@@ -1,7 +1,7 @@
-package FullstackLab1.JournalSystem.repository;
+package JournalSystem.repository;
 
 
-import FullstackLab1.JournalSystem.model.Practitioner;
+import JournalSystem.model.Practitioner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

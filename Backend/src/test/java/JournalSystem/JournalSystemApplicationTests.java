@@ -1,4 +1,4 @@
-package FullstackLab1.JournalSystem;
+package JournalSystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,8 +1,8 @@
-package FullstackLab1.JournalSystem.service;
+package JournalSystem.service;
 
-import FullstackLab1.JournalSystem.model.Patient;
-import FullstackLab1.JournalSystem.repository.IPatientRepository;
-import FullstackLab1.JournalSystem.service.interfaces.IPatientService;
+import JournalSystem.model.Patient;
+import JournalSystem.repository.IPatientRepository;
+import JournalSystem.service.interfaces.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

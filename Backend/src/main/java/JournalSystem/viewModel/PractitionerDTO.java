@@ -1,9 +1,11 @@
-package FullstackLab1.JournalSystem.viewModel;
+package JournalSystem.viewModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import JournalSystem.model.Role;
 
 @Getter
 @Setter
@@ -14,4 +16,5 @@ public class PractitionerDTO {
     private String firstName;
     private String lastName;
     private String phoneNr;
+    private Role role;
 }

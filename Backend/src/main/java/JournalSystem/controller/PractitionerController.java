@@ -1,8 +1,8 @@
-package FullstackLab1.JournalSystem.controller;
+package JournalSystem.controller;
 
-import FullstackLab1.JournalSystem.model.Practitioner;
-import FullstackLab1.JournalSystem.service.interfaces.IPractitionerService;
-import FullstackLab1.JournalSystem.viewModel.PractitionerDTO;
+import JournalSystem.model.Practitioner;
+import JournalSystem.service.interfaces.IPractitionerService;
+import JournalSystem.viewModel.PractitionerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,8 @@ public class PractitionerController {
                 practitioner.getId(),
                 practitioner.getFirstName(),
                 practitioner.getLastName(),
-                practitioner.getPhoneNr()
+                practitioner.getPhoneNr(),
+                practitioner.getRole()
         );
     }
 
@@ -68,7 +69,8 @@ public class PractitionerController {
                 id,
                 practitionerDTO.getFirstName(),
                 practitionerDTO.getLastName(),
-                practitionerDTO.getPhoneNr()
+                practitionerDTO.getPhoneNr(),
+                practitionerDTO.getRole()
         ));
         if (updatedPractitioner != null) {
             return ResponseEntity.ok(convertToDTO(updatedPractitioner));

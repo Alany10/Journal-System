@@ -1,8 +1,8 @@
-package FullstackLab1.JournalSystem.controller;
+package JournalSystem.controller;
 
-import FullstackLab1.JournalSystem.viewModel.PatientDTO;
-import FullstackLab1.JournalSystem.model.Patient;
-import FullstackLab1.JournalSystem.service.interfaces.IPatientService;
+import JournalSystem.viewModel.PatientDTO;
+import JournalSystem.model.Patient;
+import JournalSystem.service.interfaces.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

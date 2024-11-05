@@ -1,6 +1,6 @@
-package FullstackLab1.JournalSystem.service.interfaces;
+package JournalSystem.service.interfaces;
 
-import FullstackLab1.JournalSystem.model.Practitioner;
+import JournalSystem.model.Practitioner;
 
 import java.util.List;
 

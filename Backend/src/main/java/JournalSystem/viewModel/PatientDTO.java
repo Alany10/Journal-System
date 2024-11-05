@@ -1,5 +1,6 @@
-package FullstackLab1.JournalSystem.viewModel;
+package JournalSystem.viewModel;
 
+import JournalSystem.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

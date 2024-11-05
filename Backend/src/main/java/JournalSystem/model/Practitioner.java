@@ -1,4 +1,4 @@
-package FullstackLab1.JournalSystem.model;
+package JournalSystem.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,12 +11,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "patient")
+@Table(name = "practitioner")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Patient {
+public class
+Practitioner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +25,15 @@ public class Patient {
     private String firstName;
     private String lastName;
     private String phoneNr;
+    private Role role;
 
     @Override
     public String toString() {
-        return "Patient { " +
+        return "Practitioner { " +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", role='" + role + '\'' +
                 " }";
     }
 }
-

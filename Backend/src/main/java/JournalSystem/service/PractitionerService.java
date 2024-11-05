@@ -1,8 +1,8 @@
-package FullstackLab1.JournalSystem.service;
+package JournalSystem.service;
 
-import FullstackLab1.JournalSystem.model.Practitioner;
-import FullstackLab1.JournalSystem.repository.IPractitionerRepository;
-import FullstackLab1.JournalSystem.service.interfaces.IPractitionerService;
+import JournalSystem.model.Practitioner;
+import JournalSystem.repository.IPractitionerRepository;
+import JournalSystem.service.interfaces.IPractitionerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
