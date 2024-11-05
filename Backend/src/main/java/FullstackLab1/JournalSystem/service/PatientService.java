@@ -37,14 +37,14 @@ public class PatientService implements IPatientService {
     public Patient updateStaff(int id, Patient patient) {
         // Kolla om patienten finns och uppdatera om så är fallet
         if (patientRepository.existsById(id)) {
-            patient.setId(id); // Ställ in ID för att uppdatera rätt patient
+            patient.setId(id);
             return patientRepository.save(patient);
         }
-        return null; // Returnera null om patienten inte finns
+        return null;
     }
 
     @Override
     public void deletePatient(int id) {
-        patientRepository.deleteById(id); // Tar bort patienten baserat på ID
+        patientRepository.deleteById(id);
     }
 }

@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "patient") // Specifierar tabellnamnet i databasen, om du vill
+@Table(name = "patient")
 @Getter
 @Setter
-@NoArgsConstructor // Genererar en standardkonstruktor
-@AllArgsConstructor // Genererar en konstruktor med alla fält
+@NoArgsConstructor
+@AllArgsConstructor
 public class Patient {
 
     @Id

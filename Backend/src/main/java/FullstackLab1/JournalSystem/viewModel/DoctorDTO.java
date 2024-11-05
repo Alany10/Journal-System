@@ -10,8 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoctorDTO {
-    private int id; // Patientens ID
-    private String firstName; // Patientens förnamn
-    private String lastName; // Patientens efternamn
-    private String phoneNr; // Patientens telefonnummer
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String phoneNr;
 }

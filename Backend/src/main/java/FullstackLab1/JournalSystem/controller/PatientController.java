@@ -69,7 +69,7 @@ public class PatientController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable int id, @RequestBody PatientDTO patientDTO) {
-        Patient updatedPatient = patientService.updateStaff(id, new Patient(
+        Patient updatedPatient = patientService.updatePatient(id, new Patient(
                 id,
                 patientDTO.getFirstName(),
                 patientDTO.getLastName(),

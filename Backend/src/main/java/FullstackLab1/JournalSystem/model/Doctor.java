@@ -14,8 +14,8 @@ import lombok.Setter;
 @Table(name = "doctor") // Specifierar tabellnamnet i databasen, om du vill
 @Getter
 @Setter
-@NoArgsConstructor // Genererar en standardkonstruktor
-@AllArgsConstructor // Genererar en konstruktor med alla fält
+@NoArgsConstructor
+@AllArgsConstructor
 public class Doctor {
 
     @Id

@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "staff") // Specifierar tabellnamnet i databasen, om du vill
+@Table(name = "practitioner")
 @Getter
 @Setter
-@NoArgsConstructor // Genererar en standardkonstruktor
-@AllArgsConstructor // Genererar en konstruktor med alla fält
-public class Staff {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Practitioner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Staff {
 
     @Override
     public String toString() {
-        return "Staff { " +
+        return "Practitioner { " +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
