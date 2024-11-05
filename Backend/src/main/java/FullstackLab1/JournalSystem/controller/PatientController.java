@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/patient") // Grundläggande URL för API
+@RequestMapping("/patient")
 public class PatientController {
 
     private final IPatientService patientService;
@@ -22,7 +22,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    // Konvertera Patient till PatientDTO
+
     private PatientDTO convertToDTO(Patient patient) {
         return new PatientDTO(
                 patient.getId(),
@@ -32,7 +32,6 @@ public class PatientController {
         );
     }
 
-    // Konvertera lista av Patients till lista av PatientDTOs
     private List<PatientDTO> convertToDTOList(List<Patient> patients) {
         return patients.stream()
                 .map(this::convertToDTO)
@@ -42,29 +41,28 @@ public class PatientController {
     @GetMapping
     public List<PatientDTO> getAllPatients() {
         List<Patient> patients = patientService.getAllPatients();
-        return convertToDTOList(patients); // Returnera lista av PatientDTOs
+        return convertToDTOList(patients);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable int id) {
         Patient patient = patientService.getPatientById(id);
         if (patient != null) {
-            return ResponseEntity.ok(convertToDTO(patient)); // Returnera PatientDTO om hittad
+            return ResponseEntity.ok(convertToDTO(patient));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returnera 404 om inte hittad
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@RequestBody PatientDTO patientDTO) {
-        // Konvertera PatientDTO till Patient
         Patient patient = new Patient();
         patient.setFirstName(patientDTO.getFirstName());
         patient.setLastName(patientDTO.getLastName());
         patient.setPhoneNr(patientDTO.getPhoneNr());
 
         Patient createdPatient = patientService.createPatient(patient);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(createdPatient)); // Returnera skapad PatientDTO
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(createdPatient));
     }
 
     @PutMapping("/{id}")
@@ -76,15 +74,15 @@ public class PatientController {
                 patientDTO.getPhoneNr()
         ));
         if (updatedPatient != null) {
-            return ResponseEntity.ok(convertToDTO(updatedPatient)); // Returnera uppdaterad PatientDTO om lyckad
+            return ResponseEntity.ok(convertToDTO(updatedPatient));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returnera 404 om patient inte finns
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable int id) {
-        patientService.deletePatient(id); // Radera patient
-        return ResponseEntity.noContent().build(); // Returnera 204 No Content
+        patientService.deletePatient(id);
+        return ResponseEntity.noContent().build();
     }
 }

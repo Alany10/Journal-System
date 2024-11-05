@@ -34,8 +34,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public Patient updateStaff(int id, Patient patient) {
-        // Kolla om patienten finns och uppdatera om så är fallet
+    public Patient updatePatient(int id, Patient patient) {
         if (patientRepository.existsById(id)) {
             patient.setId(id);
             return patientRepository.save(patient);

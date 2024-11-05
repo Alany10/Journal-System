@@ -39,11 +39,11 @@ public class PractitionerService implements IPractitionerService {
             practitioner.setId(id);
             return PractitionerRepository.save(practitioner);
         }
-        return null; // Returnera null om patienten inte finns
+        return null;
     }
 
     @Override
-    public void deleteStaff(int id) {
-        staffRepository.deleteById(id); // Tar bort patienten baserat på ID
+    public void deletePractitioner(int id) {
+        PractitionerRepository.deleteById(id);
     }
 }

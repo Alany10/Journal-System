@@ -47,7 +47,7 @@ public class PractitionerController {
         if (practitioner != null) {
             return ResponseEntity.ok(convertToDTO(practitioner));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returnera 404 om inte hittad
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -73,13 +73,13 @@ public class PractitionerController {
         if (updatedPractitioner != null) {
             return ResponseEntity.ok(convertToDTO(updatedPractitioner));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returnera 404 om patient inte finns
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStaff(@PathVariable int id) {
-        staffService.deleteStaff(id); // Radera patient
-        return ResponseEntity.noContent().build(); // Returnera 204 No Content
+    public ResponseEntity<Void> deletePractitioner(@PathVariable int id) {
+        PractitionerService.deletePractitioner(id);
+        return ResponseEntity.noContent().build();
     }
 }

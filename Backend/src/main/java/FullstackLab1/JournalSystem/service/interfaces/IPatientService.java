@@ -1,7 +1,6 @@
 package FullstackLab1.JournalSystem.service.interfaces;
 
 import FullstackLab1.JournalSystem.model.Patient;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

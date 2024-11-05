@@ -21,7 +21,6 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    // Konvertera Patient till PatientDTO
     private DoctorDTO convertToDTO(Doctor Doctor) {
         return new DoctorDTO(
                 Doctor.getId(),
@@ -31,7 +30,6 @@ public class DoctorController {
         );
     }
 
-    // Konvertera lista av Patients till lista av PatientDTOs
     private List<DoctorDTO> convertToDTOList(List<Doctor> doctors) {
         return doctors.stream()
                 .map(this::convertToDTO)
@@ -41,33 +39,32 @@ public class DoctorController {
     @GetMapping
     public List<DoctorDTO> getAllDoctors() {
         List<Doctor> doctors = doctorService.getAllDoctors();
-        return convertToDTOList(doctors); // Returnera lista av PatientDTOs
+        return convertToDTOList(doctors);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDTO> getDoctorById(@PathVariable int id) {
         Doctor doctor = doctorService.getDoctorById(id);
         if (doctor != null) {
-            return ResponseEntity.ok(convertToDTO(doctor)); // Returnera PatientDTO om hittad
+            return ResponseEntity.ok(convertToDTO(doctor));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returnera 404 om inte hittad
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @PostMapping
     public ResponseEntity<DoctorDTO> createDoctor(@RequestBody DoctorDTO doctorDTO) {
-        // Konvertera PatientDTO till Patient
         Doctor doctor = new Doctor();
         doctor.setFirstName(doctorDTO.getFirstName());
         doctor.setLastName(doctorDTO.getLastName());
         doctor.setPhoneNr(doctorDTO.getPhoneNr());
 
-        Doctor createdStaff = doctorService.createDoctor(doctor);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(createdStaff)); // Returnera skapad PatientDTO
+        Doctor createdDoctor = doctorService.createDoctor(doctor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(createdDoctor));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DoctorDTO> updateStaff(@PathVariable int id, @RequestBody DoctorDTO doctorDTO) {
+    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable int id, @RequestBody DoctorDTO doctorDTO) {
         Doctor updatedDoctor = doctorService.updateDoctor(id, new Doctor(
                 id,
                 doctorDTO.getFirstName(),
@@ -75,15 +72,15 @@ public class DoctorController {
                 doctorDTO.getPhoneNr()
         ));
         if (updatedDoctor != null) {
-            return ResponseEntity.ok(convertToDTO(updatedDoctor)); // Returnera uppdaterad PatientDTO om lyckad
+            return ResponseEntity.ok(convertToDTO(updatedDoctor));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Returnera 404 om patient inte finns
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable int id) {
-        doctorService.deleteDoctor(id); // Radera patient
-        return ResponseEntity.noContent().build(); // Returnera 204 No Content
+        doctorService.deleteDoctor(id);
+        return ResponseEntity.noContent().build();
     }
 }
