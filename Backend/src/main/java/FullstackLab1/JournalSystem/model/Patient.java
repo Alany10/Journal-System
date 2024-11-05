@@ -1,37 +1,37 @@
-package FullstackLab1.JournalSystem.Model;
+package FullstackLab1.JournalSystem.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table; // Importerar Table om du vill ange en specifik tabell
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "patient") // Specifierar tabellnamnet i databasen, om du vill
 @Getter
 @Setter
 @NoArgsConstructor // Genererar en standardkonstruktor
 @AllArgsConstructor // Genererar en konstruktor med alla fält
-
 public class Patient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private String name;
+    private int id;
+    private String firstName;
     private String lastName;
-    private Long phoneNr;
-    private String email;
-    private String address;
-
+    private String phoneNr;
 
     @Override
     public String toString() {
-        return "Patient{" + Id +
-                ", " + name +
-                ", email:" + email +
-                ", Address:" + address +
-                '}';
+        return "Patient { " +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                " }";
     }
 }
+
