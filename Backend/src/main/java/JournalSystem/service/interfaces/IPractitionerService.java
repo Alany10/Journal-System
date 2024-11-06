@@ -10,4 +10,5 @@ public interface IPractitionerService {
     Practitioner createPractitioner(Practitioner practitioner);
     Practitioner updatePractitioner(int id, Practitioner practitioner);
     void deletePractitioner(int id);
+    boolean existsById(int id);
 }

@@ -46,4 +46,9 @@ public class PractitionerService implements IPractitionerService {
     public void deletePractitioner(int id) {
         PractitionerRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existsById(int id) {
+        return practitionerRepository.existsById(id);
+    }
 }

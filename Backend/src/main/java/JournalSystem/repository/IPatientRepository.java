@@ -10,3 +10,5 @@ import java.util.List;
 public interface IPatientRepository extends JpaRepository<Patient, Integer> {
     public List<Patient> findByPhoneNr(String phoneNr);
 }
+
+//Lägg till querys sen.

@@ -10,4 +10,5 @@ public interface IPatientService {
     Patient createPatient(Patient patient);
     Patient updatePatient(int id, Patient patient);
     void deletePatient(int id);
+    boolean existsById(int id);
 }

@@ -10,23 +10,76 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+<<<<<<< Updated upstream
 @Entity
+=======
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(name = "Practitioner")
+>>>>>>> Stashed changes
 @Table(name = "practitioner")
 @Getter
 @Setter
 @NoArgsConstructor
+<<<<<<< Updated upstream
 @AllArgsConstructor
 public class
 Practitioner {
+=======
+public class Practitioner {
+>>>>>>> Stashed changes
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id",updatable = false)
     private int id;
+
+    @Column(name = "first_name",nullable = false, columnDefinition = "TEXT")
     private String firstName;
+
+    @Column(name = "last_name",nullable = false, columnDefinition = "TEXT")
     private String lastName;
+
+    @Column(name = "phone_nr",nullable = false, columnDefinition = "TEXT")
     private String phoneNr;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
     private Role role;
 
+<<<<<<< Updated upstream
+=======
+    @OneToMany(mappedBy = "practitioner", cascade = CascadeType.ALL)
+    private List<Encounter> encounters;
+
+    @OneToMany(mappedBy = "practitioner", cascade = CascadeType.ALL)
+    private List<Observation> observations;
+
+    public Practitioner(int id, String firstName, String lastName, String phoneNr, Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNr = phoneNr;
+        this.role = role;
+        this.encounters = new ArrayList<>();
+        this.observations = new ArrayList<>();
+    }
+
+    public Practitioner(String firstName, String lastName, String phoneNr, Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNr = phoneNr;
+        this.role = role;
+        this.encounters = new ArrayList<>();
+        this.observations = new ArrayList<>();
+    }
+
+    public void addEncounter(Encounter encounter){
+        this.encounters.add(encounter);
+    }
+
+>>>>>>> Stashed changes
     @Override
     public String toString() {
         return "Practitioner { " +
