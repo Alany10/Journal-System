@@ -22,8 +22,6 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-<<<<<<< Updated upstream
-
     private PatientDTO convertToDTO(Patient patient) {
         return new PatientDTO(
                 patient.getId(),
@@ -31,12 +29,6 @@ public class PatientController {
                 patient.getLastName(),
                 patient.getPhoneNr()
         );
-    }
-
-    private List<PatientDTO> convertToDTOList(List<Patient> patients) {
-        return patients.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
     }
 
     @GetMapping
@@ -58,7 +50,6 @@ public class PatientController {
         } else {
             return new ArrayList<>();
         }
->>>>>>> Stashed changes
     }
 
     @GetMapping("/get/{id}")
@@ -77,19 +68,13 @@ public class PatientController {
                 patientDTO.getLastName() == null ||
                 patientDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-<<<<<<< Updated upstream
-        Patient createdPatient = patientService.createPatient(patient);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(createdPatient));
-=======
         else {
             Patient patient = new Patient(patientDTO.getFirstName(),
                     patientDTO.getLastName(),
                     patientDTO.getPhoneNr());
-
             Patient createdPatient = patientService.createPatient(patient);
             return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdPatient));
         }
->>>>>>> Stashed changes
     }
 
     @PutMapping("/update/{id}")
@@ -97,20 +82,18 @@ public class PatientController {
         if (patientDTO.getFirstName() == null ||
                 patientDTO.getLastName() == null ||
                 patientDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
         //TODO
+
         Patient updatedPatient = patientService.updatePatient(id, new Patient(
                 id,
                 patientDTO.getFirstName(),
                 patientDTO.getLastName(),
                 patientDTO.getPhoneNr()
         ));
+
         if (updatedPatient != null) {
-<<<<<<< Updated upstream
-            return ResponseEntity.ok(convertToDTO(updatedPatient));
-=======
             return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedPatient));
->>>>>>> Stashed changes
+
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

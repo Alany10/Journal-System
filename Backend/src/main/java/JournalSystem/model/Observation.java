@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "observation")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Observation {
 
@@ -37,15 +38,6 @@ public class Observation {
     @ManyToOne
     @JoinColumn(name = "encounter_id", nullable = false)
     private Encounter encounter;
-
-    public Observation(int id, String description, LocalDateTime dateTime, Patient patient, Practitioner practitioner, Encounter encounter) {
-        this.id = id;
-        this.dateTime = dateTime;
-        this.description = description;
-        this.patient = patient;
-        this.practitioner = practitioner;
-        this.encounter = encounter;
-    }
 
     public Observation(String description, LocalDateTime dateTime, Patient patient, Practitioner practitioner, Encounter encounter) {
         this.dateTime = dateTime;

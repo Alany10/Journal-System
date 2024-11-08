@@ -20,34 +20,26 @@ public class PatientService implements IPatientService {
 
     @Override
     public List<Patient> getAllPatients() {
-        return patientRepository.findAll(); // Använder den automatiska metoden från JpaRepository
+        return patientRepository.findAll();
     }
 
     @Override
     public Patient getPatientById(int id) {
-        return patientRepository.findById(id).orElse(null); // Returnerar patient eller null om inte hittad
+        return patientRepository.findById(id).orElse(null);
     }
 
     @Override
     public Patient createPatient(Patient patient) {
-        return patientRepository.save(patient); // Sparar en ny patient
+        return patientRepository.save(patient);
     }
 
     @Override
     public Patient updatePatient(int id, Patient patient) {
-<<<<<<< Updated upstream
         if (patientRepository.existsById(id)) {
             patient.setId(id);
             return patientRepository.save(patient);
         }
         return null;
-=======
-        if (!patientRepository.existsById(id)) throw new IllegalArgumentException("Patient with id " + id + " does not exist");
-
-        patient.setId(id);
-
-        return patientRepository.save(patient);
->>>>>>> Stashed changes
     }
 
     @Override

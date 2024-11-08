@@ -8,7 +8,6 @@ import JournalSystem.service.interfaces.IEncounterService;
 import JournalSystem.service.interfaces.IObservationService;
 import JournalSystem.service.interfaces.IPatientService;
 import JournalSystem.service.interfaces.IPractitionerService;
-import JournalSystem.viewModel.EncounterDTO;
 import JournalSystem.viewModel.ObservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
 @RestController
 @RequestMapping("/observation")
 public class ObservationController {
@@ -43,7 +41,6 @@ public class ObservationController {
             for (Observation observation: observations){
                 observationDTOs.add(Mapper.convertToDTO(observation));
             }
-
             return observationDTOs;
         } else {
             return new ArrayList<>();
@@ -66,15 +63,12 @@ public class ObservationController {
                 observationDTO.getPatientId() < 0 || observationDTO.getPractitionerId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
         Patient patient = patientService.getPatientById(observationDTO.getPatientId());
         Practitioner practitioner = practitionerService.getPractitionerById(observationDTO.getPractitionerId());
         Encounter encounter = encounterService.getEncounterById(observationDTO.getEncounterId());
-
         if (patient == null || practitioner == null || encounter == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
         Observation observation = new Observation(observationDTO.getDescription(), observationDTO.getDateTime(), patient, practitioner,encounter);
         Observation createdObservation = observationService.createObservation(observation);
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdObservation));
@@ -89,15 +83,12 @@ public class ObservationController {
                 observationDTO.getEncounterId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
         Patient patient = patientService.getPatientById(observationDTO.getPatientId());
         Practitioner practitioner = practitionerService.getPractitionerById(observationDTO.getPractitionerId());
         Encounter encounter = encounterService.getEncounterById(observationDTO.getEncounterId());
-
         if (patient == null || practitioner == null || encounter == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
         Observation updatedObservation = observationService.updateObservation(id, new Observation(
                 id,
                 observationDTO.getDescription(),
@@ -106,7 +97,6 @@ public class ObservationController {
                 practitioner,
                 encounter
         ));
-
         if (updatedObservation != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedObservation));
         } else {

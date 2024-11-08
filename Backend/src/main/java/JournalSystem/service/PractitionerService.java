@@ -11,40 +11,40 @@ import java.util.List;
 @Service
 public class PractitionerService implements IPractitionerService {
 
-    private final IPractitionerRepository PractitionerRepository;
+    private final IPractitionerRepository practitionerRepository;
 
     @Autowired
     public PractitionerService(IPractitionerRepository PractitionerRepository) {
-        this.PractitionerRepository = PractitionerRepository;
+        this.practitionerRepository = PractitionerRepository;
     }
 
     @Override
     public List<Practitioner> getAllPractitioner() {
-        return PractitionerRepository.findAll();
+        return practitionerRepository.findAll();
     }
 
     @Override
     public Practitioner getPractitionerById(int id) {
-        return PractitionerRepository.findById(id).orElse(null);
+        return practitionerRepository.findById(id).orElse(null);
     }
 
     @Override
     public Practitioner createPractitioner(Practitioner practitioner) {
-        return PractitionerRepository.save(practitioner);
+        return practitionerRepository.save(practitioner);
     }
 
     @Override
     public Practitioner updatePractitioner(int id, Practitioner practitioner) {
-        if (PractitionerRepository.existsById(id)) {
+        if (practitionerRepository.existsById(id)) {
             practitioner.setId(id);
-            return PractitionerRepository.save(practitioner);
+            return practitionerRepository.save(practitioner);
         }
         return null;
     }
 
     @Override
     public void deletePractitioner(int id) {
-        PractitionerRepository.deleteById(id);
+        practitionerRepository.deleteById(id);
     }
 
     @Override

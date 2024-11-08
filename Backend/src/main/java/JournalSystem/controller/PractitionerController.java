@@ -1,6 +1,7 @@
 package JournalSystem.controller;
 
 import JournalSystem.model.Practitioner;
+import JournalSystem.model.Role;
 import JournalSystem.service.interfaces.IPractitionerService;
 import JournalSystem.viewModel.PractitionerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/practitioner")
 public class PractitionerController {
@@ -17,8 +19,8 @@ public class PractitionerController {
     private final IPractitionerService practitionerService;
 
     @Autowired
-    public PractitionerController(IPractitionerService PractitionerService) {
-        this.practitionerService = PractitionerService;
+    public PractitionerController(IPractitionerService practitionerService) {
+        this.practitionerService = practitionerService;
     }
 
 <<<<<<< Updated upstream
@@ -51,19 +53,17 @@ public class PractitionerController {
             for (Practitioner practitioner: practitioners){
                 practitionerDTOs.add(Mapper.convertToDTO(practitioner));
             }
-
             return practitionerDTOs;
         } else {
             return new ArrayList<>();
         }
->>>>>>> Stashed changes
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<PractitionerDTO> getPractitionerById(@PathVariable int id) {
         Practitioner practitioner = practitionerService.getPractitionerById(id);
         if (practitioner != null) {
-            return ResponseEntity.ok(convertToDTO(practitioner));
+            return ResponseEntity.ok(Mapper.convertToDTO(practitioner));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -71,15 +71,6 @@ public class PractitionerController {
 
     @PostMapping("/create")
     public ResponseEntity<PractitionerDTO> createPractitioner(@RequestBody PractitionerDTO practitionerDTO) {
-<<<<<<< Updated upstream
-        Practitioner practitioner = new Practitioner();
-        practitioner.setFirstName(practitionerDTO.getFirstName());
-        practitioner.setLastName(practitionerDTO.getLastName());
-        practitioner.setPhoneNr(practitionerDTO.getPhoneNr());
-
-        Practitioner createdPractitioner = PractitionerService.createPractitioner(practitioner);
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(createdPractitioner));
-=======
         if (practitionerDTO.getFirstName() == null ||
                 practitionerDTO.getLastName() == null ||
                 practitionerDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -94,14 +85,14 @@ public class PractitionerController {
             Practitioner createdPractitioner = practitionerService.createPractitioner(practitioner);
             return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdPractitioner));
         }
->>>>>>> Stashed changes
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<PractitionerDTO> updatePractitioner(@PathVariable int id, @RequestBody PractitionerDTO practitionerDTO) {
         if (practitionerDTO.getFirstName() == null ||
                 practitionerDTO.getLastName() == null ||
-                practitionerDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                practitionerDTO.getPhoneNr() == null ||
+                practitionerDTO.getRole() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //TODO
         Practitioner updatedPractitioner = practitionerService.updatePractitioner(id, new Practitioner(
@@ -109,17 +100,11 @@ public class PractitionerController {
                 practitionerDTO.getFirstName(),
                 practitionerDTO.getLastName(),
                 practitionerDTO.getPhoneNr(),
-<<<<<<< Updated upstream
-                practitionerDTO.getRole()
-        ));
-        if (updatedPractitioner != null) {
-            return ResponseEntity.ok(convertToDTO(updatedPractitioner));
-=======
                 Role.valueOf(practitionerDTO.getRole())
         ));
+
         if (updatedPractitioner != null) {
             return ResponseEntity.ok().build();
->>>>>>> Stashed changes
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

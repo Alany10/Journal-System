@@ -1,6 +1,5 @@
 package JournalSystem.viewModel;
 
-import JournalSystem.model.Observation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

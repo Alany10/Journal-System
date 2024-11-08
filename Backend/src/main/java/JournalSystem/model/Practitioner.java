@@ -5,30 +5,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-<<<<<<< Updated upstream
-@Entity
-=======
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "Practitioner")
->>>>>>> Stashed changes
 @Table(name = "practitioner")
 @Getter
 @Setter
 @NoArgsConstructor
-<<<<<<< Updated upstream
-@AllArgsConstructor
-public class
-Practitioner {
-=======
 public class Practitioner {
->>>>>>> Stashed changes
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,8 +38,6 @@ public class Practitioner {
     @Column(name = "role", nullable = false)
     private Role role;
 
-<<<<<<< Updated upstream
-=======
     @OneToMany(mappedBy = "practitioner", cascade = CascadeType.ALL)
     private List<Encounter> encounters;
 
@@ -79,7 +67,6 @@ public class Practitioner {
         this.encounters.add(encounter);
     }
 
->>>>>>> Stashed changes
     @Override
     public String toString() {
         return "Practitioner { " +

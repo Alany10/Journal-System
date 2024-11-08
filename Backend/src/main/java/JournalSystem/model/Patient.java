@@ -10,14 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-<<<<<<< Updated upstream
-@Entity
-=======
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "Patient")
->>>>>>> Stashed changes
 @Table(name = "patient")
 @Getter
 @Setter
@@ -35,8 +31,6 @@ public class Patient {
     @Column(name = "phone_nr",nullable = false, columnDefinition = "TEXT")
     private String phoneNr;
 
-<<<<<<< Updated upstream
-=======
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Encounter> encounters;
 
@@ -64,7 +58,6 @@ public class Patient {
         this.encounters.add(encounter);
     }
 
->>>>>>> Stashed changes
     @Override
     public String toString() {
         return "Patient { " +
