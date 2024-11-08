@@ -12,14 +12,18 @@ public class Mapper {
     public static PatientDTO convertToDTO(Patient patient){
         List<Encounter> encounters = patient.getEncounters();
         List<EncounterDTO> encounterDTOs = new ArrayList<>();
+
         List<Observation> observations = patient.getObservations();
         List<ObservationDTO> observationDTOs = new ArrayList<>();
+
         for (Encounter encounter: encounters){
             encounterDTOs.add(convertToDTO(encounter));
         }
+
         for (Observation observation: observations){
             observationDTOs.add(convertToDTO(observation));
         }
+
         return new PatientDTO(
                 patient.getId(),
                 patient.getFirstName(),
@@ -28,12 +32,15 @@ public class Mapper {
                 encounterDTOs,
                 observationDTOs);
     }
+
     public static EncounterDTO convertToDTO(Encounter encounter) {
         List<Observation> observations = encounter.getObservations();
         List<ObservationDTO> observationDTOs = new ArrayList<>();
+
         for (Observation observation: observations){
             observationDTOs.add(convertToDTO(observation));
         }
+
         return new EncounterDTO(
                 encounter.getId(),
                 encounter.getDateTime(),
@@ -42,17 +49,22 @@ public class Mapper {
                 observationDTOs
         );
     }
+
     public static PractitionerDTO convertToDTO(Practitioner practitioner){
         List<Encounter> encounters = practitioner.getEncounters();
         List<EncounterDTO> encounterDTOs = new ArrayList<>();
+
         List<Observation> observations = practitioner.getObservations();
         List<ObservationDTO> observationDTOs = new ArrayList<>();
+
         for (Encounter encounter: encounters){
             encounterDTOs.add(convertToDTO(encounter));
         }
+
         for (Observation observation: observations){
             observationDTOs.add(convertToDTO(observation));
         }
+
         return new PractitionerDTO(
                 practitioner.getId(),
                 practitioner.getFirstName(),
@@ -63,6 +75,7 @@ public class Mapper {
                 observationDTOs
         );
     }
+
     public static ObservationDTO convertToDTO(Observation observation) {
         return new ObservationDTO(
                 observation.getId(),

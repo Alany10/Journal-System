@@ -21,6 +21,7 @@ public class PractitionerDTO {
     private String role;
     private List<EncounterDTO> encounters;
     private List<ObservationDTO> observation;
+
     public PractitionerDTO(int id, String firstName, String lastName, String phoneNr, String role) {
         this.id = id;
         this.firstName = firstName;

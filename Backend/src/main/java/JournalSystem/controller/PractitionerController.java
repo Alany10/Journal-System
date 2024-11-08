@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +24,13 @@ public class PractitionerController {
         this.practitionerService = practitionerService;
     }
 
-<<<<<<< Updated upstream
     private PractitionerDTO convertToDTO(Practitioner practitioner) {
         return new PractitionerDTO(
                 practitioner.getId(),
                 practitioner.getFirstName(),
                 practitioner.getLastName(),
                 practitioner.getPhoneNr(),
-                practitioner.getRole()
+                practitioner.getRole().toString()
         );
     }
 
@@ -40,11 +40,6 @@ public class PractitionerController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping
-    public List<PractitionerDTO> getAllPractitioners() {
-        List<Practitioner> practitioners = PractitionerService.getAllPractitioner();
-        return convertToDTOList(practitioners);
-=======
     @GetMapping("/getAll")
     public List<PractitionerDTO> getAllPractitioners() {
         List<Practitioner> practitioners = practitionerService.getAllPractitioner();

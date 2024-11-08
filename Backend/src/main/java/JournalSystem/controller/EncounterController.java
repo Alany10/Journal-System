@@ -18,12 +18,14 @@ public class EncounterController {
     private final IEncounterService encounterService;
     private final IPatientService patientService;
     private final IPractitionerService practitionerService;
+
     @Autowired
     public EncounterController(IEncounterService encounterService, IPatientService patientService, IPractitionerService practitionerService) {
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.practitionerService = practitionerService;
     }
+
     @GetMapping("/getAll")
     public List<EncounterDTO> getAllEncounters() {
         List<Encounter> encounters = encounterService.getAllEncounters();
@@ -37,6 +39,7 @@ public class EncounterController {
             return new ArrayList<>();
         }
     }
+
     @GetMapping("/get/{id}")
     public ResponseEntity<EncounterDTO> getEncounterById(@PathVariable int id) {
         Encounter encounter = encounterService.getEncounterById(id);
@@ -46,6 +49,7 @@ public class EncounterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
     @PostMapping("/create")
     public ResponseEntity<EncounterDTO> createEncounter(@RequestBody EncounterDTO encounterDTO) {
         if (encounterDTO.getDateTime() == null || encounterDTO.getPatientId() < 0 || encounterDTO.getPractitionerId() < 0) {
@@ -60,6 +64,7 @@ public class EncounterController {
         Encounter createdEncounter = encounterService.createEncounter(encounter);
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdEncounter));
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<EncounterDTO> updateEncounter(@PathVariable int id, @RequestBody EncounterDTO encounterDTO) {
         if (encounterDTO.getDateTime() == null ||
@@ -84,6 +89,7 @@ public class EncounterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteEncounter(@PathVariable int id) {
         if (id >= 0 && encounterService.existsById(id)) {
