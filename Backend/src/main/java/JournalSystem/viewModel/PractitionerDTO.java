@@ -20,7 +20,8 @@ public class PractitionerDTO {
     private String phoneNr;
     private String role;
     private List<EncounterDTO> encounters;
-    private List<ObservationDTO> observation;
+    private List<ObservationDTO> observations;
+    private List<DiagnosDTO> diagnoses;
 
     public PractitionerDTO(int id, String firstName, String lastName, String phoneNr, String role) {
         this.id = id;
@@ -29,6 +30,7 @@ public class PractitionerDTO {
         this.phoneNr = phoneNr;
         this.role = role;
         this.encounters = new ArrayList<>();
-        this.observation = new ArrayList<>();
+        this.observations = new ArrayList<>();
+        this.diagnoses = new ArrayList<>();
     }
 }

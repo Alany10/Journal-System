@@ -1,27 +1,33 @@
 package JournalSystem.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "Encounter")
-@Table(name = "encounters")
+@Entity(name = "Diagnos")
+@Table(name = "diagnos")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
-public class Encounter {
+public class Diagnos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",updatable = false)
+    @Column(name = "id", updatable = false)
     private int id;
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime;
+
+    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "diagnos_status", nullable = false)
+    private DiagnosStatus diagnosStatus;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
@@ -31,23 +37,23 @@ public class Encounter {
     @JoinColumn(name = "practitioner_id", nullable = false)
     private Practitioner practitioner;
 
-    @OneToMany(mappedBy = "encounter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "diagnos", cascade = CascadeType.ALL)
     private List<Observation> observations;
 
-    public Encounter(int id, LocalDateTime dateTime, Patient patient, Practitioner practitioner) {
+    public Diagnos(int id, String name, Patient patient, Practitioner practitioner) {
         this.id = id;
-        this.dateTime = dateTime;
+        this.name = name;
+        this.diagnosStatus = DiagnosStatus.ONGOING;
         this.patient = patient;
         this.practitioner = practitioner;
         this.observations = new ArrayList<>();
     }
 
-    public Encounter(LocalDateTime dateTime, Patient patient, Practitioner practitioner) {
-        this.dateTime = dateTime;
+    public Diagnos(String name, Patient patient, Practitioner practitioner) {
+        this.name = name;
+        this.diagnosStatus = DiagnosStatus.ONGOING;
         this.patient = patient;
         this.practitioner = practitioner;
         this.observations = new ArrayList<>();
     }
-
-
 }

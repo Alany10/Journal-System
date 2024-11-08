@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,8 +12,8 @@ import java.time.LocalDateTime;
 public class ObservationDTO {
     private int id;
     private String description;
-    private LocalDateTime dateTime;
     private int patientId;
     private int practitionerId;
     private int encounterId;
+    private int diagnosId;
 }

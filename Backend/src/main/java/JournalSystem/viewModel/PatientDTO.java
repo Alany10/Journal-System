@@ -18,7 +18,8 @@ public class PatientDTO {
     private String lastName;
     private String phoneNr;
     private List<EncounterDTO> encounters;
-    private List<ObservationDTO> observation;
+    private List<ObservationDTO> observations;
+    private List<DiagnosDTO> diagnoses;
 
     public PatientDTO(int id, String firstName, String lastName, String phoneNr) {
         this.id = id;
@@ -26,7 +27,8 @@ public class PatientDTO {
         this.lastName = lastName;
         this.phoneNr = phoneNr;
         this.encounters = new ArrayList<>();
-        this.observation = new ArrayList<>();
+        this.observations = new ArrayList<>();
+        this.diagnoses = new ArrayList<>();
     }
 
 }

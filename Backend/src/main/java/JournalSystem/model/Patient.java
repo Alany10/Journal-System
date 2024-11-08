@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "Patient")
-@Table(name = "patient")
+@Table(name = "patients")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,6 +36,9 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Observation> observations;
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    private List<Diagnos> diagnoses;
+
     public Patient(int id, String firstName, String lastName, String phoneNr) {
         this.id = id;
         this.firstName = firstName;
@@ -43,6 +46,7 @@ public class Patient {
         this.phoneNr = phoneNr;
         this.encounters = new ArrayList<>();
         this.observations = new ArrayList<>();
+        this.diagnoses = new ArrayList<>();
     }
 
     public Patient(String firstName, String lastName, String phoneNr) {
@@ -51,10 +55,7 @@ public class Patient {
         this.phoneNr = phoneNr;
         this.encounters = new ArrayList<>();
         this.observations = new ArrayList<>();
-    }
-
-    public void addEncounter(Encounter encounter){
-        this.encounters.add(encounter);
+        this.diagnoses = new ArrayList<>();
     }
 
     @Override

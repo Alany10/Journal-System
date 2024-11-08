@@ -52,14 +52,19 @@ public class EncounterController {
 
     @PostMapping("/create")
     public ResponseEntity<EncounterDTO> createEncounter(@RequestBody EncounterDTO encounterDTO) {
-        if (encounterDTO.getDateTime() == null || encounterDTO.getPatientId() < 0 || encounterDTO.getPractitionerId() < 0) {
+        if (encounterDTO.getDateTime() == null ||
+                encounterDTO.getPatientId() < 0 ||
+                encounterDTO.getPractitionerId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         Patient patient = patientService.getPatientById(encounterDTO.getPatientId());
         Practitioner practitioner = practitionerService.getPractitionerById(encounterDTO.getPractitionerId());
+
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
         Encounter encounter = new Encounter(encounterDTO.getDateTime(), patient, practitioner);
         Encounter createdEncounter = encounterService.createEncounter(encounter);
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdEncounter));

@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity(name = "Observation")
-@Table(name = "observation")
+@Table(name = "observations")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,9 +22,6 @@ public class Observation {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime;
-
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
@@ -39,12 +34,16 @@ public class Observation {
     @JoinColumn(name = "encounter_id", nullable = false)
     private Encounter encounter;
 
-    public Observation(String description, LocalDateTime dateTime, Patient patient, Practitioner practitioner, Encounter encounter) {
-        this.dateTime = dateTime;
+    @ManyToOne
+    @JoinColumn(name = "diagnos_id", nullable = false)
+    private Diagnos diagnos;
+
+    public Observation(String description, Patient patient, Practitioner practitioner, Encounter encounter, Diagnos diagnos) {
         this.description = description;
         this.patient = patient;
         this.practitioner = practitioner;
         this.encounter = encounter;
+        this.diagnos = diagnos;
     }
 
 }
