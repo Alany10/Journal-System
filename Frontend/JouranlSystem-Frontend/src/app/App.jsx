@@ -35,7 +35,6 @@ function App() {
 
                     {/* Registreringssidan */}
                     <Route path="/register" element={<Register />} />
-
                     <Route path="/create-diagnos" element={<CreateDiagnos />} />
                     <Route path="/create-encounter" element={<CreateEncounter />} />
                     <Route path="/create-observation" element={<CreateObservation />} />

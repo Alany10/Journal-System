@@ -5,8 +5,8 @@ const PractitionerDashboard = () => {
     const navigate = useNavigate(); // För att hantera navigeringen
 
     // Funktioner för att navigera till de respektive sidorna
-    const handleCreateDiagnosis = () => {
-        navigate('/create-diagnosis'); // Omdirigerar till en sida för att skapa diagnos
+    const handleCreateDiagnos = () => {
+        navigate('/create-diagnos'); // Omdirigerar till en sida för att skapa diagnos
     };
 
     const handleCreateEncounter = () => {
@@ -26,7 +26,7 @@ const PractitionerDashboard = () => {
         <div>
             <h2>Welcome to the Practitioner Dashboard</h2>
             <div>
-                <button onClick={handleCreateDiagnosis}>Create Diagnosis</button>
+                <button onClick={handleCreateDiagnos}>Create Diagnosis</button>
             </div>
             <div>
                 <button onClick={handleCreateEncounter}>Create Encounter</button>
