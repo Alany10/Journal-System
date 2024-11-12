@@ -12,7 +12,7 @@ public interface IEncounterService {
     Encounter createEncounter(Encounter encounter);
     Encounter updateEncounter(int id, Encounter encounter);
     void deleteEncounter(int id);
-    List<Encounter> getAllEncountersByPatient(Patient patient);
-    List<Encounter> getAllEncountersByPractitioner(Practitioner practitioner);
+    List<Encounter> getAllEncountersByPatientId(int patientId);
+    List<Encounter> getAllEncountersByPractitionerId(int practitionerId);
     boolean existsById(int id);
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/diagnos")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class DiagnosController {
     private final IDiagnosService diagnosService;
     private final IPatientService patientService;
@@ -77,21 +78,95 @@ public class DiagnosController {
                 diagnosDTO.getPractitionerId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         Patient patient = patientService.getPatientById(diagnosDTO.getPatientId());
         Practitioner practitioner = practitionerService.getPractitionerById(diagnosDTO.getPractitionerId());
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+        // Validera DiagnosStatus
+        DiagnosStatus status;
+        try {
+            status = DiagnosStatus.valueOf(diagnosDTO.getDiagnosStatus().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
         Diagnos updatedDiagnos = diagnosService.updateDiagnos(id, new Diagnos(
                 id,
                 diagnosDTO.getName(),
+                status,
                 patient,
                 practitioner
         ));
+
         if (updatedDiagnos != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedDiagnos));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PutMapping("/establish/{id}") // TODO
+    public ResponseEntity<DiagnosDTO> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus) {
+        System.out.println(id + " "+ diagnosStatus);
+        if (diagnosStatus == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        Diagnos diagnos = diagnosService.getDiagnosById(id);
+
+        Patient patient = patientService.getPatientById(diagnos.getPatient().getId());
+        Practitioner practitioner = practitionerService.getPractitionerById(diagnos.getPractitioner().getId());
+
+        if (patient == null || practitioner == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Diagnos updatedDiagnos = diagnosService.updateDiagnos(id, new Diagnos(
+                id,
+                diagnos.getName(),
+                DiagnosStatus.valueOf(diagnosStatus.toUpperCase()),
+                patient,
+                practitioner
+        ));
+
+        if (updatedDiagnos != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedDiagnos));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
+    @GetMapping("/getAllByPatient/{patientId}")
+    public List<DiagnosDTO> getAllDiagnosesByPatient(@PathVariable int patientId) {
+        if (!patientService.existsById(patientId)) throw new IllegalArgumentException("No Patient With Id: " + patientId);
+
+        List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPatient(patientId);
+        if (diagnoses != null) {
+            List<DiagnosDTO> diagnosDTOS = new ArrayList<>();
+            for (Diagnos diagnos : diagnoses){
+                diagnosDTOS.add(Mapper.convertToDTO(diagnos));
+            }
+            return diagnosDTOS;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @GetMapping("/getAllByPractitioner/{practitionerId}")
+    public List<DiagnosDTO> getAllDiagnosesByPractitioner(@PathVariable int practitionerId) {
+        if (!patientService.existsById(practitionerId)) throw new IllegalArgumentException("No Pactitioner With Id: " + practitionerId);
+
+        List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPractitioner(practitionerId);
+        if (diagnoses != null) {
+            List<DiagnosDTO> diagnosDTOS = new ArrayList<>();
+            for (Diagnos diagnos : diagnoses){
+                diagnosDTOS.add(Mapper.convertToDTO(diagnos));
+            }
+            return diagnosDTOS;
+        } else {
+            return new ArrayList<>();
         }
     }
 

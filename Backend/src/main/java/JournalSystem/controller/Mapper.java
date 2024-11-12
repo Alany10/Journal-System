@@ -83,8 +83,9 @@ public class Mapper {
 
         return new PractitionerDTO(
                 practitioner.getId(),
-                practitioner.getFirstName(),
-                practitioner.getLastName(),
+                practitioner.getEmail(),
+                practitioner.getName(),
+                practitioner.getPassword(),
                 practitioner.getPhoneNr(),
                 practitioner.getRole().toString(),
                 encounterDTOs,

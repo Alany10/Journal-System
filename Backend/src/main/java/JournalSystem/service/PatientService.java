@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientService implements IPatientService {
@@ -51,4 +52,14 @@ public class PatientService implements IPatientService {
     public boolean existsById(int id) {
         return patientRepository.existsById(id);
     }
+
+    public boolean verifyLogin(String email, String password) {
+        Optional<Patient> patientOptional = patientRepository.findByEmailAndPassword(email, password);
+        return patientOptional.isPresent();
+    }
+
+    public int getIdByEmail(String email) {
+        return patientRepository.getIdByEmail(email);
+    }
+
 }

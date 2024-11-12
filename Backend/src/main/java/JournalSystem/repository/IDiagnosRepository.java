@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface IDiagnosRepository extends JpaRepository<Diagnos,Integer> {
     List<Diagnos> findByPatient_Id(int patientId);
-    List<Diagnos> findByPractitioner_Id(int practitioner_id);
+    List<Diagnos> findByPractitioner_Id(int practitionerId);
 }

@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface IEncounterRepository extends JpaRepository<Encounter, Integer> {
     List<Encounter> findByPatient_Id(int patientId);
-    List<Encounter> findByPractitioner_Id(int practitioner_id);
+    List<Encounter> findByPractitioner_Id(int practitionerId);
 }

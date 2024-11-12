@@ -12,7 +12,7 @@ public interface IDiagnosService {
     Diagnos createDiagnos(Diagnos diagnos);
     Diagnos updateDiagnos(int id, Diagnos diagnos);
     void deleteDiagnos(int id);
-    List<Diagnos> getAllDiagnosesByPatient(Patient patient);
-    List<Diagnos> getAllDiagnosesByPractitioner(Practitioner practitioner);
+    List<Diagnos> getAllDiagnosesByPatient(int patientId);
+    List<Diagnos> getAllDiagnosesByPractitioner(int practitionerId);
     boolean existsById(int id);
 }

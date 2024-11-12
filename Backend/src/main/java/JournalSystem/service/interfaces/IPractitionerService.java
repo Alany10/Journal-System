@@ -11,4 +11,6 @@ public interface IPractitionerService {
     Practitioner updatePractitioner(int id, Practitioner practitioner);
     void deletePractitioner(int id);
     boolean existsById(int id);
+    boolean verifyLogin(String email, String password);
+    int getIdByEmail(String email);
 }

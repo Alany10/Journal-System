@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/observation")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class ObservationController {
     private final IObservationService observationService;
     private final IPatientService patientService;
@@ -71,7 +72,7 @@ public class ObservationController {
         Encounter encounter = encounterService.getEncounterById(observationDTO.getEncounterId());
         Diagnos diagnos = diagnosService.getDiagnosById(observationDTO.getDiagnosId());
 
-        if (patient == null || practitioner == null || encounter == null) {
+        if (patient == null || practitioner == null || encounter == null || diagnos == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 

@@ -1,5 +1,6 @@
 package JournalSystem.service;
 
+import JournalSystem.model.Patient;
 import JournalSystem.model.Practitioner;
 import JournalSystem.repository.IPractitionerRepository;
 import JournalSystem.service.interfaces.IPractitionerService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PractitionerService implements IPractitionerService {
@@ -50,5 +52,14 @@ public class PractitionerService implements IPractitionerService {
     @Override
     public boolean existsById(int id) {
         return practitionerRepository.existsById(id);
+    }
+
+    public boolean verifyLogin(String email, String password) {
+        Optional<Practitioner> practitionerOptional = practitionerRepository.findByEmailAndPassword(email, password);
+        return practitionerOptional.isPresent();
+    }
+
+    public int getIdByEmail(String email) {
+        return practitionerRepository.getIdByEmail(email);
     }
 }

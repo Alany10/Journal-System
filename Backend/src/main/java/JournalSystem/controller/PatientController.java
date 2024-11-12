@@ -1,5 +1,7 @@
 package JournalSystem.controller;
 
+import JournalSystem.model.login.LoginRequest;
+import JournalSystem.model.login.LoginResponse;
 import JournalSystem.viewModel.PatientDTO;
 import JournalSystem.model.Patient;
 import JournalSystem.service.interfaces.IPatientService;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patient")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class PatientController {
 
     private final IPatientService patientService;
@@ -26,8 +29,9 @@ public class PatientController {
     private PatientDTO convertToDTO(Patient patient) {
         return new PatientDTO(
                 patient.getId(),
-                patient.getFirstName(),
-                patient.getLastName(),
+                patient.getEmail(),
+                patient.getName(),
+                patient.getPassword(),
                 patient.getPhoneNr()
         );
     }
@@ -60,30 +64,34 @@ public class PatientController {
 
     @PostMapping("/create")
     public ResponseEntity<PatientDTO> createPatient(@RequestBody PatientDTO patientDTO) {
-        if (patientDTO.getFirstName() == null ||
-                patientDTO.getLastName() == null ||
+        if (patientDTO.getEmail() == null ||
+                patientDTO.getName() == null ||
+                patientDTO.getPassword() == null ||
                 patientDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        else {
-            Patient patient = new Patient(patientDTO.getFirstName(),
-                    patientDTO.getLastName(),
+
+        Patient patient = new Patient(patientDTO.getEmail(),
+                    patientDTO.getName(),
+                    patientDTO.getPassword(),
                     patientDTO.getPhoneNr());
-            Patient createdPatient = patientService.createPatient(patient);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdPatient));
-        }
+
+        Patient createdPatient = patientService.createPatient(patient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdPatient));
+
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable int id, @RequestBody PatientDTO patientDTO) {
-        if (patientDTO.getFirstName() == null ||
-                patientDTO.getLastName() == null ||
+        if (patientDTO.getEmail() == null ||
+                patientDTO.getName() == null ||
+                patientDTO.getPassword() == null ||
                 patientDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        //TODO
 
         Patient updatedPatient = patientService.updatePatient(id, new Patient(
                 id,
-                patientDTO.getFirstName(),
-                patientDTO.getLastName(),
+                patientDTO.getEmail(),
+                patientDTO.getName(),
+                patientDTO.getPassword(),
                 patientDTO.getPhoneNr()
         ));
 
@@ -102,6 +110,17 @@ public class PatientController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        boolean loginSuccessful = patientService.verifyLogin(request.getEmail(), request.getPassword());
+        if (loginSuccessful) {
+            int patientId = patientService.getIdByEmail(request.getEmail()); // Assuming you have a method to retrieve the ID
+            return ResponseEntity.ok(new LoginResponse("Login successful", patientId));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Invalid email or password"));
         }
     }
 }

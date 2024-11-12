@@ -25,11 +25,14 @@ public class Practitioner {
     @Column(name = "id",updatable = false)
     private int id;
 
-    @Column(name = "first_name",nullable = false, columnDefinition = "TEXT")
-    private String firstName;
+    @Column(name = "email", nullable = false, unique = true, columnDefinition = "TEXT")
+    private String email;
 
-    @Column(name = "last_name",nullable = false, columnDefinition = "TEXT")
-    private String lastName;
+    @Column(name = "name",nullable = false, columnDefinition = "TEXT")
+    private String name;
+
+    @Column(name = "password",nullable = false, columnDefinition = "TEXT")
+    private String password;
 
     @Column(name = "phone_nr",nullable = false, columnDefinition = "TEXT")
     private String phoneNr;
@@ -47,10 +50,11 @@ public class Practitioner {
     @OneToMany(mappedBy = "practitioner", cascade = CascadeType.ALL)
     private List<Diagnos> diagnoses;
 
-    public Practitioner(int id, String firstName, String lastName, String phoneNr, Role role) {
+    public Practitioner(int id, String email, String name, String password, String phoneNr, Role role) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.email = email;
+        this.name = name;
+        this.password = password;
         this.phoneNr = phoneNr;
         this.role = role;
         this.encounters = new ArrayList<>();
@@ -58,9 +62,10 @@ public class Practitioner {
         this.diagnoses = new ArrayList<>();
     }
 
-    public Practitioner(String firstName, String lastName, String phoneNr, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Practitioner(String email, String name, String password, String phoneNr, Role role) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
         this.phoneNr = phoneNr;
         this.role = role;
         this.encounters = new ArrayList<>();
@@ -70,11 +75,9 @@ public class Practitioner {
 
     @Override
     public String toString() {
-        return "Practitioner { " +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", role='" + role + '\'' +
-                " }";
+        return "Practitioner{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

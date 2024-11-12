@@ -11,4 +11,6 @@ public interface IPatientService {
     Patient updatePatient(int id, Patient patient);
     void deletePatient(int id);
     boolean existsById(int id);
+    boolean verifyLogin(String email, String password);
+    int getIdByEmail(String email);
 }

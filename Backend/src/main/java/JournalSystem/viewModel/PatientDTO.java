@@ -14,17 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 public class PatientDTO {
     private int id;
-    private String firstName;
-    private String lastName;
+    private String email;
+    private String name;
+    private String password;
     private String phoneNr;
     private List<EncounterDTO> encounters;
     private List<ObservationDTO> observations;
     private List<DiagnosDTO> diagnoses;
 
-    public PatientDTO(int id, String firstName, String lastName, String phoneNr) {
+    public PatientDTO(int id, String email, String name, String password, String phoneNr) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.email = email;
+        this.name = name;
+        this.password = password;
         this.phoneNr = phoneNr;
         this.encounters = new ArrayList<>();
         this.observations = new ArrayList<>();

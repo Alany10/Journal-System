@@ -54,17 +54,17 @@ public class DiagnosService implements IDiagnosService {
     }
 
     @Override
-    public List<Diagnos> getAllDiagnosesByPatient(Patient patient) {
-        if (patient == null) throw new IllegalStateException("Patient is null");
+    public List<Diagnos> getAllDiagnosesByPatient(int patientId) {
+        if (patientId <= 0) throw new IllegalStateException("Patient is null");
 
-        return diagnosRepository.findByPatient_Id(patient.getId());
+        return diagnosRepository.findByPatient_Id(patientId);
     }
 
     @Override
-    public List<Diagnos> getAllDiagnosesByPractitioner(Practitioner practitioner) {
-        if (practitioner == null) throw new IllegalStateException("Practitioner is null");
+    public List<Diagnos> getAllDiagnosesByPractitioner(int practitionerId) {
+        if (practitionerId <= 0) throw new IllegalStateException("Practitioner is null");
 
-        return diagnosRepository.findByPractitioner_Id(practitioner.getId());
+        return diagnosRepository.findByPractitioner_Id(practitionerId);
     }
 
     @Override

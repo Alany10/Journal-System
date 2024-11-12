@@ -57,17 +57,17 @@ public class EncounterService implements IEncounterService {
         encounterRepository.deleteById(id);
     }
 
-    public List<Encounter> getAllEncountersByPatient(Patient patient){
-        if (patient == null) throw new IllegalStateException("Patient is null");
+    public List<Encounter> getAllEncountersByPatientId(int patientId){
+        if (patientId <= 0) throw new IllegalStateException("Patient is null");
 
-        return encounterRepository.findByPatient_Id(patient.getId());
+        return encounterRepository.findByPatient_Id(patientId);
     }
 
 
-    public List<Encounter> getAllEncountersByPractitioner(Practitioner practitioner){
-        if (practitioner == null) throw new IllegalStateException("Practitioner is null");
+    public List<Encounter> getAllEncountersByPractitionerId(int practitionerID){
+        if (practitionerID <= 0) throw new IllegalStateException("Practitioner is null");
 
-        return encounterRepository.findByPractitioner_Id(practitioner.getId());
+        return encounterRepository.findByPractitioner_Id(practitionerID);
     }
 
     @Override

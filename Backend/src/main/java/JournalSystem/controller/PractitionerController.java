@@ -2,6 +2,8 @@ package JournalSystem.controller;
 
 import JournalSystem.model.Practitioner;
 import JournalSystem.model.Role;
+import JournalSystem.model.login.LoginRequest;
+import JournalSystem.model.login.LoginResponse;
 import JournalSystem.service.interfaces.IPractitionerService;
 import JournalSystem.viewModel.PractitionerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/practitioner")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class PractitionerController {
 
     private final IPractitionerService practitionerService;
@@ -27,17 +30,12 @@ public class PractitionerController {
     private PractitionerDTO convertToDTO(Practitioner practitioner) {
         return new PractitionerDTO(
                 practitioner.getId(),
-                practitioner.getFirstName(),
-                practitioner.getLastName(),
+                practitioner.getEmail(),
+                practitioner.getName(),
+                practitioner.getPassword(),
                 practitioner.getPhoneNr(),
                 practitioner.getRole().toString()
         );
-    }
-
-    private List<PractitionerDTO> convertToDTOList(List<Practitioner> practitioners) {
-        return practitioners.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
     }
 
     @GetMapping("/getAll")
@@ -66,36 +64,37 @@ public class PractitionerController {
 
     @PostMapping("/create")
     public ResponseEntity<PractitionerDTO> createPractitioner(@RequestBody PractitionerDTO practitionerDTO) {
-        if (practitionerDTO.getFirstName() == null ||
-                practitionerDTO.getLastName() == null ||
+        if (practitionerDTO.getEmail() == null ||
+                practitionerDTO.getName() == null ||
+                practitionerDTO.getPassword() == null ||
                 practitionerDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        else {
-            Practitioner practitioner = new Practitioner(practitionerDTO.getFirstName(),
-                    practitionerDTO.getLastName(),
+
+        Practitioner practitioner = new Practitioner(practitionerDTO.getEmail(),
+                    practitionerDTO.getName(),
+                    practitionerDTO.getPassword(),
                     practitionerDTO.getPhoneNr(),
-                    Role.valueOf(practitionerDTO.getRole())
+                    Role.valueOf(practitionerDTO.getRole().toUpperCase())
                     );
 
-            Practitioner createdPractitioner = practitionerService.createPractitioner(practitioner);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdPractitioner));
-        }
+        Practitioner createdPractitioner = practitionerService.createPractitioner(practitioner);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdPractitioner));
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<PractitionerDTO> updatePractitioner(@PathVariable int id, @RequestBody PractitionerDTO practitionerDTO) {
-        if (practitionerDTO.getFirstName() == null ||
-                practitionerDTO.getLastName() == null ||
-                practitionerDTO.getPhoneNr() == null ||
-                practitionerDTO.getRole() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (practitionerDTO.getEmail() == null ||
+                practitionerDTO.getName() == null ||
+                practitionerDTO.getPassword() == null ||
+                practitionerDTO.getPhoneNr() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        //TODO
         Practitioner updatedPractitioner = practitionerService.updatePractitioner(id, new Practitioner(
                 id,
-                practitionerDTO.getFirstName(),
-                practitionerDTO.getLastName(),
+                practitionerDTO.getEmail(),
+                practitionerDTO.getName(),
+                practitionerDTO.getPassword(),
                 practitionerDTO.getPhoneNr(),
-                Role.valueOf(practitionerDTO.getRole())
+                Role.valueOf(practitionerDTO.getRole().toUpperCase())
         ));
 
         if (updatedPractitioner != null) {
@@ -112,6 +111,17 @@ public class PractitionerController {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        boolean loginSuccessful = practitionerService.verifyLogin(request.getEmail(), request.getPassword());
+        if (loginSuccessful) {
+            int practitionerId = practitionerService.getIdByEmail(request.getEmail()); // Assuming you have a method to retrieve the ID
+            return ResponseEntity.ok(new LoginResponse("Login successful", practitionerId));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Invalid email or password"));
         }
     }
 }
