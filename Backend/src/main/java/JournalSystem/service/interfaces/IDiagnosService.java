@@ -1,6 +1,7 @@
 package JournalSystem.service.interfaces;
 
 import JournalSystem.model.Diagnos;
+import JournalSystem.model.DiagnosStatus;
 import JournalSystem.model.Patient;
 import JournalSystem.model.Practitioner;
 
@@ -11,6 +12,7 @@ public interface IDiagnosService {
     Diagnos getDiagnosById(int id);
     Diagnos createDiagnos(Diagnos diagnos);
     Diagnos updateDiagnos(int id, Diagnos diagnos);
+    Diagnos establishDiagnos(int id, Diagnos diagnos);
     void deleteDiagnos(int id);
     List<Diagnos> getAllDiagnosesByPatient(int patientId);
     List<Diagnos> getAllDiagnosesByPractitioner(int practitionerId);

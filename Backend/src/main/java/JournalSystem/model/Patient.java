@@ -23,10 +23,16 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",updatable = false)
     private int id;
-    @Column(name = "first_name",nullable = false, columnDefinition = "TEXT")
-    private String firstName;
-    @Column(name = "last_name",nullable = false, columnDefinition = "TEXT")
-    private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true, columnDefinition = "TEXT")
+    private String email;
+
+    @Column(name = "name",nullable = false, columnDefinition = "TEXT")
+    private String name;
+
+    @Column(name = "password",nullable = false, columnDefinition = "TEXT")
+    private String password;
+
     @Column(name = "phone_nr",nullable = false, columnDefinition = "TEXT")
     private String phoneNr;
 
@@ -39,32 +45,27 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Diagnos> diagnoses;
 
-    public Patient(int id, String firstName, String lastName, String phoneNr) {
+    public Patient(int id, String email, String name, String password, String phoneNr) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.email = email;
+        this.name = name;
+        this.password = password;
         this.phoneNr = phoneNr;
         this.encounters = new ArrayList<>();
         this.observations = new ArrayList<>();
         this.diagnoses = new ArrayList<>();
     }
 
-    public Patient(String firstName, String lastName, String phoneNr) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Patient(String email, String name, String password, String phoneNr) {
+        this.email = email;
+        this.name = name;
         this.phoneNr = phoneNr;
+        this.password = password;
         this.encounters = new ArrayList<>();
         this.observations = new ArrayList<>();
         this.diagnoses = new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return "Patient { " +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                " }";
-    }
+
 }
 

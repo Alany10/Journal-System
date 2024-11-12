@@ -56,4 +56,13 @@ public class Diagnos {
         this.practitioner = practitioner;
         this.observations = new ArrayList<>();
     }
+
+    public Diagnos(int id, String name, DiagnosStatus status, Patient patient, Practitioner practitioner) {
+        this.id = id;
+        this.name = name;
+        this.diagnosStatus = status;
+        this.patient = patient;
+        this.practitioner = practitioner;
+        this.observations = new ArrayList<>();
+    }
 }

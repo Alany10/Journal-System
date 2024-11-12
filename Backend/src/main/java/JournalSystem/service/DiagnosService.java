@@ -1,6 +1,7 @@
 package JournalSystem.service;
 
 import JournalSystem.model.Diagnos;
+import JournalSystem.model.DiagnosStatus;
 import JournalSystem.model.Patient;
 import JournalSystem.model.Practitioner;
 import JournalSystem.repository.IDiagnosRepository;
@@ -8,6 +9,8 @@ import JournalSystem.service.interfaces.IDiagnosService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class DiagnosService implements IDiagnosService {
 
@@ -38,6 +41,14 @@ public class DiagnosService implements IDiagnosService {
 
     @Override
     public Diagnos updateDiagnos(int id, Diagnos diagnos) {
+        if (!diagnosRepository.existsById(id)) throw new IllegalArgumentException("Diagnos with id " + id + " does not exist");
+
+        diagnos.setId(id);
+        return diagnosRepository.save(diagnos);
+    }
+
+    @Override
+    public Diagnos establishDiagnos(int id, Diagnos diagnos){
         if (!diagnosRepository.existsById(id)) throw new IllegalArgumentException("Diagnos with id " + id + " does not exist");
 
         diagnos.setId(id);

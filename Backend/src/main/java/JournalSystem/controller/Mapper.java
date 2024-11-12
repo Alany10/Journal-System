@@ -34,8 +34,9 @@ public class Mapper {
 
         return new PatientDTO(
                 patient.getId(),
-                patient.getFirstName(),
-                patient.getLastName(),
+                patient.getEmail(),
+                patient.getName(),
+                patient.getPassword(),
                 patient.getPhoneNr(),
                 encounterDTOs,
                 observationDTOs,

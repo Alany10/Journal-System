@@ -15,18 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 public class PractitionerDTO {
     private int id;
-    private String firstName;
-    private String lastName;
+    private String email;
+    private String name;
+    private String password;
     private String phoneNr;
     private String role;
     private List<EncounterDTO> encounters;
     private List<ObservationDTO> observations;
     private List<DiagnosDTO> diagnoses;
 
-    public PractitionerDTO(int id, String firstName, String lastName, String phoneNr, String role) {
+    public PractitionerDTO(int id, String email, String name, String password, String phoneNr, String role) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.email = email;
+        this.name = name;
+        this.password = password;
         this.phoneNr = phoneNr;
         this.role = role;
         this.encounters = new ArrayList<>();
