@@ -36,7 +36,7 @@ const Login = ({ setUser }) => {
             }
 
         } catch (error) {
-            setError('Invalid email, password or role');
+            setError('Invalid email or password');
         }
     };
 
@@ -63,7 +63,7 @@ const Login = ({ setUser }) => {
                     />
                 </div>
                 <div>
-                    <label>Role:</label>
+                    <label>User Type:</label>
                     <select value={userType} onChange={(e) => setUserType(e.target.value)}>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
