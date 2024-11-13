@@ -55,6 +55,11 @@ public class MessageController {
 
     @PostMapping("/create")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO) {
+        System.out.println(messageDTO.getTitle());
+        System.out.println(messageDTO.getText());
+        System.out.println(messageDTO.getSender());
+        System.out.println(messageDTO.getPatientId());
+        System.out.println(messageDTO.getPractitionerId());
         if (messageDTO.getTitle() == null ||
                 messageDTO.getText() == null ||
                 messageDTO.getPatientId() < 0 ||
@@ -110,6 +115,7 @@ public class MessageController {
 
     @PutMapping("/read/{id}")
     public ResponseEntity<MessageDTO> readMessage(@PathVariable int id) {
+        System.out.println(id);
         Message message = messageService.getMessageById(id);
 
         Patient patient = patientService.getPatientById(message.getPatient().getId());

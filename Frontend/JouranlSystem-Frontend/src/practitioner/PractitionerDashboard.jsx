@@ -55,6 +55,10 @@ const PractitionerDashboard = () => {
                     <button onClick={handleViewPatients}>View Patients</button>
                 </div>
             )}
+            <div>
+                <button onClick={handleMessage}>Message Dashboard</button>
+            </div>
+
         </div>
     );
 };
