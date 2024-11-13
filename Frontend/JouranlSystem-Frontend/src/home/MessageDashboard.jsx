@@ -157,6 +157,7 @@ const MessageDashboard = () => {
         }
     };
 
+
     // Hantera när ett meddelande är valt för att visa hela innehållet
     const handleViewMessageDetails = async (message) => {
         setSelectedMessage(message);
