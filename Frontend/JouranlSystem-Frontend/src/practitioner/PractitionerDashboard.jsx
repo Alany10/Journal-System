@@ -33,6 +33,10 @@ const PractitionerDashboard = () => {
         navigate('/view-patients');
     };
 
+    const handleMessage = () => {
+        navigate('/message');
+    };
+
     return (
         <div>
             <h2>Welcome to the Practitioner Dashboard</h2>

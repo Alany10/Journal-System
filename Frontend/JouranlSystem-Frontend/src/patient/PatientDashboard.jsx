@@ -17,6 +17,10 @@ const PatientDashboard = () => {
         navigate('/view-details');
     };
 
+    const handleMessage = () => {
+        navigate('/message');
+    };
+
     return (
         <div>
             <h2>Welcome to the Patient Dashboard</h2>
@@ -25,6 +29,9 @@ const PatientDashboard = () => {
                     <button onClick={handleViewDetails}>View Details</button>
                 </div>
             )}
+            <div>
+                <button onClick={handleMessage}>Message Dashboard</button>
+            </div>
         </div>
     );
 };
