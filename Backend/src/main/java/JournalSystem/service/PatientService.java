@@ -1,6 +1,7 @@
 package JournalSystem.service;
 
 import JournalSystem.model.Patient;
+import JournalSystem.model.Role;
 import JournalSystem.repository.IPatientRepository;
 import JournalSystem.service.interfaces.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,8 @@ public class PatientService implements IPatientService {
         return patientRepository.existsById(id);
     }
 
-    public boolean verifyLogin(String email, String password) {
+    public boolean verifyLogin(String email, String password, Role role) {
+        if (role != Role.PATIENT) return false;
         Optional<Patient> patientOptional = patientRepository.findByEmailAndPassword(email, password);
         return patientOptional.isPresent();
     }

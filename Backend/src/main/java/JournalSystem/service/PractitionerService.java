@@ -1,7 +1,7 @@
 package JournalSystem.service;
 
-import JournalSystem.model.Patient;
 import JournalSystem.model.Practitioner;
+import JournalSystem.model.Role;
 import JournalSystem.repository.IPractitionerRepository;
 import JournalSystem.service.interfaces.IPractitionerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +54,8 @@ public class PractitionerService implements IPractitionerService {
         return practitionerRepository.existsById(id);
     }
 
-    public boolean verifyLogin(String email, String password) {
-        Optional<Practitioner> practitionerOptional = practitionerRepository.findByEmailAndPassword(email, password);
+    public boolean verifyLogin(String email, String password, Role role) {
+        Optional<Practitioner> practitionerOptional = practitionerRepository.findByEmailAndPasswordAndRole(email, password, role);
         return practitionerOptional.isPresent();
     }
 

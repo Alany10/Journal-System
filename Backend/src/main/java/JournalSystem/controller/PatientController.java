@@ -1,10 +1,13 @@
 package JournalSystem.controller;
 
+import JournalSystem.model.Practitioner;
+import JournalSystem.model.Role;
 import JournalSystem.model.login.LoginRequest;
 import JournalSystem.model.login.LoginResponse;
 import JournalSystem.viewModel.PatientDTO;
 import JournalSystem.model.Patient;
 import JournalSystem.service.interfaces.IPatientService;
+import JournalSystem.viewModel.PractitionerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +59,7 @@ public class PatientController {
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable int id) {
         Patient patient = patientService.getPatientById(id);
         if (patient != null) {
-            return ResponseEntity.ok(convertToDTO(patient));
+            return ResponseEntity.ok(Mapper.convertToDTO(patient));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -103,6 +106,7 @@ public class PatientController {
         }
     }
 
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable int id) {
         if (id >= 0 && patientService.existsById(id)) {
@@ -115,7 +119,7 @@ public class PatientController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        boolean loginSuccessful = patientService.verifyLogin(request.getEmail(), request.getPassword());
+        boolean loginSuccessful = patientService.verifyLogin(request.getEmail(), request.getPassword(), Role.valueOf(request.getRole().toUpperCase()));
         if (loginSuccessful) {
             int patientId = patientService.getIdByEmail(request.getEmail()); // Assuming you have a method to retrieve the ID
             return ResponseEntity.ok(new LoginResponse("Login successful", patientId));

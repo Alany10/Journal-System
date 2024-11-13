@@ -40,7 +40,8 @@ public class Mapper {
                 patient.getPhoneNr(),
                 encounterDTOs,
                 observationDTOs,
-                diagnosDTOs);
+                diagnosDTOs
+        );
     }
 
     public static EncounterDTO convertToDTO(Encounter encounter) {

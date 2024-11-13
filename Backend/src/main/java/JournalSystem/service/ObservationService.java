@@ -71,6 +71,13 @@ public class ObservationService implements IObservationService {
     }
 
     @Override
+    public List<Observation> getAllObservationsByDiagnos(int diagnosId) {
+        if (diagnosId <= 0) throw new IllegalStateException("Patient is null");
+
+        return observationRepository.findByDiagnos_Id(diagnosId);
+    }
+
+    @Override
     public boolean existsById(int id) {
         return observationRepository.existsById(id);
     }

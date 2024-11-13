@@ -15,5 +15,6 @@ public interface IObservationService {
     void deleteObservation(int id);
     List<Observation> getAllObservationsByPatient(Patient patient);
     List<Observation> getAllObservationsByPractitioner(Practitioner practitioner);
+    List<Observation> getAllObservationsByDiagnos(int diagnosId);
     boolean existsById(int id);
 }

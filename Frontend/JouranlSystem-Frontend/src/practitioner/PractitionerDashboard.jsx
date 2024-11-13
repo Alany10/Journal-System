@@ -1,12 +1,20 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom'; // För navigering till andra sidor
+import React, { useState, useEffect } from 'react';
 
 const PractitionerDashboard = () => {
     const navigate = useNavigate(); // För att hantera navigeringen
+    const [userRole, setUserRole] = useState(null); // State för att lagra användarens roll
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            setUserRole(user.role);
+        }
+    }, []); // Lägg till ett tomt beroende för att köra detta bara vid mount
 
     // Funktioner för att navigera till de respektive sidorna
     const handleCreateDiagnos = () => {
-        navigate('/create-diagnos'); // Omdirigerar till en sida för att skapa diagnos
+        navigate('/create-diagnos');
     };
 
     const handleCreateEncounter = () => {
@@ -21,6 +29,9 @@ const PractitionerDashboard = () => {
         navigate('/establish-diagnos');
     };
 
+    const handleViewPatients = () => {
+        navigate('/view-patients');
+    };
 
     return (
         <div>
@@ -37,6 +48,13 @@ const PractitionerDashboard = () => {
             <div>
                 <button onClick={handleEstablishDiagnos}>Establish Diagnosis</button>
             </div>
+
+            {/* Visa "View Patients" om användaren är DOCTOR */}
+            {userRole === 'doctor' && (
+                <div>
+                    <button onClick={handleViewPatients}>View Patients</button>
+                </div>
+            )}
         </div>
     );
 };

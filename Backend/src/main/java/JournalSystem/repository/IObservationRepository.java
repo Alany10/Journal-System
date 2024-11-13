@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface IObservationRepository extends JpaRepository<Observation, Integer> {
-    List<Observation> findByPatient_Id(int patientId);
+    List<Observation> findByPatient_Id(int patient_id);
     List<Observation> findByPractitioner_Id(int practitioner_id);
+    List<Observation> findByDiagnos_Id(int diagnos_id);
 }

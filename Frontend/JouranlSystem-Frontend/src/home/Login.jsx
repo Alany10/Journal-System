@@ -17,7 +17,7 @@ const Login = ({ setUser }) => {
 
         try {
             const url = userType === 'patient' ? '/patient/login' : '/practitioner/login';
-            const response = await axios.post(url, { email, password });
+            const response = await axios.post(url, { email: email, password: password , role: userType});
 
             const user = {
                 id: response.data.id,
@@ -25,8 +25,8 @@ const Login = ({ setUser }) => {
             };
 
             // Uppdatera användardatan i App.js
-                                                                          setUser(user);
-                                                                          localStorage.setItem('user', JSON.stringify(user))
+            setUser(user);
+            localStorage.setItem('user', JSON.stringify(user))
 
             // Omdirigera användaren till rätt dashboard
             if (user.role === 'patient') {
@@ -36,7 +36,7 @@ const Login = ({ setUser }) => {
             }
 
         } catch (error) {
-            setError('Invalid email or password');
+            setError('Invalid email, password or role');
         }
     };
 
@@ -63,10 +63,11 @@ const Login = ({ setUser }) => {
                     />
                 </div>
                 <div>
-                    <label>User Type:</label>
+                    <label>Role:</label>
                     <select value={userType} onChange={(e) => setUserType(e.target.value)}>
                         <option value="patient">Patient</option>
-                        <option value="practitioner">Practitioner</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
                 <button type="submit">Login</button>

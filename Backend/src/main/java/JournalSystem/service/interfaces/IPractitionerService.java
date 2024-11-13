@@ -1,6 +1,7 @@
 package JournalSystem.service.interfaces;
 
 import JournalSystem.model.Practitioner;
+import JournalSystem.model.Role;
 
 import java.util.List;
 
@@ -11,6 +12,6 @@ public interface IPractitionerService {
     Practitioner updatePractitioner(int id, Practitioner practitioner);
     void deletePractitioner(int id);
     boolean existsById(int id);
-    boolean verifyLogin(String email, String password);
+    boolean verifyLogin(String email, String password, Role role);
     int getIdByEmail(String email);
 }

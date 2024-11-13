@@ -25,11 +25,8 @@ const EstablishDiagnos = () => {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Förhindrar standardbeteendet för formuläret
         setError(null); // Återställer eventuella tidigare fel
-
-
         try {
-            // Skickar status som text till servern
-            await axios.put(`/diagnos/establish/${diagnosId}`, status); // Här skickas status som en text
+            await axios.put(`/diagnos/establish/${diagnosId}`, status);
             alert("Diagnosis established successfully!");
         } catch (err) {
             setError("Error establishing diagnosis");

@@ -6,6 +6,7 @@ import JournalSystem.service.interfaces.IObservationService;
 import JournalSystem.service.interfaces.IPatientService;
 import JournalSystem.service.interfaces.IPractitionerService;
 import JournalSystem.service.interfaces.IDiagnosService;
+import JournalSystem.viewModel.DiagnosDTO;
 import JournalSystem.viewModel.ObservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -113,6 +114,23 @@ public class ObservationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @GetMapping("/getAllByDiagnos/{diagnosId}")
+    public List<ObservationDTO> getAllObservationsByDiagnos(@PathVariable int diagnosId) {
+        if (!diagnosService.existsById(diagnosId)) throw new IllegalArgumentException("No Diagnos With Id: " + diagnosId);
+
+        List<Observation> observations = observationService.getAllObservationsByDiagnos(diagnosId);
+        if (observations != null) {
+            List<ObservationDTO> observationDTOs = new ArrayList<>();
+            for (Observation observation : observations){
+                observationDTOs.add(Mapper.convertToDTO(observation));
+            }
+            return observationDTOs;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteObservation(@PathVariable int id) {

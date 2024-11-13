@@ -116,7 +116,7 @@ public class PractitionerController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        boolean loginSuccessful = practitionerService.verifyLogin(request.getEmail(), request.getPassword());
+        boolean loginSuccessful = practitionerService.verifyLogin(request.getEmail(), request.getPassword(), Role.valueOf(request.getRole().toUpperCase()));
         if (loginSuccessful) {
             int practitionerId = practitionerService.getIdByEmail(request.getEmail()); // Assuming you have a method to retrieve the ID
             return ResponseEntity.ok(new LoginResponse("Login successful", practitionerId));

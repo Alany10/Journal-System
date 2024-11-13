@@ -110,8 +110,8 @@ public class DiagnosController {
 
     @PutMapping("/establish/{id}") // TODO
     public ResponseEntity<DiagnosDTO> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus) {
-        System.out.println(id + " "+ diagnosStatus);
         if (diagnosStatus == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        String cleanedStatus = diagnosStatus.replace("\"", "").trim().toUpperCase();
 
         Diagnos diagnos = diagnosService.getDiagnosById(id);
 
@@ -125,7 +125,7 @@ public class DiagnosController {
         Diagnos updatedDiagnos = diagnosService.updateDiagnos(id, new Diagnos(
                 id,
                 diagnos.getName(),
-                DiagnosStatus.valueOf(diagnosStatus.toUpperCase()),
+                DiagnosStatus.valueOf(cleanedStatus.toUpperCase()),
                 patient,
                 practitioner
         ));
@@ -156,7 +156,7 @@ public class DiagnosController {
 
     @GetMapping("/getAllByPractitioner/{practitionerId}")
     public List<DiagnosDTO> getAllDiagnosesByPractitioner(@PathVariable int practitionerId) {
-        if (!patientService.existsById(practitionerId)) throw new IllegalArgumentException("No Pactitioner With Id: " + practitionerId);
+        if (!practitionerService.existsById(practitionerId)) throw new IllegalArgumentException("No Pactitioner With Id: " + practitionerId);
 
         List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPractitioner(practitionerId);
         if (diagnoses != null) {
