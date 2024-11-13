@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // För att hämta ID från URL
-import axios from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import axios from "./AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const DiagnosDetails = () => {
     const { id } = useParams();  // Hämta diagnos-id från URL-parametrar

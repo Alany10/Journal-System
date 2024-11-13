@@ -20,6 +20,7 @@ public class Encounter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",updatable = false)
     private int id;
+
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 

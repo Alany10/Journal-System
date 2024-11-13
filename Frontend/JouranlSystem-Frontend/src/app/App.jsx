@@ -11,7 +11,8 @@ import CreateObservation from "../practitioner/CreateObservation.jsx";
 import EstablishDiagnos from "../practitioner/EstablishDiagnos.jsx";
 import ViewPatients from "../practitioner/ViewPatients.jsx";
 import PatientDetails from "../practitioner/PatientDetails.jsx";
-import DiagnosDetails from "../practitioner/DiagnosDetails.jsx";
+import DiagnosDetails from "../home/DiagnosDetails.jsx";
+import ViewDetails from "../patient/ViewDetails.jsx";
 
 function App() {
     const [user, setUser] = useState(null); // Skapa en state för användaren (null betyder inte inloggad)
@@ -35,9 +36,8 @@ function App() {
                         path="/practitioner/dashboard"
                         element={user && (user.role === 'doctor' ||  user.role === 'other') ? <PractitionerDashboard /> : <Login setUser={setUser} />}
                     />
-
-                    {/* Registreringssidan */}
                     <Route path="/register" element={<Register />} />
+
                     <Route path="/create-diagnos" element={<CreateDiagnos />} />
                     <Route path="/create-encounter" element={<CreateEncounter />} />
                     <Route path="/create-observation" element={<CreateObservation />} />
@@ -45,6 +45,8 @@ function App() {
                     <Route path="/view-patients" element={<ViewPatients />} />
                     <Route path="/patient-details/:id" element={<PatientDetails />} />
                     <Route path="/diagnos-details/:id" element={<DiagnosDetails />} />
+                    <Route path="/view-details/" element={<ViewDetails />} />
+
 
                 </Routes>
             </div>

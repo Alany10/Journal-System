@@ -2,6 +2,7 @@ package JournalSystem.controller;
 
 import JournalSystem.model.Encounter;
 import JournalSystem.model.Observation;
+import JournalSystem.model.Message;
 import JournalSystem.model.Patient;
 import JournalSystem.model.Diagnos;
 import JournalSystem.model.Practitioner;
@@ -104,6 +105,19 @@ public class Mapper {
                 observation.getPractitioner().getId(),
                 observation.getEncounter().getId(),
                 observation.getDiagnos().getId()
+        );
+    }
+
+    public static MessageDTO convertToDTO(Message message) {
+        return new MessageDTO(
+                message.getId(),
+                message.getTitle(),
+                message.getText(),
+                message.getDateTime(),
+                message.getIsRead(),
+                message.getSender().toString(),
+                message.getPatient().getId(),
+                message.getPractitioner().getId()
         );
     }
 
