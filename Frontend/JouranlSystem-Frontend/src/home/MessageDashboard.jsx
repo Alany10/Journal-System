@@ -163,10 +163,10 @@ const MessageDashboard = () => {
         setSelectedMessage(message);
 
         // Kontrollera om användaren är samma som avsändaren
-        if (userRole === message.sender && userId === (message.sender === 'patient' ? message.patientId : message.practitionerId)) {
-            // Om användaren är samma som avsändaren, gör inget anrop för att markera som läst
-            return;
-        }
+        if (
+            (userRole === 'patient' && message.sender === 'PATIENT') ||
+            ((userRole === 'doctor' || userRole === 'other') && message.sender === 'PRACTITIONER')
+        ) return;
 
         // Skicka API-anrop för att markera meddelandet som läst
         try {
@@ -184,13 +184,14 @@ const MessageDashboard = () => {
     // Hantera skicka meddelande formulär
     const handleSendMessageSubmit = async (e) => {
         e.preventDefault();
+        alert(newMessage.recipientId);
 
         const messageDTO = {
             title: newMessage.title,
             text: newMessage.text,
-            sender: userRole,
-            patientId: userRole === 'patient' ? userId : newMessage.patientId,
-            practitionerId: userRole === 'patient' ? newMessage.practitionerId : userId,
+            sender: userRole === 'patient' ? userRole : 'practitioner',
+            patientId: userRole === 'patient' ? userId : newMessage.recipientId,
+            practitionerId: userRole === 'patient' ? newMessage.recipientId : userId,
         };
 
         try {
