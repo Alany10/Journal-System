@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>FullstackLab1</groupId>
-	<artifactId>JournalSystem</artifactId>
+	<artifactId>Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>JournalSystem</name>
 	<description>Demo project for Spring Boot</description>
