@@ -12,7 +12,7 @@ services:
     depends_on:
       - backend
     networks:
-      - journal_system_net
+      - journal-network
 
   backend:
     build:
@@ -27,25 +27,25 @@ services:
     depends_on:
       - db
     networks:
-      - journal_system_net
+      - journal-network
 
   db:
-    image: mysql:8.0
+    image: mysql:8.0.36
     environment:
       MYSQL_DATABASE: journalsystem
       MYSQL_USER: journal_user
       MYSQL_PASSWORD: journal321
-      MYSQL_ROOT_PASSWORD: rootpassword123
+      MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - journal_system_net
+      - journal-network
 
 volumes:
   mysql_data:
 
 networks:
-  journal_system_net:
+  journal-network:
     driver: bridge
