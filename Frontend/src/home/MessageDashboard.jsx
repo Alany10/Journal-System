@@ -184,7 +184,7 @@ const MessageDashboard = () => {
     // Hantera skicka meddelande formulär
     const handleSendMessageSubmit = async (e) => {
         e.preventDefault();
-        alert(newMessage.recipientId);
+
 
         const messageDTO = {
             title: newMessage.title,
@@ -200,6 +200,7 @@ const MessageDashboard = () => {
             setNewMessage({ title: '', text: '', recipientId: '' });
             handleViewAll(); // Uppdatera meddelandelistan
             setError(null);
+            alert("Message sent successfully!")
         } catch {
             setError("Failed to send message.");
         }
