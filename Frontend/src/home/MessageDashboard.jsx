@@ -45,18 +45,6 @@ const MessageDashboard = () => {
         }
     };
 
-    // Funktion för att hämta avsändarens och mottagarens namn baserat på roll
-    const fetchSenderAndReceiverNames = async (message) => {
-        try {
-            const senderName = await getUserName(message.sender, message.senderId);
-            const receiverName = await getUserName(message.receiver, message.receiverId);
-            return { senderName, receiverName };
-        } catch (error) {
-            console.error("Failed to fetch sender/receiver names", error);
-            return { senderName: "Unknown", receiverName: "Unknown" };
-        }
-    };
-
     // Hämta användarnamn baserat på roll och id
     const getUserName = async (role, userId) => {
         const endpoint = role === 'patient' ? `/patient/get/${userId}` : `/practitioner/get/${userId}`;
