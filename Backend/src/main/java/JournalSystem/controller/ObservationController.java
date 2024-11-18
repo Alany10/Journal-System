@@ -6,7 +6,6 @@ import JournalSystem.service.interfaces.IObservationService;
 import JournalSystem.service.interfaces.IPatientService;
 import JournalSystem.service.interfaces.IPractitionerService;
 import JournalSystem.service.interfaces.IDiagnosService;
-import JournalSystem.viewModel.DiagnosDTO;
 import JournalSystem.viewModel.ObservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

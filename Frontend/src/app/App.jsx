@@ -13,7 +13,6 @@ import ViewPatients from "../practitioner/ViewPatients.jsx";
 import PatientDetails from "../practitioner/PatientDetails.jsx";
 import DiagnosDetails from "../home/DiagnosDetails.jsx";
 import ViewDetails from "../patient/ViewDetails.jsx";
-import MassageDashboard from "../home/MessageDashboard.jsx";
 import MessageDashboard from "../home/MessageDashboard.jsx";
 
 function App() {

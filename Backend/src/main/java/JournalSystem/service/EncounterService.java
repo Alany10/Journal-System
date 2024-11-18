@@ -1,8 +1,6 @@
 package JournalSystem.service;
 
 import JournalSystem.model.Encounter;
-import JournalSystem.model.Patient;
-import JournalSystem.model.Practitioner;
 import JournalSystem.repository.IEncounterRepository;
 import JournalSystem.service.interfaces.IEncounterService;
 import org.springframework.beans.factory.annotation.Autowired;

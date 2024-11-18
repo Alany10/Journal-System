@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/practitioner")
@@ -25,17 +24,6 @@ public class PractitionerController {
     @Autowired
     public PractitionerController(IPractitionerService practitionerService) {
         this.practitionerService = practitionerService;
-    }
-
-    private PractitionerDTO convertToDTO(Practitioner practitioner) {
-        return new PractitionerDTO(
-                practitioner.getId(),
-                practitioner.getEmail(),
-                practitioner.getName(),
-                practitioner.getPassword(),
-                practitioner.getPhoneNr(),
-                practitioner.getRole().toString()
-        );
     }
 
     @GetMapping("/getAll")

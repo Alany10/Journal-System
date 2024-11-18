@@ -1,13 +1,11 @@
 package JournalSystem.controller;
 
-import JournalSystem.model.Practitioner;
 import JournalSystem.model.Role;
 import JournalSystem.model.login.LoginRequest;
 import JournalSystem.model.login.LoginResponse;
 import JournalSystem.viewModel.PatientDTO;
 import JournalSystem.model.Patient;
 import JournalSystem.service.interfaces.IPatientService;
-import JournalSystem.viewModel.PractitionerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patient")
@@ -27,16 +24,6 @@ public class PatientController {
     @Autowired
     public PatientController(IPatientService patientService) {
         this.patientService = patientService;
-    }
-
-    private PatientDTO convertToDTO(Patient patient) {
-        return new PatientDTO(
-                patient.getId(),
-                patient.getEmail(),
-                patient.getName(),
-                patient.getPassword(),
-                patient.getPhoneNr()
-        );
     }
 
     @GetMapping("/getAll")

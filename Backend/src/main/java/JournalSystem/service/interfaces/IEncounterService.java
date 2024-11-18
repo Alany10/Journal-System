@@ -1,8 +1,6 @@
 package JournalSystem.service.interfaces;
 
 import JournalSystem.model.Encounter;
-import JournalSystem.model.Practitioner;
-import JournalSystem.model.Patient;
 
 import java.util.List;
 

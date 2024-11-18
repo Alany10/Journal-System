@@ -1,9 +1,6 @@
 package JournalSystem.service.interfaces;
 
 import JournalSystem.model.Diagnos;
-import JournalSystem.model.DiagnosStatus;
-import JournalSystem.model.Patient;
-import JournalSystem.model.Practitioner;
 
 import java.util.List;
 

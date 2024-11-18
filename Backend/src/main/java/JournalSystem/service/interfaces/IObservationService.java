@@ -1,6 +1,5 @@
 package JournalSystem.service.interfaces;
 
-import JournalSystem.model.Encounter;
 import JournalSystem.model.Observation;
 import JournalSystem.model.Patient;
 import JournalSystem.model.Practitioner;

@@ -1,15 +1,11 @@
 package JournalSystem.service;
 
 import JournalSystem.model.Diagnos;
-import JournalSystem.model.DiagnosStatus;
-import JournalSystem.model.Patient;
-import JournalSystem.model.Practitioner;
 import JournalSystem.repository.IDiagnosRepository;
 import JournalSystem.service.interfaces.IDiagnosService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiagnosService implements IDiagnosService {

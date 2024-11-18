@@ -1,11 +1,9 @@
 package JournalSystem.controller;
 
 import JournalSystem.model.*;
-import JournalSystem.service.interfaces.IEncounterService;
 import JournalSystem.service.interfaces.IMessageService;
 import JournalSystem.service.interfaces.IPatientService;
 import JournalSystem.service.interfaces.IPractitionerService;
-import JournalSystem.viewModel.EncounterDTO;
 import JournalSystem.viewModel.MessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
