@@ -1,24 +1,24 @@
 package JournalSystem.controller;
 
-import JournalSystem.model.Encounter;
-import JournalSystem.model.Observation;
-import JournalSystem.model.Message;
-import JournalSystem.model.Patient;
-import JournalSystem.model.Diagnos;
-import JournalSystem.model.Practitioner;
+import JournalSystem.model.*;
 import JournalSystem.viewModel.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
-    public static PatientDTO convertToDTO(Patient patient){
-        List<Encounter> encounters = patient.getEncounters();
+
+    public static UserDTO convertToDTO(User user){
+
+        // Lista för encounters beroende på användarroll
+        List<Encounter> encounters = user.getRole() == Role.PATIENT ? user.getPatientEncounters() : user.getPractitionerEncounters();
         List<EncounterDTO> encounterDTOs = new ArrayList<>();
 
-        List<Observation> observations = patient.getObservations();
+        // Lista för observations beroende på användarroll
+        List<Observation> observations = user.getRole() == Role.PATIENT ? user.getPatientObservations() : user.getPractitionerObservations();
         List<ObservationDTO> observationDTOs = new ArrayList<>();
 
-        List<Diagnos> diagnoses = patient.getDiagnoses();
+        // Lista för diagnoser beroende på användarroll
+        List<Diagnos> diagnoses = user.getRole() == Role.PATIENT ? user.getPatientDiagnoses() : user.getPractitionerDiagnoses();
         List<DiagnosDTO> diagnosDTOs = new ArrayList<>();
 
         for (Encounter encounter: encounters){
@@ -33,12 +33,13 @@ public class Mapper {
             diagnosDTOs.add(convertToDTO(diagnos));
         }
 
-        return new PatientDTO(
-                patient.getId(),
-                patient.getEmail(),
-                patient.getName(),
-                patient.getPassword(),
-                patient.getPhoneNr(),
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getPassword(),
+                user.getPhoneNr(),
+                user.getRole().toString(),
                 encounterDTOs,
                 observationDTOs,
                 diagnosDTOs
@@ -59,41 +60,6 @@ public class Mapper {
                 encounter.getPatient().getId(),
                 encounter.getPractitioner().getId(),
                 observationDTOs
-        );
-    }
-
-    public static PractitionerDTO convertToDTO(Practitioner practitioner){
-        List<Encounter> encounters = practitioner.getEncounters();
-        List<EncounterDTO> encounterDTOs = new ArrayList<>();
-
-        List<Observation> observations = practitioner.getObservations();
-        List<ObservationDTO> observationDTOs = new ArrayList<>();
-
-        List<Diagnos> diagnoses = practitioner.getDiagnoses();
-        List<DiagnosDTO> diagnosDTOs = new ArrayList<>();
-
-        for (Encounter encounter: encounters){
-            encounterDTOs.add(convertToDTO(encounter));
-        }
-
-        for (Observation observation: observations){
-            observationDTOs.add(convertToDTO(observation));
-        }
-
-        for (Diagnos diagnos : diagnoses){
-            diagnosDTOs.add(convertToDTO(diagnos));
-        }
-
-        return new PractitionerDTO(
-                practitioner.getId(),
-                practitioner.getEmail(),
-                practitioner.getName(),
-                practitioner.getPassword(),
-                practitioner.getPhoneNr(),
-                practitioner.getRole().toString(),
-                encounterDTOs,
-                observationDTOs,
-                diagnosDTOs
         );
     }
 

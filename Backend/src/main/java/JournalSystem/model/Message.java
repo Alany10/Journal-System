@@ -35,17 +35,17 @@ public class Message {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sender", nullable = false)
-    private Sender sender;
+    private Role sender;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    private User patient;
 
     @ManyToOne
     @JoinColumn(name = "practitioner_id", nullable = false)
-    private Practitioner practitioner;
+    private User practitioner;
 
-    public Message(int id, String title, String text, Sender sender, Patient patient, Practitioner practitioner) {
+    public Message(int id, String title, String text, Role sender, User patient, User practitioner) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -56,7 +56,7 @@ public class Message {
         this.practitioner = practitioner;
     }
 
-    public Message(String title, String text, Sender sender, Patient patient, Practitioner practitioner) {
+    public Message(String title, String text, Role sender, User patient, User practitioner) {
         this.title = title;
         this.text = text;
         this.dateTime = LocalDateTime.now();

@@ -62,6 +62,7 @@ const EstablishDiagnos = () => {
                     >
                         <option value="">Select a status</option>
                         <option value="confirmed">Confirmed</option>
+                        <option value="ongoing">Ongoing</option>
                         <option value="off">Off</option>
                     </select>
                 </div>

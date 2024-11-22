@@ -26,8 +26,8 @@ const Register = () => {
         };
 
         try {
-            // Beroende på om användaren är patient eller practitioner (doctor eller other), gör ett POST-anrop till respektive API
-            const url = userType === 'patient' ? '/patient/create' : '/practitioner/create';
+            // Gör ett POST-anrop till respektive API
+            const url = '/user/create';
             const response = await axios.post(url, userData); // Skicka tillbaka skapade användaren
 
             // Efter lyckad registrering, omdirigera till login-sidan

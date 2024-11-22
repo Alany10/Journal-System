@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PractitionerDTO {
+public class UserDTO {
     private int id;
     private String email;
     private String name;
@@ -24,7 +24,7 @@ public class PractitionerDTO {
     private List<ObservationDTO> observations;
     private List<DiagnosDTO> diagnoses;
 
-    public PractitionerDTO(int id, String email, String name, String password, String phoneNr, String role) {
+    public UserDTO(int id, String email, String name, String password, String phoneNr, String role) {
         this.id = id;
         this.email = email;
         this.name = name;

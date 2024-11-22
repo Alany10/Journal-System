@@ -12,7 +12,7 @@ const ViewPatients = () => {
         // Hämta alla patienter när komponenten laddas
         const fetchPatients = async () => {
             try {
-                const response = await axios.get('/patient/getAll');
+                const response = await axios.get('/user/getAllPatients');
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");

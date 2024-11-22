@@ -1,6 +1,7 @@
 package JournalSystem.service.interfaces;
 
 import JournalSystem.model.Message;
+import JournalSystem.model.Role;
 
 import java.util.List;
 
@@ -11,14 +12,11 @@ public interface IMessageService {
     Message updateMessage(int id, Message message);
     void deleteMessage(int id);
 
-    List<Message> getAllUnreadReceivedByPatientId(int patientId);
-    List<Message> getAllUnreadReceivedByPractitionerId(int practitionerId);
+    List<Message> getAllReceivedById(int id, Role role);
 
-    List<Message> getAllSentByPatientId(int patientId);
-    List<Message> getAllSentByPractitionerId(int practitionerId);
+    List<Message> getAllUnreadById(int id, Role role);
 
-    List<Message> getAllReceivedByPatientId(int patientId);
-    List<Message> getAllReceivedByPractitionerId(int practitionerId);
+    List<Message> getAllSentById(int id, Role role);
 
     boolean existsById(int id);
 }

@@ -28,7 +28,7 @@ const MessageDashboard = () => {
     // Hämta alla praktiker om användaren är en patient
     const fetchPractitioners = async () => {
         try {
-            const response = await axios.get('/practitioner/getAll');
+            const response = await axios.get('/user/getAllPractitioners');
             setRecipients(response.data);
         } catch (error) {
             setError("Failed to fetch practitioners.");
@@ -38,7 +38,7 @@ const MessageDashboard = () => {
     // Hämta alla patienter om användaren är en praktiker
     const fetchPatients = async () => {
         try {
-            const response = await axios.get('/patient/getAll');
+            const response = await axios.get('/user/getAllPatients');
             setRecipients(response.data);
         } catch (error) {
             setError("Failed to fetch patients.");
@@ -46,8 +46,8 @@ const MessageDashboard = () => {
     };
 
     // Hämta användarnamn baserat på roll och id
-    const getUserName = async (role, userId) => {
-        const endpoint = role === 'patient' ? `/patient/get/${userId}` : `/practitioner/get/${userId}`;
+    const getUserName = async (userId) => {
+        const endpoint =  `/user/get/${userId}`;
         const response = await axios.get(endpoint);
         return response.data.name;
     };
@@ -56,9 +56,7 @@ const MessageDashboard = () => {
     const handleViewAll = async () => {
         try {
             setShowSendMessageForm(false); // Döljer formuläret
-            const endpoint = userRole === 'patient'
-                ? `/message/getAllReceivedByPatient/${userId}`
-                : `/message/getAllReceivedByPractitioner/${userId}`;
+            const endpoint = `/message/getAllReceived/${userId}`
             const response = await axios.get(endpoint);
 
             const messagesWithNames = await Promise.all(response.data.map(async (message) => {
@@ -66,11 +64,11 @@ const MessageDashboard = () => {
                 let receiverName = '';
 
                 if (message.sender === 'PATIENT') {
-                    senderName = await getUserName('patient', message.patientId);
-                    receiverName = await getUserName('practitioner', message.practitionerId);
+                    senderName = await getUserName(message.patientId);
+                    receiverName = await getUserName(message.practitionerId);
                 } else {
-                    senderName = await getUserName('practitioner', message.practitionerId);
-                    receiverName = await getUserName('patient', message.patientId);
+                    senderName = await getUserName(message.practitionerId);
+                    receiverName = await getUserName(message.patientId);
                 }
 
                 return { ...message, senderName, receiverName };
@@ -87,9 +85,7 @@ const MessageDashboard = () => {
     const handleViewUnread = async () => {
         try {
             setShowSendMessageForm(false);
-            const endpoint = userRole === 'patient'
-                ? `/message/getAllUnreadByPatient/${userId}`
-                : `/message/getAllUnreadByPractitioner/${userId}`;
+            const endpoint = `/message/getAllUnread/${userId}`;
             const response = await axios.get(endpoint);
 
             const messagesWithNames = await Promise.all(response.data.map(async (message) => {
@@ -97,11 +93,11 @@ const MessageDashboard = () => {
                 let receiverName = '';
 
                 if (message.sender === 'PATIENT') {
-                    senderName = await getUserName('patient', message.patientId);
-                    receiverName = await getUserName('practitioner', message.practitionerId);
+                    senderName = await getUserName(message.patientId);
+                    receiverName = await getUserName(message.practitionerId);
                 } else {
-                    senderName = await getUserName('practitioner', message.practitionerId);
-                    receiverName = await getUserName('patient', message.patientId);
+                    senderName = await getUserName(message.practitionerId);
+                    receiverName = await getUserName(message.patientId);
                 }
 
                 return { ...message, senderName, receiverName };
@@ -118,21 +114,19 @@ const MessageDashboard = () => {
     const handleViewSent = async () => {
         try {
             setShowSendMessageForm(false);
-            const endpoint = userRole === 'patient'
-                ? `/message/getAllSentByPatient/${userId}`
-                : `/message/getAllSentByPractitioner/${userId}`;
+            const endpoint = `/message/getAllSent/${userId}`;
             const response = await axios.get(endpoint);
 
             const messagesWithNames = await Promise.all(response.data.map(async (message) => {
                 let senderName = '';
                 let receiverName = '';
 
-                if (message.sender === '') {
-                    senderName = await getUserName('patient', message.patientId);
-                    receiverName = await getUserName('practitioner', message.practitionerId);
+                if (message.sender === 'PATIENT') {
+                    senderName = await getUserName(message.patientId);
+                    receiverName = await getUserName(message.practitionerId);
                 } else {
-                    senderName = await getUserName('practitioner', message.practitionerId);
-                    receiverName = await getUserName('patient', message.patientId);
+                    senderName = await getUserName(message.practitionerId);
+                    receiverName = await getUserName(message.patientId);
                 }
 
                 return { ...message, senderName, receiverName };
@@ -152,8 +146,7 @@ const MessageDashboard = () => {
 
         // Kontrollera om användaren är samma som avsändaren
         if (
-            (userRole === 'patient' && message.sender === 'PATIENT') ||
-            ((userRole === 'doctor' || userRole === 'other') && message.sender === 'PRACTITIONER')
+            (userRole.toUpperCase() === message.sender)
         ) return;
 
         // Skicka API-anrop för att markera meddelandet som läst
@@ -177,9 +170,9 @@ const MessageDashboard = () => {
         const messageDTO = {
             title: newMessage.title,
             text: newMessage.text,
-            sender: userRole === 'patient' ? userRole : 'practitioner',
+            sender: userRole,
             patientId: userRole === 'patient' ? userId : newMessage.recipientId,
-            practitionerId: userRole === 'patient' ? newMessage.recipientId : userId,
+            practitionerId: (userRole === 'doctor' || userRole === 'other') ? userId : newMessage.recipientId,
         };
 
         try {

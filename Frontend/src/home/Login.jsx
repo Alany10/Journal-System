@@ -16,7 +16,7 @@ const Login = ({ setUser }) => {
         setError(null);
 
         try {
-            const url = userType === 'patient' ? '/patient/login' : '/practitioner/login';
+            const url = '/user/login';
             const response = await axios.post(url, { email: email, password: password , role: userType});
 
             const user = {

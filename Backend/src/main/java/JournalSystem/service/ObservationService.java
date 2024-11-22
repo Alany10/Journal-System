@@ -1,8 +1,7 @@
 package JournalSystem.service;
 
 import JournalSystem.model.Observation;
-import JournalSystem.model.Patient;
-import JournalSystem.model.Practitioner;
+import JournalSystem.model.User;
 import JournalSystem.repository.IObservationRepository;
 import JournalSystem.service.interfaces.IObservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,14 +55,14 @@ public class ObservationService implements IObservationService {
     }
 
     @Override
-    public List<Observation> getAllObservationsByPatient(Patient patient) {
+    public List<Observation> getAllObservationsByPatient(User patient) {
         if (patient == null) throw new IllegalStateException("Patient is null");
 
         return observationRepository.findByPatient_Id(patient.getId());
     }
 
     @Override
-    public List<Observation> getAllObservationsByPractitioner(Practitioner practitioner) {
+    public List<Observation> getAllObservationsByPractitioner(User practitioner) {
         if (practitioner == null) throw new IllegalStateException("Practitioner is null");
 
         return observationRepository.findByPractitioner_Id(practitioner.getId());
@@ -71,7 +70,7 @@ public class ObservationService implements IObservationService {
 
     @Override
     public List<Observation> getAllObservationsByDiagnos(int diagnosId) {
-        if (diagnosId <= 0) throw new IllegalStateException("Patient is null");
+        if (diagnosId <= 0) throw new IllegalStateException("Diagnos is null");
 
         return observationRepository.findByDiagnos_Id(diagnosId);
     }

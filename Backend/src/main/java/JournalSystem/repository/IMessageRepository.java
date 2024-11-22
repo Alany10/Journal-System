@@ -1,7 +1,7 @@
 package JournalSystem.repository;
 
 import JournalSystem.model.Message;
-import JournalSystem.model.Sender;
+import JournalSystem.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,15 +9,21 @@ import java.util.List;
 
 @Repository
 public interface IMessageRepository extends JpaRepository<Message, Integer> {
-   // 1. Hämta meddelanden där patienten är avsändaren
-    List<Message> findByPatient_IdAndSender(int patientId, Sender sender);
+    // Hämta mottagna meddelanden för en patient från en lista av roller
+    List<Message> findByPatient_IdAndSenderIn(int patientId, List<Role> roles);
 
-    // 2. Hämta meddelanden där praktiker är avsändaren
-    List<Message> findByPractitioner_IdAndSender(int practitionerId, Sender sender);
+    // Hämta mottagna meddelanden för en praktiker från patienter
+    List<Message> findByPractitioner_IdAndSender(int practitionerId, Role role);
 
-    // 3. Hämta olästa meddelanden där patienten är avsändaren
-    List<Message> findByIsReadFalseAndPatient_IdAndSender(int patientId, Sender sender);
+    // Hämta olästa mottagna meddelanden för en patient från en lista av roller
+    List<Message> findByIsReadFalseAndPatient_IdAndSenderIn(int patientId, List<Role> roles);
 
-    // 4. Hämta olästa meddelanden där praktiker är avsändaren
-    List<Message> findByIsReadFalseAndPractitioner_IdAndSender(int practitionerId, Sender sender);
+    // Hämta olästa mottagna meddelanden för en praktiker från patienter
+    List<Message> findByIsReadFalseAndPractitioner_IdAndSender(int practitionerId, Role role);
+
+    // Hämta skickade meddelanden från en patient
+    List<Message> findByPatient_IdAndSender(int patientId, Role role);
+
+    // Hämta skickade meddelanden från en praktiker till roller (doktor eller annan)
+    List<Message> findByPractitioner_IdAndSenderIn(int practitionerId, List<Role> roles);
 }

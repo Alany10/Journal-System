@@ -21,7 +21,7 @@ const ViewDetails = () => {
         // Funktion för att hämta patientdetaljer baserat på id
         const fetchPatientDetails = async () => {
             try {
-                const response = await axios.get(`/patient/get/${id}`);
+                const response = await axios.get(`/user/get/${id}`);
                 setPatient(response.data);
             } catch (err) {
                 setError("Failed to load patient details");

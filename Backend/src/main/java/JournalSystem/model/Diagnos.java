@@ -31,16 +31,16 @@ public class Diagnos {
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    private User patient;
 
     @ManyToOne
     @JoinColumn(name = "practitioner_id", nullable = false)
-    private Practitioner practitioner;
+    private User practitioner;
 
     @OneToMany(mappedBy = "diagnos", cascade = CascadeType.ALL)
     private List<Observation> observations;
 
-    public Diagnos(int id, String name, Patient patient, Practitioner practitioner) {
+    public Diagnos(int id, String name, User patient, User practitioner) {
         this.id = id;
         this.name = name;
         this.diagnosStatus = DiagnosStatus.ONGOING;
@@ -49,7 +49,7 @@ public class Diagnos {
         this.observations = new ArrayList<>();
     }
 
-    public Diagnos(String name, Patient patient, Practitioner practitioner) {
+    public Diagnos(String name, User patient, User practitioner) {
         this.name = name;
         this.diagnosStatus = DiagnosStatus.ONGOING;
         this.patient = patient;
@@ -57,7 +57,7 @@ public class Diagnos {
         this.observations = new ArrayList<>();
     }
 
-    public Diagnos(int id, String name, DiagnosStatus status, Patient patient, Practitioner practitioner) {
+    public Diagnos(int id, String name, DiagnosStatus status, User patient, User practitioner) {
         this.id = id;
         this.name = name;
         this.diagnosStatus = status;

@@ -2,8 +2,7 @@ package JournalSystem.controller;
 
 import JournalSystem.model.*;
 import JournalSystem.service.interfaces.IEncounterService;
-import JournalSystem.service.interfaces.IPatientService;
-import JournalSystem.service.interfaces.IPractitionerService;
+import JournalSystem.service.interfaces.IUserService;
 import JournalSystem.viewModel.EncounterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +16,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class EncounterController {
     private final IEncounterService encounterService;
-    private final IPatientService patientService;
-    private final IPractitionerService practitionerService;
+    private final IUserService userService;
 
     @Autowired
-    public EncounterController(IEncounterService encounterService, IPatientService patientService, IPractitionerService practitionerService) {
+    public EncounterController(IEncounterService encounterService, IUserService userService) {
         this.encounterService = encounterService;
-        this.patientService = patientService;
-        this.practitionerService = practitionerService;
+        this.userService = userService;
     }
 
     @GetMapping("/getAll")
@@ -60,14 +57,14 @@ public class EncounterController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(encounterDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(encounterDTO.getPractitionerId());
+        User patient = userService.getPatientById(encounterDTO.getPatientId());
+        User user = userService.getPractitionerById(encounterDTO.getPractitionerId());
 
-        if (patient == null || practitioner == null) {
+        if (patient == null || user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Encounter encounter = new Encounter(encounterDTO.getDateTime(), patient, practitioner);
+        Encounter encounter = new Encounter(encounterDTO.getDateTime(), patient, user);
         Encounter createdEncounter = encounterService.createEncounter(encounter);
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdEncounter));
     }
@@ -79,16 +76,19 @@ public class EncounterController {
                 encounterDTO.getPractitionerId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Patient patient = patientService.getPatientById(encounterDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(encounterDTO.getPractitionerId());
-        if (patient == null || practitioner == null) {
+
+        User patient = userService.getPatientById(encounterDTO.getPatientId());
+        User user = userService.getPractitionerById(encounterDTO.getPractitionerId());
+
+        if (patient == null || user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
         Encounter updatedEncounter = encounterService.updateEncounter(id, new Encounter(
                 id,
                 encounterDTO.getDateTime(),
                 patient,
-                practitioner
+                user
         ));
         if (updatedEncounter != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedEncounter));
@@ -99,9 +99,10 @@ public class EncounterController {
 
     @GetMapping("/getAllByPatient/{patientId}")
     public List<EncounterDTO> getAllEncoutersByPatient(@PathVariable int patientId) {
-        if (!patientService.existsById(patientId)) throw new IllegalArgumentException("No Patient With Id: " + patientId);
+        if (userService.getPatientById(patientId) == null) throw new IllegalArgumentException("No Patient With Id: " + patientId);
 
         List<Encounter> encouters = encounterService.getAllEncountersByPatientId(patientId);
+
         if (encouters != null) {
             List<EncounterDTO> encouterDTOS = new ArrayList<>();
             for (Encounter encounter : encouters){
@@ -115,9 +116,10 @@ public class EncounterController {
 
     @GetMapping("/getAllByPractitioner/{practitionerId}")
     public List<EncounterDTO> getAllEncoutersByPractitioner(@PathVariable int practitionerId) {
-        if (!practitionerService.existsById(practitionerId)) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
+        if (userService.getPractitionerById(practitionerId) == null) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
 
         List<Encounter> encouters = encounterService.getAllEncountersByPractitionerId(practitionerId);
+
         if (encouters != null) {
             List<EncounterDTO> encouterDTOS = new ArrayList<>();
             for (Encounter encounter : encouters){

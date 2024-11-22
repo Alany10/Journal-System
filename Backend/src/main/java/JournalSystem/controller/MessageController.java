@@ -2,8 +2,7 @@ package JournalSystem.controller;
 
 import JournalSystem.model.*;
 import JournalSystem.service.interfaces.IMessageService;
-import JournalSystem.service.interfaces.IPatientService;
-import JournalSystem.service.interfaces.IPractitionerService;
+import JournalSystem.service.interfaces.IUserService;
 import JournalSystem.viewModel.MessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +16,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class MessageController {
     private final IMessageService messageService;
-    private final IPatientService patientService;
-    private final IPractitionerService practitionerService;
+    private final IUserService userService;
 
     @Autowired
-    public MessageController(IMessageService messageService, IPatientService patientService, IPractitionerService practitionerService) {
+    public MessageController(IMessageService messageService, IUserService userService) {
         this.messageService = messageService;
-        this.patientService = patientService;
-        this.practitionerService = practitionerService;
+        this.userService = userService;
     }
 
     @GetMapping("/getAll")
@@ -53,11 +50,6 @@ public class MessageController {
 
     @PostMapping("/create")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO) {
-        System.out.println(messageDTO.getTitle());
-        System.out.println(messageDTO.getText());
-        System.out.println(messageDTO.getSender());
-        System.out.println(messageDTO.getPatientId());
-        System.out.println(messageDTO.getPractitionerId());
         if (messageDTO.getTitle() == null ||
                 messageDTO.getText() == null ||
                 messageDTO.getPatientId() < 0 ||
@@ -65,14 +57,15 @@ public class MessageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(messageDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(messageDTO.getPractitionerId());
+        System.out.println(messageDTO.getPatientId() + " " + messageDTO.getPractitionerId());
+        User patient = userService.getPatientById(messageDTO.getPatientId());
+        User practitioner = userService.getPractitionerById(messageDTO.getPractitionerId());
 
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Message message = new Message(messageDTO.getTitle(), messageDTO.getText(), Sender.valueOf(messageDTO.getSender().toUpperCase()), patient, practitioner);
+        Message message = new Message(messageDTO.getTitle(), messageDTO.getText(), Role.valueOf(messageDTO.getSender().toUpperCase()), patient, practitioner);
         Message createdMessage = messageService.createMessage(message);
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdMessage));
     }
@@ -86,10 +79,10 @@ public class MessageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(messageDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(messageDTO.getPractitionerId());
+        User patient = userService.getPatientById(messageDTO.getPatientId());
+        User user = userService.getPractitionerById(messageDTO.getPractitionerId());
 
-        if (patient == null || practitioner == null) {
+        if (patient == null || user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -99,9 +92,9 @@ public class MessageController {
                 messageDTO.getText(),
                 messageDTO.getDateTime(),
                 messageDTO.getIsRead(),
-                Sender.valueOf(messageDTO.getSender().toUpperCase()),
+                Role.valueOf(messageDTO.getSender().toUpperCase()),
                 patient,
-                practitioner
+                user
         ));
 
         if (updatedMessage != null) {
@@ -113,11 +106,10 @@ public class MessageController {
 
     @PutMapping("/read/{id}")
     public ResponseEntity<MessageDTO> readMessage(@PathVariable int id) {
-        System.out.println(id);
         Message message = messageService.getMessageById(id);
 
-        Patient patient = patientService.getPatientById(message.getPatient().getId());
-        Practitioner practitioner = practitionerService.getPractitionerById(message.getPractitioner().getId());
+        User patient = userService.getPatientById(message.getPatient().getId());
+        User practitioner = userService.getPractitionerById(message.getPractitioner().getId());
 
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -129,7 +121,7 @@ public class MessageController {
                 message.getText(),
                 message.getDateTime(),
                 true,
-                Sender.valueOf(message.getSender().toString()),
+                Role.valueOf(message.getSender().toString()),
                 patient,
                 practitioner
         ));
@@ -141,11 +133,13 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/getAllSentByPatient/{patientId}")
-    public List<MessageDTO> getAllSentByPatient(@PathVariable int patientId) {
-        if (!patientService.existsById(patientId)) throw new IllegalArgumentException("No Patient With Id: " + patientId);
+    @GetMapping("/getAllReceived/{userId}")
+    public List<MessageDTO> getAllReceived(@PathVariable int userId) {
+        User user = userService.getUserById(userId);
+        if (user == null) throw new IllegalArgumentException("No Patient With Id: " + userId);
 
-        List<Message> messages = messageService.getAllSentByPatientId(patientId);
+        List<Message> messages = messageService.getAllReceivedById(user.getId(), user.getRole());
+
         if (messages != null) {
             List<MessageDTO> messageDTOs = new ArrayList<>();
             for (Message message : messages){
@@ -157,27 +151,13 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/getAllSentByPractitioner/{practitionerId}")
-    public List<MessageDTO> getAllSentByPractitioner(@PathVariable int practitionerId) {
-        if (!practitionerService.existsById(practitionerId)) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
+    @GetMapping("/getAllUnread/{userId}")
+    public List<MessageDTO> getAllUnread(@PathVariable int userId) {
+        User user = userService.getUserById(userId);
+        if (user == null) throw new IllegalArgumentException("No Patient With Id: " + userId);
 
-        List<Message> messages = messageService.getAllSentByPractitionerId(practitionerId);
-        if (messages != null) {
-            List<MessageDTO> messageDTOS = new ArrayList<>();
-            for (Message message : messages){
-                messageDTOS.add(Mapper.convertToDTO(message));
-            }
-            return messageDTOS;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+        List<Message> messages = messageService.getAllUnreadById(user.getId(), user.getRole());
 
-    @GetMapping("/getAllReceivedByPatient/{patientId}")
-    public List<MessageDTO> getAllreceivedByPatient(@PathVariable int patientId) {
-        if (!patientService.existsById(patientId)) throw new IllegalArgumentException("No Patient With Id: " + patientId);
-
-        List<Message> messages = messageService.getAllReceivedByPatientId(patientId);
         if (messages != null) {
             List<MessageDTO> messageDTOs = new ArrayList<>();
             for (Message message : messages){
@@ -189,49 +169,19 @@ public class MessageController {
         }
     }
 
-    @GetMapping("/getAllReceivedByPractitioner/{practitionerId}")
-    public List<MessageDTO> getAllReceivedByPractitioner(@PathVariable int practitionerId) {
-        if (!practitionerService.existsById(practitionerId)) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
+    @GetMapping("/getAllSent/{userId}")
+    public List<MessageDTO> getAllSent(@PathVariable int userId) {
+        User user = userService.getUserById(userId);
+        if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
 
-        List<Message> messages = messageService.getAllReceivedByPractitionerId(practitionerId);
-        if (messages != null) {
-            List<MessageDTO> messageDTOS = new ArrayList<>();
-            for (Message message : messages){
-                messageDTOS.add(Mapper.convertToDTO(message));
-            }
-            return messageDTOS;
-        } else {
-            return new ArrayList<>();
-        }
-    }
+        List<Message> messages = messageService.getAllSentById(user.getId(), user.getRole());
 
-    @GetMapping("/getAllUnreadByPatient/{patientId}")
-    public List<MessageDTO> getAllUnreadByPatient(@PathVariable int patientId) {
-        if (!patientService.existsById(patientId)) throw new IllegalArgumentException("No Patient With Id: " + patientId);
-
-        List<Message> messages = messageService.getAllUnreadReceivedByPatientId(patientId);
         if (messages != null) {
             List<MessageDTO> messageDTOs = new ArrayList<>();
             for (Message message : messages){
                 messageDTOs.add(Mapper.convertToDTO(message));
             }
             return messageDTOs;
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    @GetMapping("/getAllUnreadByPractitioner/{practitionerId}")
-    public List<MessageDTO> getAllUnreadByPractitioner(@PathVariable int practitionerId) {
-        if (!practitionerService.existsById(practitionerId)) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
-
-        List<Message> messages = messageService.getAllUnreadReceivedByPractitionerId(practitionerId);
-        if (messages != null) {
-            List<MessageDTO> messageDTOS = new ArrayList<>();
-            for (Message message : messages){
-                messageDTOS.add(Mapper.convertToDTO(message));
-            }
-            return messageDTOS;
         } else {
             return new ArrayList<>();
         }

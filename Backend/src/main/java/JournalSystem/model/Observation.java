@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "Observation")
-@Table(name = "observations")
+@Table(name = "observation")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,11 +24,11 @@ public class Observation {
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    private User patient;
 
     @ManyToOne
     @JoinColumn(name = "practitioner_id", nullable = false)
-    private Practitioner practitioner;
+    private User practitioner;
 
     @ManyToOne
     @JoinColumn(name = "encounter_id", nullable = false)
@@ -38,7 +38,7 @@ public class Observation {
     @JoinColumn(name = "diagnos_id", nullable = false)
     private Diagnos diagnos;
 
-    public Observation(String description, Patient patient, Practitioner practitioner, Encounter encounter, Diagnos diagnos) {
+    public Observation(String description, User patient, User practitioner, Encounter encounter, Diagnos diagnos) {
         this.description = description;
         this.patient = patient;
         this.practitioner = practitioner;

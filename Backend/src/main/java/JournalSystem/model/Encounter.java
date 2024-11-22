@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "Encounter")
-@Table(name = "encounters")
+@Table(name = "encounter")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,16 +26,16 @@ public class Encounter {
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    private User patient;
 
     @ManyToOne
     @JoinColumn(name = "practitioner_id", nullable = false)
-    private Practitioner practitioner;
+    private User practitioner;
 
     @OneToMany(mappedBy = "encounter", cascade = CascadeType.ALL)
     private List<Observation> observations;
 
-    public Encounter(int id, LocalDateTime dateTime, Patient patient, Practitioner practitioner) {
+    public Encounter(int id, LocalDateTime dateTime, User patient, User practitioner) {
         this.id = id;
         this.dateTime = dateTime;
         this.patient = patient;
@@ -43,12 +43,11 @@ public class Encounter {
         this.observations = new ArrayList<>();
     }
 
-    public Encounter(LocalDateTime dateTime, Patient patient, Practitioner practitioner) {
+    public Encounter(LocalDateTime dateTime, User patient, User practitioner) {
         this.dateTime = dateTime;
         this.patient = patient;
         this.practitioner = practitioner;
         this.observations = new ArrayList<>();
     }
-
 
 }

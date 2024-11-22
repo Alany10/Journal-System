@@ -1,8 +1,7 @@
 package JournalSystem.service.interfaces;
 
 import JournalSystem.model.Observation;
-import JournalSystem.model.Patient;
-import JournalSystem.model.Practitioner;
+import JournalSystem.model.User;
 
 import java.util.List;
 
@@ -12,8 +11,8 @@ public interface IObservationService {
     Observation createObservation(Observation observation);
     Observation updateObservation(int id, Observation observation);
     void deleteObservation(int id);
-    List<Observation> getAllObservationsByPatient(Patient patient);
-    List<Observation> getAllObservationsByPractitioner(Practitioner practitioner);
+    List<Observation> getAllObservationsByPatient(User patient);
+    List<Observation> getAllObservationsByPractitioner(User practitioner);
     List<Observation> getAllObservationsByDiagnos(int diagnosId);
     boolean existsById(int id);
 }

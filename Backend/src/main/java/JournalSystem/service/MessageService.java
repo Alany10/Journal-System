@@ -1,7 +1,7 @@
 package JournalSystem.service;
 
 import JournalSystem.model.Message;
-import JournalSystem.model.Sender;
+import JournalSystem.model.Role;
 import JournalSystem.repository.IMessageRepository;
 import JournalSystem.service.interfaces.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,34 +55,33 @@ public class MessageService implements IMessageService {
     }
 
     @Override
-    public List<Message> getAllUnreadReceivedByPatientId(int patientId){
-        return messageRepository.findByIsReadFalseAndPatient_IdAndSender(patientId, Sender.PRACTITIONER);
+    public List<Message> getAllReceivedById(int id, Role sender) {
+        if (sender == Role.PATIENT) {
+            return messageRepository.findByPatient_IdAndSenderIn(id, List.of(Role.DOCTOR, Role.OTHER));
+        } else {
+            return messageRepository.findByPractitioner_IdAndSender(id, Role.PATIENT);
+        }
+    }
+
+
+    @Override
+    public List<Message> getAllUnreadById(int id, Role sender) {
+        if (sender == Role.PATIENT) {
+            return messageRepository.findByIsReadFalseAndPatient_IdAndSenderIn(id, List.of(Role.DOCTOR, Role.OTHER));
+        } else {
+            return messageRepository.findByIsReadFalseAndPractitioner_IdAndSender(id, Role.PATIENT);
+        }
     }
 
     @Override
-    public List<Message> getAllUnreadReceivedByPractitionerId(int practitionerId){
-        return messageRepository.findByIsReadFalseAndPractitioner_IdAndSender(practitionerId, Sender.PATIENT);
+    public List<Message> getAllSentById(int id, Role sender) {
+        if (sender == Role.PATIENT) {
+            return messageRepository.findByPatient_IdAndSender(id, Role.PATIENT);
+        } else {
+            return messageRepository.findByPractitioner_IdAndSenderIn(id, List.of(Role.DOCTOR, Role.OTHER));
+        }
     }
 
-    @Override
-    public List<Message> getAllSentByPatientId(int patientId){
-        return messageRepository.findByPatient_IdAndSender(patientId, Sender.PATIENT);
-    }
-
-    @Override
-    public List<Message> getAllSentByPractitionerId(int practitionerId){
-        return messageRepository.findByPractitioner_IdAndSender(practitionerId, Sender.PRACTITIONER);
-    }
-
-    @Override
-    public List<Message> getAllReceivedByPatientId(int patientId){
-        return messageRepository.findByPatient_IdAndSender(patientId, Sender.PRACTITIONER);
-    }
-
-    @Override
-    public List<Message> getAllReceivedByPractitionerId(int practitionerId){
-        return messageRepository.findByPractitioner_IdAndSender(practitionerId, Sender.PATIENT);
-    }
 
     @Override
     public boolean existsById(int id) {

@@ -2,8 +2,7 @@ package JournalSystem.controller;
 
 import JournalSystem.model.*;
 import JournalSystem.service.interfaces.IDiagnosService;
-import JournalSystem.service.interfaces.IPatientService;
-import JournalSystem.service.interfaces.IPractitionerService;
+import JournalSystem.service.interfaces.IUserService;
 import JournalSystem.viewModel.DiagnosDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +17,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class DiagnosController {
     private final IDiagnosService diagnosService;
-    private final IPatientService patientService;
-    private final IPractitionerService practitionerService;
+    private final IUserService userService;
 
     @Autowired
-    public DiagnosController(IDiagnosService diagnosService, IPatientService patientService,
-                             IPractitionerService practitionerService) {
+    public DiagnosController(IDiagnosService diagnosService, IUserService userService) {
         this.diagnosService = diagnosService;
-        this.patientService = patientService;
-        this.practitionerService = practitionerService;
+        this.userService = userService;
     }
 
     @GetMapping("/getAll")
@@ -59,14 +55,14 @@ public class DiagnosController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(diagnosDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(diagnosDTO.getPractitionerId());
+        User patient = userService.getPatientById(diagnosDTO.getPatientId());
+        User practitioner = userService.getPractitionerById(diagnosDTO.getPractitionerId());
 
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Diagnos diagnos = new Diagnos(diagnosDTO.getName(), patient ,practitioner);
+        Diagnos diagnos = new Diagnos(diagnosDTO.getName(), patient , practitioner);
         Diagnos createdDiagnos = diagnosService.createDiagnos(diagnos);
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdDiagnos));
     }
@@ -79,8 +75,8 @@ public class DiagnosController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(diagnosDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(diagnosDTO.getPractitionerId());
+        User patient = userService.getPatientById(diagnosDTO.getPatientId());
+        User practitioner = userService.getPractitionerById(diagnosDTO.getPractitionerId());
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -115,8 +111,8 @@ public class DiagnosController {
 
         Diagnos diagnos = diagnosService.getDiagnosById(id);
 
-        Patient patient = patientService.getPatientById(diagnos.getPatient().getId());
-        Practitioner practitioner = practitionerService.getPractitionerById(diagnos.getPractitioner().getId());
+        User patient = userService.getPatientById(diagnos.getPatient().getId());
+        User practitioner = userService.getPractitionerById(diagnos.getPractitioner().getId());
 
         if (patient == null || practitioner == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -140,7 +136,7 @@ public class DiagnosController {
 
     @GetMapping("/getAllByPatient/{patientId}")
     public List<DiagnosDTO> getAllDiagnosesByPatient(@PathVariable int patientId) {
-        if (!patientService.existsById(patientId)) throw new IllegalArgumentException("No Patient With Id: " + patientId);
+        if (userService.getPatientById(patientId) == null) throw new IllegalArgumentException("No Patient With Id: " + patientId);
 
         List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPatient(patientId);
         if (diagnoses != null) {
@@ -156,7 +152,7 @@ public class DiagnosController {
 
     @GetMapping("/getAllByPractitioner/{practitionerId}")
     public List<DiagnosDTO> getAllDiagnosesByPractitioner(@PathVariable int practitionerId) {
-        if (!practitionerService.existsById(practitionerId)) throw new IllegalArgumentException("No Pactitioner With Id: " + practitionerId);
+        if (userService.getPractitionerById(practitionerId) == null) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
 
         List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPractitioner(practitionerId);
         if (diagnoses != null) {

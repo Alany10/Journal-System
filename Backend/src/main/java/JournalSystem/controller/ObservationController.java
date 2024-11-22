@@ -3,8 +3,7 @@ package JournalSystem.controller;
 import JournalSystem.model.*;
 import JournalSystem.service.interfaces.IEncounterService;
 import JournalSystem.service.interfaces.IObservationService;
-import JournalSystem.service.interfaces.IPatientService;
-import JournalSystem.service.interfaces.IPractitionerService;
+import JournalSystem.service.interfaces.IUserService;
 import JournalSystem.service.interfaces.IDiagnosService;
 import JournalSystem.viewModel.ObservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +19,15 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class ObservationController {
     private final IObservationService observationService;
-    private final IPatientService patientService;
-    private final IPractitionerService practitionerService;
+    private final IUserService userService;
     private final IEncounterService encounterService;
     private final IDiagnosService diagnosService;
 
     @Autowired
-    public ObservationController(IObservationService observationService, IPatientService patientService,
-                                 IPractitionerService practitionerService, IEncounterService encounterService, IDiagnosService diagnosService) {
+    public ObservationController(IObservationService observationService, IUserService userService,
+                                 IEncounterService encounterService, IDiagnosService diagnosService) {
         this.observationService = observationService;
-        this.patientService = patientService;
-        this.practitionerService = practitionerService;
+        this.userService = userService;
         this.encounterService = encounterService;
         this.diagnosService = diagnosService;
     }
@@ -67,8 +64,8 @@ public class ObservationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(observationDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(observationDTO.getPractitionerId());
+        User patient = userService.getPatientById(observationDTO.getPatientId());
+        User practitioner = userService.getPractitionerById(observationDTO.getPractitionerId());
         Encounter encounter = encounterService.getEncounterById(observationDTO.getEncounterId());
         Diagnos diagnos = diagnosService.getDiagnosById(observationDTO.getDiagnosId());
 
@@ -91,14 +88,15 @@ public class ObservationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Patient patient = patientService.getPatientById(observationDTO.getPatientId());
-        Practitioner practitioner = practitionerService.getPractitionerById(observationDTO.getPractitionerId());
+        User patient = userService.getPatientById(observationDTO.getPatientId());
+        User practitioner = userService.getPractitionerById(observationDTO.getPractitionerId());
         Encounter encounter = encounterService.getEncounterById(observationDTO.getEncounterId());
         Diagnos diagnos = diagnosService.getDiagnosById(observationDTO.getDiagnosId());
 
-        if (patient == null || practitioner == null || encounter == null) {
+        if (patient == null || practitioner == null || encounter == null || diagnos == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
         Observation updatedObservation = observationService.updateObservation(id, new Observation(
                 id,
                 observationDTO.getDescription(),
@@ -129,7 +127,6 @@ public class ObservationController {
             return new ArrayList<>();
         }
     }
-
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteObservation(@PathVariable int id) {
