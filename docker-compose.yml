@@ -16,7 +16,7 @@ services:
 
   backend:
     build:
-      context: ./Backend
+      context: Journal_Backend
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
