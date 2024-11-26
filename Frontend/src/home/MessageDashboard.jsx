@@ -7,11 +7,12 @@ const MessageDashboard = () => {
     const [error, setError] = useState(null);
     const [showSendMessageForm, setShowSendMessageForm] = useState(false);
     const [recipients, setRecipients] = useState([]);
-    const [newMessage, setNewMessage] = useState({ title: '', text: '', recipientId: '' });
+    const [newMessage, setNewMessage] = useState({ title: '', text: '', recipientEmail: '' });
 
     // Hämta userId och roll från localStorage
     const userId = JSON.parse(localStorage.getItem('user'))?.id;
     const userRole = JSON.parse(localStorage.getItem('user'))?.role;
+    const userEmail = JSON.parse(localStorage.getItem('user'))?.email;
 
     // Hämta alla meddelanden vid sidladdning
     useEffect(() => {
@@ -46,8 +47,8 @@ const MessageDashboard = () => {
     };
 
     // Hämta användarnamn baserat på roll och id
-    const getUserName = async (userId) => {
-        const endpoint =  `/user/get/${userId}`;
+    const getUserName = async (userEmail) => {
+        const endpoint =  `/user/getByEmail/${userEmail}`;
         const response = await axios.get(endpoint);
         return response.data.name;
     };
@@ -63,13 +64,8 @@ const MessageDashboard = () => {
                 let senderName = '';
                 let receiverName = '';
 
-                if (message.sender === 'PATIENT') {
-                    senderName = await getUserName(message.patientId);
-                    receiverName = await getUserName(message.practitionerId);
-                } else {
-                    senderName = await getUserName(message.practitionerId);
-                    receiverName = await getUserName(message.patientId);
-                }
+                senderName = await getUserName(message.sender);
+                receiverName = await getUserName(message.receiver);
 
                 return { ...message, senderName, receiverName };
             }));
@@ -92,13 +88,8 @@ const MessageDashboard = () => {
                 let senderName = '';
                 let receiverName = '';
 
-                if (message.sender === 'PATIENT') {
-                    senderName = await getUserName(message.patientId);
-                    receiverName = await getUserName(message.practitionerId);
-                } else {
-                    senderName = await getUserName(message.practitionerId);
-                    receiverName = await getUserName(message.patientId);
-                }
+                senderName = await getUserName(message.sender);
+                receiverName = await getUserName(message.receiver);
 
                 return { ...message, senderName, receiverName };
             }));
@@ -121,13 +112,8 @@ const MessageDashboard = () => {
                 let senderName = '';
                 let receiverName = '';
 
-                if (message.sender === 'PATIENT') {
-                    senderName = await getUserName(message.patientId);
-                    receiverName = await getUserName(message.practitionerId);
-                } else {
-                    senderName = await getUserName(message.practitionerId);
-                    receiverName = await getUserName(message.patientId);
-                }
+                senderName = await getUserName(message.sender);
+                receiverName = await getUserName(message.receiver);
 
                 return { ...message, senderName, receiverName };
             }));
@@ -146,7 +132,7 @@ const MessageDashboard = () => {
 
         // Kontrollera om användaren är samma som avsändaren
         if (
-            (userRole.toUpperCase() === message.sender)
+            (userEmail === message.sender)
         ) return;
 
         // Skicka API-anrop för att markera meddelandet som läst
@@ -170,15 +156,16 @@ const MessageDashboard = () => {
         const messageDTO = {
             title: newMessage.title,
             text: newMessage.text,
-            sender: userRole,
-            patientId: userRole === 'patient' ? userId : newMessage.recipientId,
-            practitionerId: (userRole === 'doctor' || userRole === 'other') ? userId : newMessage.recipientId,
+            sender: userEmail,
+            receiver: newMessage.recipientEmail,
+            patientId: userRole === 'patient' ? userId : newMessage.recipientEmail,
+            practitionerId: (userRole === 'doctor' || userRole === 'other') ? userId : newMessage.recipientEmail,
         };
 
         try {
             await axios.post('/message/create', messageDTO);
             setShowSendMessageForm(false);
-            setNewMessage({ title: '', text: '', recipientId: '' });
+            setNewMessage({ title: '', text: '', recipientEmail: '' });
             handleViewAll(); // Uppdatera meddelandelistan
             setError(null);
             alert("Message sent successfully!")
@@ -251,13 +238,13 @@ const MessageDashboard = () => {
                         <div>
                             <label>Recipient:</label>
                             <select
-                                value={newMessage.recipientId}
-                                onChange={(e) => setNewMessage({ ...newMessage, recipientId: e.target.value })}
+                                value={newMessage.recipientEmail}
+                                onChange={(e) => setNewMessage({ ...newMessage, recipientEmail: e.target.value })}
                                 required
                             >
                                 <option value="">Select a recipient</option>
                                 {recipients.map((recipient) => (
-                                    <option key={recipient.id} value={recipient.id}>
+                                    <option key={recipient.email} value={recipient.email}>
                                         {recipient.name}
                                     </option>
                                 ))}

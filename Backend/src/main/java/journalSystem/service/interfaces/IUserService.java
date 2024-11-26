@@ -21,7 +21,7 @@ public interface IUserService {
 
     // Hämta specifika attribut
     int getIdByEmail(String email);          // Hämta ID via email
-    Optional<User> getUserByEmail(String email); // Hämta användare via email
+    User getUserByEmail(String email); // Hämta användare via email
 
     // Rollbaserade metoder
     List<User> getUsersByRole(Role role);    // Hämta alla användare av en viss roll

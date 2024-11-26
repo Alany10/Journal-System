@@ -21,8 +21,7 @@ public class AuthController {
         AuthUser user = authUserService.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 
-        // Jämför inkommande lösenord med det krypterade lösenordet
-        if (request.getPassword().equals(user.getPassword())) {
+        if (request.getPassword().equals(user.getPassword()) && request.getRole().toUpperCase().equals(user.getRole().toString())) {
             return ResponseEntity.ok(new LoginResponse("Login successful", user.getId()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Invalid email or password"));

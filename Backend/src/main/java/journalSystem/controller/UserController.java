@@ -1,6 +1,6 @@
 package journalSystem.controller;
 
-import journalSystem.AuthServiceClient;
+import journalSystem.service.AuthServiceClient;
 import journalSystem.model.User;
 import journalSystem.model.Role;
 import journalSystem.model.login.LoginRequest;
@@ -94,6 +94,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getByEmail/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        User user = userService.getUserByEmail(email);
+        if (user != null) {
+            return ResponseEntity.ok(Mapper.convertToDTO(user));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         if (userDTO.getEmail() == null ||
@@ -108,6 +118,7 @@ public class UserController {
                     userDTO.getPhoneNr(),
                     Role.valueOf(userDTO.getRole().toUpperCase())
                     );
+
 
         authServiceClient.createUser(userDTO);
         User createdUser = userService.createUser(user);
@@ -151,6 +162,6 @@ public class UserController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-        return authServiceClient.login(request.getEmail(), request.getPassword(), Role.valueOf(request.getRole()));
+        return authServiceClient.login(request.getEmail(), request.getPassword(), Role.valueOf(request.getRole().toUpperCase()));
     }
 }

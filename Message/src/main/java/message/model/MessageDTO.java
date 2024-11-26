@@ -1,4 +1,4 @@
-package journalSystem.viewModel;
+package message.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

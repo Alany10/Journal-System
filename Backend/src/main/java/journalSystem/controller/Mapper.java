@@ -74,19 +74,6 @@ public class Mapper {
         );
     }
 
-    public static MessageDTO convertToDTO(Message message) {
-        return new MessageDTO(
-                message.getId(),
-                message.getTitle(),
-                message.getText(),
-                message.getDateTime(),
-                message.getIsRead(),
-                message.getSender().toString(),
-                message.getPatient().getId(),
-                message.getPractitioner().getId()
-        );
-    }
-
     public static DiagnosDTO convertToDTO(Diagnos diagnos){
         List<Observation> observations = diagnos.getObservations();
         List<ObservationDTO> observationDTOs = new ArrayList<>();

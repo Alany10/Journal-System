@@ -22,6 +22,7 @@ const Login = ({ setUser }) => {
             const user = {
                 id: response.data.id,
                 role: userType,
+                email: email
             };
 
             // Uppdatera användardatan i App.js

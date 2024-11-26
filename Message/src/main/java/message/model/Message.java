@@ -1,4 +1,4 @@
-package journalSystem.model;
+package message.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,41 +33,32 @@ public class Message {
     @Column(name = "is_read", nullable = false)
     private boolean isRead;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "sender", nullable = false)
-    private Role sender;
+    private String sender;
 
-    @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
-    private User patient;
+    @Column(name = "receiver", nullable = false)
+    private String receiver;
 
-    @ManyToOne
-    @JoinColumn(name = "practitioner_id", nullable = false)
-    private User practitioner;
-
-    public Message(int id, String title, String text, Role sender, User patient, User practitioner) {
+    public Message(int id, String title, String text, String sender, String receiver) {
         this.id = id;
         this.title = title;
         this.text = text;
         this.dateTime = LocalDateTime.now();
-        this.sender = sender;
         this.isRead = false;
-        this.patient = patient;
-        this.practitioner = practitioner;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
-    public Message(String title, String text, Role sender, User patient, User practitioner) {
+    public Message(String title, String text, String sender, String receiver) {
         this.title = title;
         this.text = text;
         this.dateTime = LocalDateTime.now();
         this.isRead = false;
         this.sender = sender;
-        this.patient = patient;
-        this.practitioner = practitioner;
+        this.receiver = receiver;
     }
 
     //TODO
-    public boolean getIsRead(){
-        return isRead;
+    public boolean getIsRead() {return isRead;
     }
 }

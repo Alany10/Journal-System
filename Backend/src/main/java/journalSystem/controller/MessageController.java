@@ -1,7 +1,7 @@
 package journalSystem.controller;
 
+import journalSystem.service.MessageServiceClient;
 import journalSystem.model.*;
-import journalSystem.service.interfaces.IMessageService;
 import journalSystem.service.interfaces.IUserService;
 import journalSystem.viewModel.MessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +15,21 @@ import java.util.List;
 @RequestMapping("/message")
 @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class MessageController {
-    private final IMessageService messageService;
+
+    @Autowired
+    private MessageServiceClient messageServiceClient;
+
     private final IUserService userService;
 
     @Autowired
-    public MessageController(IMessageService messageService, IUserService userService) {
-        this.messageService = messageService;
+    public MessageController(IUserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/getAll")
     public List<MessageDTO> getAllMessages() {
-        List<Message> messages = messageService.getAllMessages();
-        if (messages != null) {
-            List<MessageDTO> messageDTOs = new ArrayList<>();
-            for (Message message: messages){
-                messageDTOs.add(Mapper.convertToDTO(message));
-            }
+        List<MessageDTO> messageDTOs = messageServiceClient.getAllMessages();
+        if (messageDTOs != null) {
             return messageDTOs;
         } else {
             return new ArrayList<>();
@@ -40,9 +38,9 @@ public class MessageController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<MessageDTO> getMessageById(@PathVariable int id) {
-        Message message = messageService.getMessageById(id);
-        if (message != null) {
-            return ResponseEntity.ok(Mapper.convertToDTO(message));
+        MessageDTO messageDTO = messageServiceClient.getMessageById(id);
+        if (messageDTO != null) {
+            return ResponseEntity.ok(messageDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -50,101 +48,41 @@ public class MessageController {
 
     @PostMapping("/create")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO) {
-        if (messageDTO.getTitle() == null ||
-                messageDTO.getText() == null ||
-                messageDTO.getPatientId() < 0 ||
-                messageDTO.getPractitionerId() < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        User sender = userService.getUserByEmail(messageDTO.getSender());
+        User receiver = userService.getUserByEmail(messageDTO.getReceiver());
 
-        System.out.println(messageDTO.getPatientId() + " " + messageDTO.getPractitionerId());
-        User patient = userService.getPatientById(messageDTO.getPatientId());
-        User practitioner = userService.getPractitionerById(messageDTO.getPractitionerId());
-
-        if (patient == null || practitioner == null) {
+        if (sender == null || receiver == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Message message = new Message(messageDTO.getTitle(), messageDTO.getText(), Role.valueOf(messageDTO.getSender().toUpperCase()), patient, practitioner);
-        Message createdMessage = messageService.createMessage(message);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdMessage));
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageServiceClient.createMessage(messageDTO));
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<MessageDTO> updateMessage(@PathVariable int id, @RequestBody MessageDTO messageDTO) {
-        if (messageDTO.getTitle() == null ||
-                messageDTO.getText() == null ||
-                messageDTO.getPatientId() < 0 ||
-                messageDTO.getPractitionerId() < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        User sender = userService.getUserByEmail(messageDTO.getSender());
+        User receiver = userService.getUserByEmail(messageDTO.getReceiver());
 
-        User patient = userService.getPatientById(messageDTO.getPatientId());
-        User user = userService.getPractitionerById(messageDTO.getPractitionerId());
-
-        if (patient == null || user == null) {
+        if (sender == null || receiver == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Message updatedMessage = messageService.updateMessage(id, new Message(
-                id,
-                messageDTO.getTitle(),
-                messageDTO.getText(),
-                messageDTO.getDateTime(),
-                messageDTO.getIsRead(),
-                Role.valueOf(messageDTO.getSender().toUpperCase()),
-                patient,
-                user
-        ));
-
-        if (updatedMessage != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedMessage));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(messageServiceClient.updateMessage(id, messageDTO));
     }
 
     @PutMapping("/read/{id}")
     public ResponseEntity<MessageDTO> readMessage(@PathVariable int id) {
-        Message message = messageService.getMessageById(id);
-
-        User patient = userService.getPatientById(message.getPatient().getId());
-        User practitioner = userService.getPractitionerById(message.getPractitioner().getId());
-
-        if (patient == null || practitioner == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Message updatedMessage = messageService.updateMessage(id, new Message(
-                id,
-                message.getTitle(),
-                message.getText(),
-                message.getDateTime(),
-                true,
-                Role.valueOf(message.getSender().toString()),
-                patient,
-                practitioner
-        ));
-
-        if (updatedMessage != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedMessage));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(messageServiceClient.readMessage(id));
     }
 
     @GetMapping("/getAllReceived/{userId}")
     public List<MessageDTO> getAllReceived(@PathVariable int userId) {
         User user = userService.getUserById(userId);
-        if (user == null) throw new IllegalArgumentException("No Patient With Id: " + userId);
+        if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
 
-        List<Message> messages = messageService.getAllReceivedById(user.getId(), user.getRole());
+        List<MessageDTO> messageDTOs = messageServiceClient.getAllReceived(user.getEmail());
 
-        if (messages != null) {
-            List<MessageDTO> messageDTOs = new ArrayList<>();
-            for (Message message : messages){
-                messageDTOs.add(Mapper.convertToDTO(message));
-            }
+        if (messageDTOs != null) {
             return messageDTOs;
         } else {
             return new ArrayList<>();
@@ -154,15 +92,11 @@ public class MessageController {
     @GetMapping("/getAllUnread/{userId}")
     public List<MessageDTO> getAllUnread(@PathVariable int userId) {
         User user = userService.getUserById(userId);
-        if (user == null) throw new IllegalArgumentException("No Patient With Id: " + userId);
+        if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
 
-        List<Message> messages = messageService.getAllUnreadById(user.getId(), user.getRole());
+        List<MessageDTO> messageDTOs = messageServiceClient.getAllUnread(user.getEmail());
 
-        if (messages != null) {
-            List<MessageDTO> messageDTOs = new ArrayList<>();
-            for (Message message : messages){
-                messageDTOs.add(Mapper.convertToDTO(message));
-            }
+        if (messageDTOs != null) {
             return messageDTOs;
         } else {
             return new ArrayList<>();
@@ -174,13 +108,9 @@ public class MessageController {
         User user = userService.getUserById(userId);
         if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
 
-        List<Message> messages = messageService.getAllSentById(user.getId(), user.getRole());
+        List<MessageDTO> messageDTOs = messageServiceClient.getAllSent(user.getEmail());
 
-        if (messages != null) {
-            List<MessageDTO> messageDTOs = new ArrayList<>();
-            for (Message message : messages){
-                messageDTOs.add(Mapper.convertToDTO(message));
-            }
+        if (messageDTOs != null) {
             return messageDTOs;
         } else {
             return new ArrayList<>();
@@ -189,8 +119,8 @@ public class MessageController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable int id) {
-        if (id >= 0 && messageService.existsById(id)) {
-            messageService.deleteMessage(id);
+        if (messageServiceClient.getMessageById(id) != null) {
+            messageServiceClient.deleteMessage(id);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

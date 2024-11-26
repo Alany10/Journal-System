@@ -8,7 +8,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState(''); // Lägg till namn
     const [phoneNr, setPhoneNr] = useState(''); // Lägg till telefonnummer
-    const [userType, setUserType] = useState('patient'); // Standard är 'patient'
+    const [role, setRole] = useState('patient'); // Standard är 'patient'
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
@@ -16,20 +16,18 @@ const Register = () => {
         e.preventDefault();
         setError(null);
 
-        // Skapa objektet baserat på userType
         const userData = {
             email,
             password,
             name,
             phoneNr,
-            role: userType === 'patient' ? undefined : userType, // Om användaren inte är patient, sätt rollen
+            role,
         };
 
         try {
             // Gör ett POST-anrop till respektive API
             const url = '/user/create';
-            const response = await axios.post(url, userData); // Skicka tillbaka skapade användaren
-
+            const response = await axios.post(url, userData); // Skicka tillbaka skapade användaren //TODO
             // Efter lyckad registrering, omdirigera till login-sidan
             navigate('/');
         } catch (error) {
@@ -78,8 +76,8 @@ const Register = () => {
                     />
                 </div>
                 <div>
-                    <label>User Type:</label>
-                    <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+                    <label>Role:</label>
+                    <select value={role} onChange={(e) => setRole(e.target.value)}>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
                         <option value="other">Other</option>
