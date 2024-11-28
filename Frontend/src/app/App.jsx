@@ -14,6 +14,7 @@ import PatientDetails from "../practitioner/PatientDetails.jsx";
 import DiagnosDetails from "../home/DiagnosDetails.jsx";
 import ViewDetails from "../patient/ViewDetails.jsx";
 import MessageDashboard from "../home/MessageDashboard.jsx";
+import ImageDashboard from "../home/ImageDashboard.jsx";
 
 function App() {
     const [user, setUser] = useState(null); // Skapa en state för användaren (null betyder inte inloggad)
@@ -48,6 +49,7 @@ function App() {
                     <Route path="/diagnos-details/:id" element={<DiagnosDetails />} />
                     <Route path="/view-details/" element={<ViewDetails />} />
                     <Route path="/message/" element={<MessageDashboard />} />
+                    <Route path="/image/" element={<ImageDashboard />} />
 
 
                 </Routes>
