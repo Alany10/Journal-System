@@ -26,9 +26,6 @@ public class User {
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String name;
 
-    @Column(name = "password", nullable = false, columnDefinition = "TEXT")
-    private String password;
-
     @Column(name = "phone_nr", nullable = false, columnDefinition = "TEXT")
     private String phoneNr;
 
@@ -58,11 +55,10 @@ public class User {
     private List<Diagnos> practitionerDiagnoses = new ArrayList<>();
 
     // Konstruktorer
-    public User(int id, String email, String name, String password, String phoneNr, Role role) {
+    public User(int id, String email, String name, String phoneNr, Role role) {
         this.id = id;
         this.email = email;
         this.name = name;
-        this.password = password;
         this.phoneNr = phoneNr;
         this.role = role;
         this.patientEncounters = new ArrayList<>();
@@ -73,10 +69,9 @@ public class User {
         this.practitionerDiagnoses = new ArrayList<>();
     }
 
-    public User(String email, String name, String password, String phoneNr, Role role) {
+    public User(String email, String name, String phoneNr, Role role) {
         this.email = email;
         this.name = name;
-        this.password = password;
         this.phoneNr = phoneNr;
         this.role = role;
         this.patientEncounters = new ArrayList<>();

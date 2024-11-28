@@ -37,7 +37,6 @@ public class Mapper {
                 user.getId(),
                 user.getEmail(),
                 user.getName(),
-                user.getPassword(),
                 user.getPhoneNr(),
                 user.getRole().toString(),
                 encounterDTOs,

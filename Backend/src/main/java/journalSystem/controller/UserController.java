@@ -114,7 +114,6 @@ public class UserController {
 
         User user = new User(userDTO.getEmail(),
                     userDTO.getName(),
-                    userDTO.getPassword(),
                     userDTO.getPhoneNr(),
                     Role.valueOf(userDTO.getRole().toUpperCase())
                     );
@@ -138,7 +137,6 @@ public class UserController {
                 id,
                 userDTO.getEmail(),
                 userDTO.getName(),
-                userDTO.getPassword(),
                 userDTO.getPhoneNr(),
                 Role.valueOf(userDTO.getRole().toUpperCase())
         ));

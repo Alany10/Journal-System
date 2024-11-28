@@ -17,7 +17,6 @@ public interface IUserService {
 
     // Verifiering och existenskontroll
     boolean existsById(int id);              // Kontrollera om en användare existerar via ID
-    boolean verifyLogin(String email, String password, Role role); // Verifiera inloggning
 
     // Hämta specifika attribut
     int getIdByEmail(String email);          // Hämta ID via email

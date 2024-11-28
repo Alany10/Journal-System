@@ -35,4 +35,26 @@ public class UserDTO {
         this.observations = new ArrayList<>();
         this.diagnoses = new ArrayList<>();
     }
+
+    public UserDTO(int id, String email, String name, String phoneNr, String role) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.phoneNr = phoneNr;
+        this.role = role;
+        this.encounters = new ArrayList<>();
+        this.observations = new ArrayList<>();
+        this.diagnoses = new ArrayList<>();
+    }
+
+    public UserDTO(int id, String email, String name, String phoneNr, String role, List<EncounterDTO> encounters, List<ObservationDTO> observations, List<DiagnosDTO> diagnoses) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.phoneNr = phoneNr;
+        this.role = role;
+        this.encounters = encounters;
+        this.observations = observations;
+        this.diagnoses = diagnoses;
+    }
 }

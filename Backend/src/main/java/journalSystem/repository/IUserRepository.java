@@ -11,10 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface IUserRepository extends JpaRepository<User, Integer> {
-
-    // Hämta användare baserat på email, lösenord och roll
-    Optional<User> findByEmailAndPasswordAndRole(String email, String password, Role role);
-
     // Hämta användare baserat på email
     Optional<User> findByEmail(String email);
 

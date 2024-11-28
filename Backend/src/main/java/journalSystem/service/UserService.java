@@ -41,7 +41,6 @@ public class UserService implements IUserService {
         User existingUser = getUserById(id);
         existingUser.setName(user.getName());
         existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
         existingUser.setPhoneNr(user.getPhoneNr());
         existingUser.setRole(user.getRole());
         return userRepository.save(existingUser);
@@ -55,11 +54,6 @@ public class UserService implements IUserService {
     @Override
     public boolean existsById(int id) {
         return userRepository.existsById(id);
-    }
-
-    @Override
-    public boolean verifyLogin(String email, String password, Role role) {
-        return userRepository.findByEmailAndPasswordAndRole(email, password, role).isPresent();
     }
 
     @Override
