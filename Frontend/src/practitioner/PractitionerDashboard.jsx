@@ -41,6 +41,10 @@ const PractitionerDashboard = () => {
         navigate('/image');
     };
 
+    const handleSearch = () => {
+        navigate('/search');
+    };
+
     return (
         <div>
             <h2>Welcome to the Practitioner Dashboard</h2>
@@ -68,6 +72,9 @@ const PractitionerDashboard = () => {
             </div>
             <div>
                 <button onClick={handleImages}>Image Dashboard</button>
+            </div>
+            <div>
+                <button onClick={handleSearch}>Search Dashboard</button>
             </div>
 
         </div>
