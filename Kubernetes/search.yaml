@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search
+  template:
+    metadata:
+      labels:
+        app: search
+    spec:
+      containers:
+        - name: search
+          image: alany10/search:latest  # Din Docker-image för search-applikationen
+          ports:
+            - containerPort: 8083  # Applikationen lyssnar på denna port i containern
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-service
+spec:
+  selector:
+    app: search  # Matchar search-poddarna
+  ports:
+    - protocol: TCP
+      port: 80         # Exponera tjänsten på port 80 för externa anrop
+      targetPort: 8083  # Vidarebefordra till search-appen som kör på port 8083
+      nodePort: 30005   # Exponera tjänsten på en specifik NodePort
+  type: NodePort       # Gör tjänsten tillgänglig utanför klustret

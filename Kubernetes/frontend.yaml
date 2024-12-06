@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1  # Du kan öka detta om du vill köra fler instanser
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: alany10/frontend:latest  # Din Docker-image för frontend
+          ports:
+            - containerPort: 5173  # Porten på vilken frontend-applikationen körs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend  # Matchar poddarna med labeln app: frontend
+  ports:
+    - port: 5173      # Porten som tjänsten kommer att vara tillgänglig på
+      targetPort: 5173 # Porten på containern
+      nodePort: 30000  # Exponerad port på varje nod
+  type: NodePort      # Gör tjänsten tillgänglig via en NodePort

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-deployment
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: alany10/backend:latest  # Din Docker-image för backend
+          ports:
+            - containerPort: 8080  # Applikationen lyssnar på denna port i containern
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend  # Matchar backend-poddarna
+  ports:
+    - protocol: TCP
+      port: 80         # Exponera tjänsten på port 80 för externa anrop
+      targetPort: 8080  # Vidarebefordra till backend-appen som kör på port 8080
+      nodePort: 30001   # Exponera tjänsten på en specifik NodePort (kan justeras)
+  type: NodePort       # Gör tjänsten tillgänglig utanför klustret

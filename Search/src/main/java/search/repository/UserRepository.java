@@ -15,9 +15,9 @@ public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
     // Hitta patienter baserat på namn som innehåller argumentet
     public Uni<List<User>> findPatientsByName(String name) {
-        return User.find("name LIKE ?1", "%" + name + "%").list();
+        return User.find("role = ?1 and name LIKE ?2", Role.PATIENT, "%" + name + "%").list();
     }
-
+    
     // Hitta läkare
     public Uni<List<User>> findDoctors() {
         return User.find("role", Role.valueOf("DOCTOR")).list();

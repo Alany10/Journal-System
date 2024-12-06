@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-db
+  template:
+    metadata:
+      labels:
+        app: message-db
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0.36
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "rootpassword"
+            - name: MYSQL_DATABASE
+              value: "message"
+            - name: MYSQL_USER
+              value: "journal_user"
+            - name: MYSQL_PASSWORD
+              value: "journal321"
+          ports:
+            - containerPort: 3306  # Porten MySQL kör på i containern
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-persistent-storage
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce  # Endast en pod kan läsa och skriva till PVC:n samtidigt
+  resources:
+    requests:
+      storage: 1Gi  # Be om 1 GB lagring för MySQL-databasen
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-db-service
+spec:
+  selector:
+    app: message-db  # Matchar pods med denna label
+  ports:
+    - protocol: TCP
+      port: 3306      # Tjänsten blir tillgänglig på denna port inom klustret
+      targetPort: 3306 # Vidarebefordra till containerns port 3306
+      nodePort: 30008  # Exponera tjänsten på denna port för externa anslutningar
+  type: NodePort      # Gör tjänsten tillgänglig utanför klustret

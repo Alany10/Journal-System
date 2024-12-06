@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-deployment
+spec:
+  replicas: 1  # Du kan öka detta om du vill köra fler instanser
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - name: authentication
+          image: alany10/authentication:latest  # Din Docker-image för authentication
+          ports:
+            - containerPort: 8081  # Porten på vilken frontend-applikationen körs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication-service
+spec:
+  selector:
+    app: authentication  # Matchar poddarna med labeln app: authentication
+  ports:
+    - port: 8081        # Porten som tjänsten kommer att vara tillgänglig på
+      targetPort: 8081   # Porten på containern
+      nodePort: 30002    # Exponerad port på varje nod
+  type: NodePort        # Gör tjänsten tillgänglig via en NodePort
