@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/message")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://backend-service:8080", "http://localhost:8080", "http://localhost:30001"}, allowedHeaders = "*")
 public class MessageController {
     private final MessageService messageService;
 

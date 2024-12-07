@@ -1,11 +1,11 @@
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
-    host: 'image-db',        // Din databasvärd, vanligtvis localhost om den körs på samma maskin
+    host: 'image-db-service',        // Din databasvärd, vanligtvis localhost om den körs på samma maskin
     user: 'journal_user',     // Din MySQL-användare
     password: 'journal321',   // Ditt lösenord
     database: 'image',        // Namnet på databasen
-    port: 3306                // Ange porten som din MySQL-databas kör på
+    port: 3310                // Ange porten som din MySQL-databas kör på
 });
 
 db.connect((err) => {

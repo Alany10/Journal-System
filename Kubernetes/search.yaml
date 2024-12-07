@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-deployment
+  name: search
 spec:
   replicas: 1
   selector:
@@ -29,7 +29,7 @@ spec:
     app: search  # Matchar search-poddarna
   ports:
     - protocol: TCP
-      port: 80         # Exponera tjänsten på port 80 för externa anrop
+      port: 8083         # Exponera tjänsten på port 80 för externa anrop
       targetPort: 8083  # Vidarebefordra till search-appen som kör på port 8083
       nodePort: 30005   # Exponera tjänsten på en specifik NodePort
   type: NodePort       # Gör tjänsten tillgänglig utanför klustret

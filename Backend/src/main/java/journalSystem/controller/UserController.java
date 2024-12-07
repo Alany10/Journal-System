@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
 public class UserController {
 
     @Autowired

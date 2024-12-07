@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
+  name: frontend
 spec:
   replicas: 1  # Du kan öka detta om du vill köra fler instanser
   selector:
@@ -19,6 +19,7 @@ spec:
             - containerPort: 5173  # Porten på vilken frontend-applikationen körs
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -27,7 +28,8 @@ spec:
   selector:
     app: frontend  # Matchar poddarna med labeln app: frontend
   ports:
-    - port: 5173      # Porten som tjänsten kommer att vara tillgänglig på
-      targetPort: 5173 # Porten på containern
-      nodePort: 30000  # Exponerad port på varje nod
-  type: NodePort      # Gör tjänsten tillgänglig via en NodePort
+    - protocol: TCP
+      port: 5173         # Exponera tjänsten på port 8080 för externa anrop
+      targetPort: 5173  # Vidarebefordra till backend-appen som kör på port 8080
+      nodePort: 30000   # Exponera tjänsten på en specifik NodePort (kan justeras)
+  type: NodePort       # Gör tjänsten tillgänglig utanför klustret

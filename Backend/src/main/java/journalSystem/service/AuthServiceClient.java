@@ -15,7 +15,7 @@ public class AuthServiceClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String AUTH_SERVICE_BASE_URL = "http://authentication:8081/auth"; // Anpassa URL:en
+    private static final String AUTH_SERVICE_BASE_URL = "http://authentication-service:8081/auth";
 
     public LoginResponse login(String email, String password, Role role) {
         String url = AUTH_SERVICE_BASE_URL + "/login";

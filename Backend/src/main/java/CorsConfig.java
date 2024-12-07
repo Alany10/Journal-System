@@ -8,7 +8,7 @@ public class CorsConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // Tillåter alla vägar
-                .allowedOrigins("http://localhost:5173")  // Tillåt frontend på localhost:3000
+                .allowedOrigins("http://frontend-service:5173", "http://localhost:5173", "http://localhost:30001")  // Tillåt frontend på localhost:3000
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Tillåt dessa metoder
                 .allowedHeaders("*")  // Tillåt alla headers
                 .allowCredentials(true)  // Tillåt cookies eller annan autentisering

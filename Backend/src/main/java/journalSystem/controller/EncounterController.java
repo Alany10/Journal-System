@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/encounter")
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
 public class EncounterController {
     private final IEncounterService encounterService;
     private final IUserService userService;

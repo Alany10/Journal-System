@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://backend-service:8080", "http://localhost:8080", "http://localhost:30001"}, allowedHeaders = "*")
 public class AuthController {
 
     @Autowired

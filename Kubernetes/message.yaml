@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: message-deployment
+  name: message
 spec:
   replicas: 1
   selector:
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: message
-          image: alany10/message:latest  # Din Docker-image för message
+          image: alany10/message:latest  # Din Docker-image för backend
           ports:
             - containerPort: 8082  # Applikationen lyssnar på denna port i containern
 
@@ -29,7 +29,7 @@ spec:
     app: message  # Matchar backend-poddarna
   ports:
     - protocol: TCP
-      port: 80         # Exponera tjänsten på port 80 för externa anrop
-      targetPort: 8082  # Vidarebefordra till message-appen som kör på port 8080
+      port: 8082         # Exponera tjänsten på port 80 för externa anrop
+      targetPort: 8082  # Vidarebefordra till backend-appen som kör på port 8080
       nodePort: 30003   # Exponera tjänsten på en specifik NodePort (kan justeras)
   type: NodePort       # Gör tjänsten tillgänglig utanför klustret

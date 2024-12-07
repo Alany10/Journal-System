@@ -6,7 +6,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend-deployment
+      app: backend
   template:
     metadata:
       labels:
@@ -29,7 +29,7 @@ spec:
     app: backend  # Matchar backend-poddarna
   ports:
     - protocol: TCP
-      port: 80         # Exponera tjänsten på port 80 för externa anrop
+      port: 8080         # Exponera tjänsten på port 8080 för externa anrop
       targetPort: 8080  # Vidarebefordra till backend-appen som kör på port 8080
       nodePort: 30001   # Exponera tjänsten på en specifik NodePort (kan justeras)
   type: NodePort       # Gör tjänsten tillgänglig utanför klustret
