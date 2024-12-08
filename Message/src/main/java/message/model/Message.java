@@ -58,7 +58,6 @@ public class Message {
         this.receiver = receiver;
     }
 
-    //TODO
     public boolean getIsRead() {return isRead;
     }
 }

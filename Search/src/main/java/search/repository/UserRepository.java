@@ -13,10 +13,12 @@ import java.util.List;
 @ApplicationScoped
 public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
-    // Hitta patienter baserat på namn som innehåller argumentet
+    // Hitta patienter baserat på namn som innehåller argumentet, både för- och efternamn
     public Uni<List<User>> findPatientsByName(String name) {
-        return User.find("role = ?1 and name LIKE ?2", Role.PATIENT, "%" + name + "%").list();
+        return User.find("role = ?1 and (firstName LIKE ?2 or lastName LIKE ?2)",
+                Role.PATIENT, "%" + name + "%").list();
     }
+
     
     // Hitta läkare
     public Uni<List<User>> findDoctors() {

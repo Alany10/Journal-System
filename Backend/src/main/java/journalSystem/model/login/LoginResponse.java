@@ -7,15 +7,14 @@ import lombok.Setter;
 @Getter
 public class LoginResponse {
     private String message;
-    private int id;
+    private String token; // Token från Keycloak
 
-    public LoginResponse(String message, int id) {
+    public LoginResponse(String message, String token) {
         this.message = message;
-        this.id = id;
+        this.token = token;
     }
 
     public LoginResponse(String message) {
         this.message = message;
     }
-
 }

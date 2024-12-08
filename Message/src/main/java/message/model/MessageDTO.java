@@ -20,7 +20,6 @@ public class MessageDTO {
     private String sender;
     private String receiver;
 
-    //TODO
     public boolean getIsRead(){
         return isRead;
     }

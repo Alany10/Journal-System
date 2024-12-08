@@ -41,16 +41,17 @@ const MessageDashboard = () => {
         try {
             const response = await axios.get('/user/getAllPatients');
             setRecipients(response.data);
+            aler('Fetched practitioners:', response.data); // Kontrollera vad som hämtas
         } catch (error) {
             setError("Failed to fetch patients.");
         }
     };
 
     // Hämta användarnamn baserat på roll och id
-    const getUserName = async (userEmail) => {
+    const getUserEmail = async (userEmail) => {
         const endpoint =  `/user/getByEmail/${userEmail}`;
         const response = await axios.get(endpoint);
-        return response.data.name;
+        return response.data.email;
     };
 
     // Funktion för att hämta alla meddelanden
@@ -60,17 +61,17 @@ const MessageDashboard = () => {
             const endpoint = `/message/getAllReceived/${userId}`
             const response = await axios.get(endpoint);
 
-            const messagesWithNames = await Promise.all(response.data.map(async (message) => {
-                let senderName = '';
-                let receiverName = '';
+            const messagesWithEmails = await Promise.all(response.data.map(async (message) => {
+                let senderEmail = '';
+                let receiverEmail = '';
 
-                senderName = await getUserName(message.sender);
-                receiverName = await getUserName(message.receiver);
+                senderEmail = await getUserEmail(message.sender);
+                receiverEmail = await getUserEmail(message.receiver);
 
-                return { ...message, senderName, receiverName };
+                return { ...message, senderEmail, receiverEmail };
             }));
 
-            setMessages(messagesWithNames);
+            setMessages(messagesWithEmails);
             setError(null);
         } catch {
             setError("Failed to fetch all messages.");
@@ -84,17 +85,17 @@ const MessageDashboard = () => {
             const endpoint = `/message/getAllUnread/${userId}`;
             const response = await axios.get(endpoint);
 
-            const messagesWithNames = await Promise.all(response.data.map(async (message) => {
-                let senderName = '';
-                let receiverName = '';
+            const messagesWithEmails = await Promise.all(response.data.map(async (message) => {
+                let senderEmail = '';
+                let receiverEmail = '';
 
-                senderName = await getUserName(message.sender);
-                receiverName = await getUserName(message.receiver);
+                senderEmail = await getUserEmail(message.sender);
+                receiverEmail = await getUserEmail(message.receiver);
 
-                return { ...message, senderName, receiverName };
+                return { ...message, senderEmail, receiverEmail };
             }));
 
-            setMessages(messagesWithNames);
+            setMessages(messagesWithEmails);
             setError(null);
         } catch {
             setError("Failed to fetch unread messages.");
@@ -108,17 +109,17 @@ const MessageDashboard = () => {
             const endpoint = `/message/getAllSent/${userId}`;
             const response = await axios.get(endpoint);
 
-            const messagesWithNames = await Promise.all(response.data.map(async (message) => {
-                let senderName = '';
-                let receiverName = '';
+            const messagesWithEmails = await Promise.all(response.data.map(async (message) => {
+                let senderEmail = '';
+                let receiverEmail = '';
 
-                senderName = await getUserName(message.sender);
-                receiverName = await getUserName(message.receiver);
+                senderEmail = await getUserEmail(message.sender);
+                receiverEmail = await getUserEmail(message.receiver);
 
-                return { ...message, senderName, receiverName };
+                return { ...message, senderEmail, receiverEmail };
             }));
 
-            setMessages(messagesWithNames);
+            setMessages(messagesWithEmails);
             setError(null);
         } catch {
             setError("Failed to fetch sent messages.");
@@ -199,8 +200,8 @@ const MessageDashboard = () => {
                                     {selectedMessage?.id === message.id && (
                                         <div>
                                             <p>{message.text}</p>
-                                            <p><em>Sender: {message.senderName}</em></p>
-                                            <p><em>Receiver: {message.receiverName}</em></p>
+                                            <p><em>Sender: {message.senderEmail}</em></p>
+                                            <p><em>Receiver: {message.receiverEmail}</em></p>
                                             <p><em>{new Date(message.dateTime).toLocaleString()}</em></p>
                                         </div>
                                     )}
@@ -245,7 +246,7 @@ const MessageDashboard = () => {
                                 <option value="">Select a recipient</option>
                                 {recipients.map((recipient) => (
                                     <option key={recipient.email} value={recipient.email}>
-                                        {recipient.name}
+                                        {recipient.email}
                                     </option>
                                 ))}
                             </select>

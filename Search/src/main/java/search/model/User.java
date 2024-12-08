@@ -24,7 +24,12 @@ public class User extends PanacheEntityBase {
     private String email;
 
     @NotNull
-    private String name;
+    @Column(name = "first_name")
+    private String firstName;
+
+    @NotNull
+    @Column(name = "last_name")
+    private String lastName;
 
     @NotNull
     @Column(name = "phone_nr")

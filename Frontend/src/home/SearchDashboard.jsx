@@ -25,10 +25,10 @@ const SearchDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const diagnosResponse = await axios.get('http://localhost:30001/diagnos/getAll');
+                const diagnosResponse = await axios.get('http://localhost:8080/diagnos/getAll');
                 setDiagnosList(diagnosResponse.data);
 
-                const encounterResponse = await axios.get('http://localhost:30001/encounter/getAll');
+                const encounterResponse = await axios.get('http://localhost:8080/encounter/getAll');
                 setEncounterList(encounterResponse.data);
             } catch (error) {
                 console.error('Error fetching diagnoses and encounters:', error);
@@ -41,7 +41,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på namn
     const searchByName = async () => {
         try {
-            const response = await axios.get(`http://localhost:30001/search/patients/${name}`);
+            const response = await axios.get(`http://localhost:8083/search/patients/${name}`);
             setPatientsByName(response.data);
         } catch (error) {
             console.error('Error fetching patients by name:', error);
@@ -51,7 +51,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på läkare
     const searchByDoctor = async () => {
         try {
-            const response = await axios.get(`http://localhost:30001/search/patients/doctor/${userId}`);
+            const response = await axios.get(`http://localhost:8083/search/patients/doctor/${userId}`);
             setPatientsByDoctor(response.data);
         } catch (error) {
             console.error('Error fetching patients by doctor:', error);
@@ -61,7 +61,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på diagnos
     const searchByDiagnos = async () => {
         try {
-            const response = await axios.get(`http://localhost:30001/search/patients/diagnos/${diagnosId}`);
+            const response = await axios.get(`http://localhost:8083/search/patients/diagnos/${diagnosId}`);
             setPatientsByDiagnos(response.data);
         } catch (error) {
             console.error('Error fetching patients by diagnos:', error);
@@ -71,7 +71,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på encounter
     const searchByEncounter = async () => {
         try {
-            const response = await axios.get(`http://localhost:30001/search/patients/encounter/${encounterId}`);
+            const response = await axios.get(`http://localhost:8083/search/patients/encounter/${encounterId}`);
             setPatientsByEncounter(response.data);
         } catch (error) {
             console.error('Error fetching patients by encounter:', error);
@@ -94,7 +94,7 @@ const SearchDashboard = () => {
                 <button onClick={searchByName}>Search by Name</button>
                 <ul>
                     {patientsByName.map((patient) => (
-                        <li key={patient.id}>{patient.name}</li>
+                        <li key={patient.id}>{patient.email}</li>
                     ))}
                 </ul>
             </div>
@@ -106,7 +106,7 @@ const SearchDashboard = () => {
                     <button onClick={searchByDoctor}>Search by Doctor</button>
                     <ul>
                         {patientsByDoctor.map((patient) => (
-                            <li key={patient.id}>{patient.name}</li>
+                            <li key={patient.id}>{patient.email}</li>
                         ))}
                     </ul>
                 </div>
@@ -129,7 +129,7 @@ const SearchDashboard = () => {
                 <button onClick={searchByDiagnos}>Search by Diagnos</button>
                 <ul>
                     {patientsByDiagnos.map((patient) => (
-                        <li key={patient.id}>{patient.name}</li>
+                        <li key={patient.id}>{patient.email}</li>
                     ))}
                 </ul>
             </div>
@@ -151,7 +151,7 @@ const SearchDashboard = () => {
                 <button onClick={searchByEncounter}>Search by Encounter</button>
                 <ul>
                     {patientsByEncounter.map((patient) => (
-                        <li key={patient.id}>{patient.name}</li>
+                        <li key={patient.id}>{patient.email}</li>
                     ))}
                 </ul>
             </div>

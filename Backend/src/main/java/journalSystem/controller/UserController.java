@@ -104,20 +104,26 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getIdByEmail/{email}")
+    public int getUserIdByEmail(@PathVariable String email) {
+        return userService.getIdByEmail(email);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         if (userDTO.getEmail() == null ||
-                userDTO.getName() == null ||
+                userDTO.getFirstName() == null ||
+                userDTO.getLastName() == null ||
                 userDTO.getPassword() == null ||
                 userDTO.getPhoneNr() == null ||
                 userDTO.getRole() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         User user = new User(userDTO.getEmail(),
-                    userDTO.getName(),
+                    userDTO.getFirstName(),
+                    userDTO.getLastName(),
                     userDTO.getPhoneNr(),
                     Role.valueOf(userDTO.getRole().toUpperCase())
                     );
-
 
         authServiceClient.createUser(userDTO);
         User createdUser = userService.createUser(user);
@@ -128,7 +134,8 @@ public class UserController {
     @PutMapping("/update/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         if (userDTO.getEmail() == null ||
-                userDTO.getName() == null ||
+                userDTO.getFirstName() == null ||
+                userDTO.getLastName() == null ||
                 userDTO.getPassword() == null ||
                 userDTO.getPhoneNr() == null ||
                 userDTO.getRole() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -136,7 +143,8 @@ public class UserController {
         User updatedUser = userService.updateUser(id, new User(
                 id,
                 userDTO.getEmail(),
-                userDTO.getName(),
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
                 userDTO.getPhoneNr(),
                 Role.valueOf(userDTO.getRole().toUpperCase())
         ));
@@ -160,6 +168,10 @@ public class UserController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-        return authServiceClient.login(request.getEmail(), request.getPassword(), Role.valueOf(request.getRole().toUpperCase()));
+        User user = userService.getUserByEmailAndRole(request.getEmail(), Role.valueOf(request.getRole().toUpperCase()));
+
+        if (user != null) return authServiceClient.login(request.getEmail(), request.getPassword());
+
+        return new LoginResponse("User not found");
     }
 }

@@ -10,38 +10,44 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = {"http://backend-service:8080", "http://localhost:8080", "http://localhost:30001"}, allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:8080/", allowedHeaders = "*")
 public class AuthController {
 
     @Autowired
     private AuthUserService authUserService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        AuthUser user = authUserService.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+    public ResponseEntity<LoginResponse> login(@RequestParam String email, @RequestParam String password) {
+        try {
+            // Logga in via Keycloak och hämta JWT-token
+            String token = authUserService.login(email, password);
 
-        if (request.getPassword().equals(user.getPassword()) && request.getRole().toUpperCase().equals(user.getRole().toString())) {
-            return ResponseEntity.ok(new LoginResponse("Login successful", user.getId()));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Invalid email or password"));
+            return ResponseEntity.ok(new LoginResponse("Login successful", token)); // Skickar en pseudo-id
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse("Wrong password"));
         }
     }
 
+    @GetMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            // Validera token via Keycloak
+            String userInfo = authUserService.validateToken(token.substring(7)); // Ta bort "Bearer "
+            return ResponseEntity.ok(userInfo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+
+    // Skapa användare via Keycloak Admin API
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        if (userDTO.getEmail() == null ||
-                userDTO.getPassword() == null ||
-                userDTO.getRole() == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
-        AuthUser user = new AuthUser(
-                userDTO.getEmail(),
-                userDTO.getPassword(),
-                Role.valueOf(userDTO.getRole().toUpperCase())
-        );
-
-        authUserService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+    public ResponseEntity<String> createUser(@RequestParam String email, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
+        try {
+            // Skapa användare genom AuthUserService
+            authUserService.createUser(email, firstName, lastName, password);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating user: " + e.getMessage());
+        }
     }
 }

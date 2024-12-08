@@ -39,7 +39,8 @@ public class UserService implements IUserService {
     @Override
     public User updateUser(int id, User user) {
         User existingUser = getUserById(id);
-        existingUser.setName(user.getName());
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
         existingUser.setPhoneNr(user.getPhoneNr());
         existingUser.setRole(user.getRole());
@@ -63,8 +64,13 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByEmail(String email) {
-        System.out.println(email);
         return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public User getUserByEmailAndRole(String email, Role role) {
+        return userRepository.findByEmailAndRole(email, role)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
@@ -115,15 +121,5 @@ public class UserService implements IUserService {
     public User getPractitionerById(int id) {
         return userRepository.findByIdAndRoleIn(id, List.of(Role.DOCTOR, Role.OTHER))
                 .orElseThrow(() -> new RuntimeException("Practitioner not found"));
-    }
-
-    @Override
-    public List<User> getUsersByName(String name) {
-        return userRepository.findAllByName(name);
-    }
-
-    @Override
-    public int countAllUsers() {
-        return (int) userRepository.count();
     }
 }

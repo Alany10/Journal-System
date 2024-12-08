@@ -17,17 +17,21 @@ const Login = ({ setUser }) => {
 
         try {
             const url = '/user/login';
-            const response = await axios.post(url, { email: email, password: password , role: userType});
+            const response = await axios.post(url, { email: email, password: password, role: userType });
+
+            // Hämta användarens ID asynkront
+            const userIdResponse = await axios.get(`http://localhost:8080/user/getIdByEmail/${email}`);
+            const userId = userIdResponse.data;
 
             const user = {
-                id: response.data.id,
+                email: email,
+                id: userId, // Här är det faktiska ID:t
                 role: userType,
-                email: email
             };
 
             // Uppdatera användardatan i App.js
             setUser(user);
-            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('user', JSON.stringify(user));
 
             // Omdirigera användaren till rätt dashboard
             if (user.role === 'patient') {
@@ -35,11 +39,11 @@ const Login = ({ setUser }) => {
             } else {
                 navigate('/practitioner/dashboard'); // Navigera till praktikerns dashboard
             }
-
         } catch (error) {
             setError('Invalid email, password or role');
         }
     };
+
 
     return (
         <div>

@@ -90,10 +90,10 @@ public class SearchResource {
 
     // Hitta alla patienter som tillhör en läkare baserat på diagnos
     @GET
-    @Path("/patients/doctor/{doctorId}")
-    public Uni<List<User>> findPatientsByDoctor(@PathParam("doctorId") int doctorId) {
+    @Path("/patients/doctor/{email}")
+    public Uni<List<User>> findPatientsByDoctor(@PathParam("email") String email) {
         User doctor = new User();
-        doctor.setId(doctorId);
+        doctor.setEmail(email);
         return searchService.findPatientsByDoctor(doctor);
     }
 

@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 
 const db = mysql.createConnection({
-    host: 'image-db-service',        // Din databasvärd, vanligtvis localhost om den körs på samma maskin
+    host: 'localhost',        // Din databasvärd, vanligtvis localhost om den körs på samma maskin
     user: 'journal_user',     // Din MySQL-användare
     password: 'journal321',   // Ditt lösenord
     database: 'image',        // Namnet på databasen

@@ -78,7 +78,7 @@ public class MessageController {
     @GetMapping("/getAllReceived/{userId}")
     public List<MessageDTO> getAllReceived(@PathVariable int userId) {
         User user = userService.getUserById(userId);
-        if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
+        if (user == null) throw new IllegalArgumentException("No User With id: " + userId);
 
         List<MessageDTO> messageDTOs = messageServiceClient.getAllReceived(user.getEmail());
 
@@ -92,7 +92,7 @@ public class MessageController {
     @GetMapping("/getAllUnread/{userId}")
     public List<MessageDTO> getAllUnread(@PathVariable int userId) {
         User user = userService.getUserById(userId);
-        if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
+        if (user == null) throw new IllegalArgumentException("No User With id: " + userId);
 
         List<MessageDTO> messageDTOs = messageServiceClient.getAllUnread(user.getEmail());
 
@@ -106,7 +106,7 @@ public class MessageController {
     @GetMapping("/getAllSent/{userId}")
     public List<MessageDTO> getAllSent(@PathVariable int userId) {
         User user = userService.getUserById(userId);
-        if (user == null) throw new IllegalArgumentException("No User With Id: " + userId);
+        if (user == null) throw new IllegalArgumentException("No User With email: " + userId);
 
         List<MessageDTO> messageDTOs = messageServiceClient.getAllSent(user.getEmail());
 

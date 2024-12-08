@@ -14,6 +14,8 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     // Hämta användare baserat på email
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByEmailAndRole(String email, Role role);
+
     // Hämta användare baserat på id och roll
     Optional<User> findByIdAndRole(int id, Role role);
 
@@ -32,9 +34,6 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
 
     // Kontrollera om en användare med en viss email existerar
     boolean existsByEmail(String email);
-
-    // Hämta användare baserat på namn (fall för att hitta användare med samma namn)
-    List<User> findAllByName(String name);
 
     // Hämta alla läkare
     default List<User> findAllDoctors() {

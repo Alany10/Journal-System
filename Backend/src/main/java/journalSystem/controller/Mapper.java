@@ -36,7 +36,8 @@ public class Mapper {
         return new UserDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getName(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getPhoneNr(),
                 user.getRole().toString(),
                 encounterDTOs,

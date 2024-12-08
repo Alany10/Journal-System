@@ -16,7 +16,8 @@ import java.util.List;
 public class UserDTO {
     private int id;
     private String email;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String password;
     private String phoneNr;
     private String role;
@@ -24,10 +25,11 @@ public class UserDTO {
     private List<ObservationDTO> observations;
     private List<DiagnosDTO> diagnoses;
 
-    public UserDTO(int id, String email, String name, String password, String phoneNr, String role) {
+    public UserDTO(int id, String email, String firstName, String lastName, String password, String phoneNr, String role) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.phoneNr = phoneNr;
         this.role = role;
@@ -36,10 +38,11 @@ public class UserDTO {
         this.diagnoses = new ArrayList<>();
     }
 
-    public UserDTO(int id, String email, String name, String phoneNr, String role) {
+    public UserDTO(int id, String email, String firstName, String lastName, String phoneNr, String role) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNr = phoneNr;
         this.role = role;
         this.encounters = new ArrayList<>();
@@ -47,10 +50,11 @@ public class UserDTO {
         this.diagnoses = new ArrayList<>();
     }
 
-    public UserDTO(int id, String email, String name, String phoneNr, String role, List<EncounterDTO> encounters, List<ObservationDTO> observations, List<DiagnosDTO> diagnoses) {
+    public UserDTO(int id, String email, String firstName, String lastName, String phoneNr, String role, List<EncounterDTO> encounters, List<ObservationDTO> observations, List<DiagnosDTO> diagnoses) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNr = phoneNr;
         this.role = role;
         this.encounters = encounters;

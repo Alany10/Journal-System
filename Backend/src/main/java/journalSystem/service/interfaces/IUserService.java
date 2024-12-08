@@ -21,6 +21,7 @@ public interface IUserService {
     // Hämta specifika attribut
     int getIdByEmail(String email);          // Hämta ID via email
     User getUserByEmail(String email); // Hämta användare via email
+    User getUserByEmailAndRole(String email, Role role); // Hämta användare via email
 
     // Rollbaserade metoder
     List<User> getUsersByRole(Role role);    // Hämta alla användare av en viss roll
@@ -33,9 +34,4 @@ public interface IUserService {
     User getPatientById(int id);
     User getOtherById(int id);
     User getPractitionerById(int id);
-
-    // Avancerade filtreringsmetoder
-    List<User> getUsersByName(String name);  // Hämta alla användare med ett specifikt namn
-
-    int countAllUsers();                    // Räkna totala antalet användare
 }

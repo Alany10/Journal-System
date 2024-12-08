@@ -23,8 +23,11 @@ public class User {
     @Column(name = "email", nullable = false, unique = true, columnDefinition = "TEXT")
     private String email;
 
-    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
-    private String name;
+    @Column(name = "first_name", nullable = false, columnDefinition = "TEXT")
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, columnDefinition = "TEXT")
+    private String lastName;
 
     @Column(name = "phone_nr", nullable = false, columnDefinition = "TEXT")
     private String phoneNr;
@@ -55,10 +58,11 @@ public class User {
     private List<Diagnos> practitionerDiagnoses = new ArrayList<>();
 
     // Konstruktorer
-    public User(int id, String email, String name, String phoneNr, Role role) {
+    public User(int id, String email, String firstName, String lastName, String phoneNr, Role role) {
         this.id = id;
         this.email = email;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNr = phoneNr;
         this.role = role;
         this.patientEncounters = new ArrayList<>();
@@ -69,9 +73,11 @@ public class User {
         this.practitionerDiagnoses = new ArrayList<>();
     }
 
-    public User(String email, String name, String phoneNr, Role role) {
+    // Konstruktorer
+    public User(String email, String firstName, String lastName, String phoneNr, Role role) {
         this.email = email;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNr = phoneNr;
         this.role = role;
         this.patientEncounters = new ArrayList<>();

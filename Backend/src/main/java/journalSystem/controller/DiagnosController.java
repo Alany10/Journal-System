@@ -104,7 +104,7 @@ public class DiagnosController {
         }
     }
 
-    @PutMapping("/establish/{id}") // TODO
+    @PutMapping("/establish/{id}")
     public ResponseEntity<DiagnosDTO> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus) {
         if (diagnosStatus == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String cleanedStatus = diagnosStatus.replace("\"", "").trim().toUpperCase();

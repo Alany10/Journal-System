@@ -26,7 +26,7 @@ const ImageDashboard = () => {
 
     const fetchUploadedImages = async () => {
         try {
-            const response = await axios.get('http://localhost:30004/image/getAll');
+            const response = await axios.get('http://localhost:3000/image/getAll');
             setUploadedImages(response.data);
         } catch (error) {
             console.error('Error fetching images', error);
@@ -51,7 +51,7 @@ const ImageDashboard = () => {
         formData.append('image', image);
 
         try {
-            const response = await axios.post('http://localhost:30004/image/upload', formData, {
+            const response = await axios.post('http://localhost:3000/image/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -69,7 +69,7 @@ const ImageDashboard = () => {
     const fetchSelectedImage = async (id) => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:30004/image/get/${id}`);
+            const response = await axios.get(`http://localhost:3000/image/get/${id}`);
             setSelectedImage(response.data);
         } catch (error) {
             console.error('Error fetching image', error);
