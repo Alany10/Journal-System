@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom'; // För att navigera efter regis
 const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState(''); // Lägg till namn
+    const [firstName, setFirstName] = useState(''); // Lägg till namn
+    const [lastName, setLastName] = useState(''); // Lägg till namn
     const [phoneNr, setPhoneNr] = useState(''); // Lägg till telefonnummer
     const [role, setRole] = useState('patient'); // Standard är 'patient'
     const [error, setError] = useState(null);
@@ -19,7 +20,8 @@ const Register = () => {
         const userData = {
             email,
             password,
-            name,
+            firstName,
+            lastName,
             phoneNr,
             role,
         };
@@ -58,11 +60,20 @@ const Register = () => {
                     />
                 </div>
                 <div>
-                    <label>Name:</label> {/* Lägg till namnfält */}
+                    <label>First Name:</label> {/* Lägg till namnfält */}
                     <input
                         type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Last Name:</label> {/* Lägg till namnfält */}
+                    <input
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         required
                     />
                 </div>
@@ -86,7 +97,7 @@ const Register = () => {
                 <button type="submit">Register</button>
             </form>
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{color: 'red'}}>{error}</p>}
         </div>
     );
 };
