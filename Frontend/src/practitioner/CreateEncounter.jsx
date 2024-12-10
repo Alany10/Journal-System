@@ -1,6 +1,6 @@
 // src/components/CreateEncounter.jsx
 import React, { useState, useEffect } from 'react';
-import axios from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import {backendInstance} from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const CreateEncounter = () => {
     const [dateTime, setDateTime] = useState('');
@@ -12,7 +12,7 @@ const CreateEncounter = () => {
         // Hämta alla patienter vid komponentens laddning
         const fetchPatients = async () => {
             try {
-                const response = await axios.get('/user/getAllPatients');
+                const response = await backendInstance.get('/user/getAllPatients');
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");
@@ -33,7 +33,7 @@ const CreateEncounter = () => {
         };
 
         try {
-            await axios.post('/encounter/create', encounterData);
+            await backendInstance.post('/encounter/create', encounterData);
             alert("Encounter created successfully!");
         } catch (err) {
             setError("Error creating encounter");
@@ -64,7 +64,7 @@ const CreateEncounter = () => {
                         <option value="">Select a patient</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>
-                                {patient.name} (Email: {patient.email})
+                                {patient.email}
                             </option>
                         ))}
                     </select>

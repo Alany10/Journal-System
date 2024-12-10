@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/message")
-@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class MessageController {
 
     @Autowired
@@ -47,7 +47,7 @@ public class MessageController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<String> createMessage(@RequestBody MessageDTO messageDTO) {
         User sender = userService.getUserByEmail(messageDTO.getSender());
         User receiver = userService.getUserByEmail(messageDTO.getReceiver());
 
@@ -55,11 +55,11 @@ public class MessageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(messageServiceClient.createMessage(messageDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created message");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MessageDTO> updateMessage(@PathVariable int id, @RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<String> updateMessage(@PathVariable int id, @RequestBody MessageDTO messageDTO) {
         User sender = userService.getUserByEmail(messageDTO.getSender());
         User receiver = userService.getUserByEmail(messageDTO.getReceiver());
 
@@ -67,12 +67,13 @@ public class MessageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(messageServiceClient.updateMessage(id, messageDTO));
+        return ResponseEntity.status(HttpStatus.OK).body("Updated message");
     }
 
     @PutMapping("/read/{id}")
-    public ResponseEntity<MessageDTO> readMessage(@PathVariable int id) {
-        return ResponseEntity.status(HttpStatus.OK).body(messageServiceClient.readMessage(id));
+    public ResponseEntity<String> readMessage(@PathVariable int id) {
+        messageServiceClient.readMessage(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Message is now read");
     }
 
     @GetMapping("/getAllReceived/{userId}")

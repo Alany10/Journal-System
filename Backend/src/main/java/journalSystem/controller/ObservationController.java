@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/observation")
-@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class ObservationController {
     private final IObservationService observationService;
     private final IUserService userService;
@@ -57,7 +57,7 @@ public class ObservationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ObservationDTO> createObservation(@RequestBody ObservationDTO observationDTO) {
+    public ResponseEntity<String> createObservation(@RequestBody ObservationDTO observationDTO) {
         if (observationDTO.getDescription() == null ||
                 observationDTO.getPatientId() < 0 ||
                 observationDTO.getPractitionerId() < 0) {
@@ -75,11 +75,11 @@ public class ObservationController {
 
         Observation observation = new Observation(observationDTO.getDescription(), patient, practitioner, encounter, diagnos);
         Observation createdObservation = observationService.createObservation(observation);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdObservation));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Observation created");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ObservationDTO> updateObservation(@PathVariable int id, @RequestBody ObservationDTO observationDTO) {
+    public ResponseEntity<String> updateObservation(@PathVariable int id, @RequestBody ObservationDTO observationDTO) {
         if (observationDTO.getDescription() == null ||
                 observationDTO.getPatientId() < 0 ||
                 observationDTO.getPractitionerId() < 0 ||
@@ -106,7 +106,7 @@ public class ObservationController {
                 diagnos
         ));
         if (updatedObservation != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedObservation));
+            return ResponseEntity.status(HttpStatus.CREATED).body("Observation updated");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

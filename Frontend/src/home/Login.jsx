@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // För att navigera efter inloggning
 import { Link } from 'react-router-dom'; // Importera Link för att navigera utan att ladda om sidan
-import axios from './AxiosConfig'; // Importera Axios för att skicka API-anrop
+import {backendInstance} from './AxiosConfig'; // Importera Axios för att skicka API-anrop
 
 const Login = ({ setUser }) => {
     const [email, setEmail] = useState('');
@@ -17,11 +17,10 @@ const Login = ({ setUser }) => {
 
         try {
             const url = '/user/login';
-            const response = await axios.post(url, { email: email, password: password, role: userType });
+            const response = await backendInstance.post(url, { email: email, password: password, role: userType });
 
             // Hämta användarens ID asynkront
-            const userIdResponse = await axios.get(`http://localhost:8080/user/getIdByEmail/${email}`);
-            const userId = userIdResponse.data;
+            const userId = (await backendInstance.get(`/user/getIdByEmail/${email}`)).data;
 
             const user = {
                 email: email,

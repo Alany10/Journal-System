@@ -1,6 +1,6 @@
 // src/components/Register.jsx
 import React, { useState } from 'react';
-import axios from './AxiosConfig'; // Importera Axios för att skicka API-anrop
+import {backendInstance} from './AxiosConfig'; // Importera Axios för att skicka API-anrop
 import { useNavigate } from 'react-router-dom'; // För att navigera efter registrering
 
 const Register = () => {
@@ -28,9 +28,7 @@ const Register = () => {
 
         try {
             // Gör ett POST-anrop till respektive API
-            const url = '/user/create';
-            const response = await axios.post(url, userData); // Skicka tillbaka skapade användaren //TODO
-            // Efter lyckad registrering, omdirigera till login-sidan
+            await backendInstance.post('/user/create', userData);
             navigate('/');
         } catch (error) {
             setError('Error during registration');

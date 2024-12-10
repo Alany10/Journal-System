@@ -1,6 +1,6 @@
 // src/components/CreateObservation.jsx
 import React, { useState, useEffect } from 'react';
-import axios from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import {backendInstance} from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const CreateObservation = () => {
     const [description, setDescription] = useState('');
@@ -16,7 +16,7 @@ const CreateObservation = () => {
     useEffect(() => {
         const fetchInformations = async () => {
             try {
-                const response = await axios.get('/user/getAllPatients');
+                const response = await backendInstance.get('/user/getAllPatients');
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");
@@ -30,8 +30,8 @@ const CreateObservation = () => {
         if (patientId) {
             const fetchEncounterAndDiagnoses = async () => {
                 try {
-                    const encounterResponse = await axios.get(`/encounter/getAllByPatient/${patientId}`);
-                    const diagnosesResponse = await axios.get(`/diagnos/getAllByPatient/${patientId}`);
+                    const encounterResponse = await backendInstance.get(`/encounter/getAllByPatient/${patientId}`);
+                    const diagnosesResponse = await backendInstance.get(`/diagnos/getAllByPatient/${patientId}`);
                     setEncounters(encounterResponse.data);
                     setDiagnoses(diagnosesResponse.data);
                 } catch (err) {
@@ -57,7 +57,7 @@ const CreateObservation = () => {
         };
 
         try {
-            await axios.post('/observation/create', observationData);
+            await backendInstance.post('/observation/create', observationData);
             alert("Observation created successfully!");
         } catch (err) {
             setError("Error creating observation");
@@ -88,7 +88,7 @@ const CreateObservation = () => {
                         <option value="">Select a patient</option>
                         {patients.map((patient) => (
                             <option key={patient.id} value={patient.id}>
-                                {patient.name} (Email: {patient.email})
+                                {patient.email}
                             </option>
                         ))}
                     </select>

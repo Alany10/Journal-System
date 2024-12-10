@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:8080/", allowedHeaders = "*")
+@CrossOrigin(origins = {"https://backend-service:8080", "https://localhost:8001", "https://localhost:30001"}, allowedHeaders = "*")
 public class AuthController {
 
     @Autowired
@@ -42,6 +42,10 @@ public class AuthController {
     // Skapa användare via Keycloak Admin API
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestParam String email, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
+        System.out.println(email);
+        System.out.println(firstName);
+        System.out.println(lastName);
+        System.out.println(password);
         try {
             // Skapa användare genom AuthUserService
             authUserService.createUser(email, firstName, lastName, password);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import {backendInstance, searchInstance} from "./AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const SearchDashboard = () => {
     // States för att hålla data och inputvärden
@@ -9,7 +9,6 @@ const SearchDashboard = () => {
     const [patientsByEncounter, setPatientsByEncounter] = useState([]);
 
     const [name, setName] = useState('');
-    const [doctorId, setDoctorId] = useState('');
     const [diagnosId, setDiagnosId] = useState('');
     const [encounterId, setEncounterId] = useState('');
 
@@ -25,10 +24,10 @@ const SearchDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const diagnosResponse = await axios.get('http://localhost:8080/diagnos/getAll');
+                const diagnosResponse = await backendInstance.get('/diagnos/getAll');
                 setDiagnosList(diagnosResponse.data);
 
-                const encounterResponse = await axios.get('http://localhost:8080/encounter/getAll');
+                const encounterResponse = await backendInstance.get('/encounter/getAll');
                 setEncounterList(encounterResponse.data);
             } catch (error) {
                 console.error('Error fetching diagnoses and encounters:', error);
@@ -41,7 +40,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på namn
     const searchByName = async () => {
         try {
-            const response = await axios.get(`http://localhost:8083/search/patients/${name}`);
+            const response = await searchInstance.get(`/search/patients/${name}`);
             setPatientsByName(response.data);
         } catch (error) {
             console.error('Error fetching patients by name:', error);
@@ -51,7 +50,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på läkare
     const searchByDoctor = async () => {
         try {
-            const response = await axios.get(`http://localhost:8083/search/patients/doctor/${userId}`);
+            const response = await searchInstance.get(`/search/patients/doctor/${userId}`);
             setPatientsByDoctor(response.data);
         } catch (error) {
             console.error('Error fetching patients by doctor:', error);
@@ -61,7 +60,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på diagnos
     const searchByDiagnos = async () => {
         try {
-            const response = await axios.get(`http://localhost:8083/search/patients/diagnos/${diagnosId}`);
+            const response = await searchInstance.get(`/search/patients/diagnos/${diagnosId}`);
             setPatientsByDiagnos(response.data);
         } catch (error) {
             console.error('Error fetching patients by diagnos:', error);
@@ -71,7 +70,7 @@ const SearchDashboard = () => {
     // Hitta patienter baserat på encounter
     const searchByEncounter = async () => {
         try {
-            const response = await axios.get(`http://localhost:8083/search/patients/encounter/${encounterId}`);
+            const response = await searchInstance.get(`/search/patients/encounter/${encounterId}`);
             setPatientsByEncounter(response.data);
         } catch (error) {
             console.error('Error fetching patients by encounter:', error);

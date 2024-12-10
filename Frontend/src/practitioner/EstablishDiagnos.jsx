@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import {backendInstance} from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const EstablishDiagnos = () => {
     const [status, setStatus] = useState(''); // Status för diagnos
@@ -11,7 +11,7 @@ const EstablishDiagnos = () => {
         // Hämta alla diagnoser vid komponentens laddning
         const fetchDiagnoses = async () => {
             try {
-                const response = await axios.get(`/diagnos/getAllByPractitioner/${practitionerId}`);
+                const response = await backendInstance.get(`/diagnos/getAllByPractitioner/${practitionerId}`);
                 setDiagnoses(response.data);  // Sätter listan på diagnoser
             } catch (err) {
                 setError("Failed to load diagnoses");
@@ -26,7 +26,7 @@ const EstablishDiagnos = () => {
         e.preventDefault(); // Förhindrar standardbeteendet för formuläret
         setError(null); // Återställer eventuella tidigare fel
         try {
-            await axios.put(`/diagnos/establish/${diagnosId}`, status);
+            await backendInstance.put(`/diagnos/establish/${diagnosId}`, status);
             alert("Diagnosis established successfully!");
         } catch (err) {
             setError("Error establishing diagnosis");

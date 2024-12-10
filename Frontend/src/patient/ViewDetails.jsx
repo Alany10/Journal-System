@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importera useNavigate för navigering
-import axios from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import {backendInstance} from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const ViewDetails = () => {
     const [patient, setPatient] = useState(null); // State för patientdetaljer
@@ -21,7 +21,7 @@ const ViewDetails = () => {
         // Funktion för att hämta patientdetaljer baserat på id
         const fetchPatientDetails = async () => {
             try {
-                const response = await axios.get(`/user/get/${id}`);
+                const response = await backendInstance.get(`/user/get/${id}`);
                 setPatient(response.data);
             } catch (err) {
                 setError("Failed to load patient details");
@@ -51,7 +51,7 @@ const ViewDetails = () => {
     return (
         <div>
             <h2>Patient Details</h2>
-            <p><strong>Name:</strong> {patient.name}</p>
+            <p><strong>Name:</strong> {patient.firstName + " " + patient.lastName}</p>
             <p><strong>Email:</strong> {patient.email}</p>
             <p><strong>PhoneNr:</strong> {patient.phoneNr}</p>
 

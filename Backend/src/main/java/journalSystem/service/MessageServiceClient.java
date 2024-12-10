@@ -15,7 +15,7 @@ public class MessageServiceClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String MESSAGE_SERVICE_BASE_URL = "http://localhost:8082/message"; // URL för Message-tjänsten
+    private static final String MESSAGE_SERVICE_BASE_URL = "https://localhost:8003/message"; // URL för Message-tjänsten
 
     // Hämta alla meddelanden
     public List<MessageDTO> getAllMessages() {

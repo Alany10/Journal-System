@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // För att navigera till PatientDetails
-import axios from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import {backendInstance} from "../home/AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const ViewPatients = () => {
     const [patients, setPatients] = useState([]);      // Lista över alla patienter
@@ -12,7 +12,7 @@ const ViewPatients = () => {
         // Hämta alla patienter när komponenten laddas
         const fetchPatients = async () => {
             try {
-                const response = await axios.get('/user/getAllPatients');
+                const response = await backendInstance.get('/user/getAllPatients');
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");

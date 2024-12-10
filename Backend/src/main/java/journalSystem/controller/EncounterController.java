@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/encounter")
-@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class EncounterController {
     private final IEncounterService encounterService;
     private final IUserService userService;
@@ -49,7 +49,7 @@ public class EncounterController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<EncounterDTO> createEncounter(@RequestBody EncounterDTO encounterDTO) {
+    public ResponseEntity<String> createEncounter(@RequestBody EncounterDTO encounterDTO) {
         System.out.println(encounterDTO.getDateTime() + " " + encounterDTO.getPatientId() + encounterDTO.getPractitionerId());
         if (encounterDTO.getDateTime() == null ||
                 encounterDTO.getPatientId() < 0 ||
@@ -66,11 +66,11 @@ public class EncounterController {
 
         Encounter encounter = new Encounter(encounterDTO.getDateTime(), patient, user);
         Encounter createdEncounter = encounterService.createEncounter(encounter);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdEncounter));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Encounter created");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<EncounterDTO> updateEncounter(@PathVariable int id, @RequestBody EncounterDTO encounterDTO) {
+    public ResponseEntity<String> updateEncounter(@PathVariable int id, @RequestBody EncounterDTO encounterDTO) {
         if (encounterDTO.getDateTime() == null ||
                 encounterDTO.getPatientId() < 0 ||
                 encounterDTO.getPractitionerId() < 0) {
@@ -91,7 +91,7 @@ public class EncounterController {
                 user
         ));
         if (updatedEncounter != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedEncounter));
+            return ResponseEntity.status(HttpStatus.CREATED).body("Encounter updated");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -9,16 +9,18 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class AuthUserService {
 
     private final WebClient webClient;
-    private static final String CLIENTSECRET = "ohAonNqI9YgohNkdpuSlRVng6qFZeVw6";
+    private static final String CLIENTSECRET = "3PNTN4xR5nQmgtmJleJdGZ5AS6pcFVQn";
 
     public AuthUserService() {
         this.webClient = WebClient.builder()
-                .baseUrl("http://localhost:8084")
+                .baseUrl("http://localhost:8006")
                 .build();
     }
 
     public String login(String username, String password) {
         try {
+            System.out.println(username);
+            System.out.println(password);
             // Make the POST request to get the response containing the access token
             String response = webClient.post()
                     .uri("/realms/journal_system/protocol/openid-connect/token")
@@ -91,6 +93,10 @@ public class AuthUserService {
         try {
             // Hämta access token
             String accessToken = getAccessToken();
+            System.out.println(username);
+            System.out.println(password);
+            System.out.println(firstName);
+            System.out.println(lastName);
 
             // Skicka request för att skapa användare
             webClient.post()

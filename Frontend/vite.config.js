@@ -1,11 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import fs from 'fs';
 
-// https://vite.dev/config/
+// HTTPS-konfiguration
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '0.0.0.0', // Lägg till detta för att tillåta extern åtkomst
-    port: 5173
-  }
+    https: {
+      key: fs.readFileSync('./src/resources/key.pem'),
+      cert: fs.readFileSync('./src/resources/cert.pem'),
+    },
+    host: 'localhost', // Använd 'localhost' eller specificera en IP om nödvändigt
+    port: 8000,        // Ändra till önskad port om det behövs
+  },
 });

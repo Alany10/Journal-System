@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // För att hämta ID från URL
-import axios from "./AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
+import {backendInstance} from "./AxiosConfig.jsx"; // Anpassa för din axios-konfiguration
 
 const DiagnosDetails = () => {
     const { id } = useParams();  // Hämta diagnos-id från URL-parametrar
@@ -12,13 +12,13 @@ const DiagnosDetails = () => {
     useEffect(() => {
         const fetchObservationDetails = async () => {
             try {
-                const response = await axios.get(`/observation/getAllByDiagnos/${id}`);
+                const response = await backendInstance.get(`/observation/getAllByDiagnos/${id}`);
                 setObservations(response.data);  // Uppdatera med listan av observationer
 
                 // För varje observation, hämta encounter date
                 const encounters = {};
                 for (const observation of response.data) {
-                    const encounterResponse = await axios.get(`/encounter/get/${observation.encounterId}`);
+                    const encounterResponse = await backendInstance.get(`/encounter/get/${observation.encounterId}`);
                     encounters[observation.id] = encounterResponse.data.dateTime;
                 }
                 setEncounterDates(encounters);

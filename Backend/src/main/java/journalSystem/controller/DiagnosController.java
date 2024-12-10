@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/diagnos")
-@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class DiagnosController {
     private final IDiagnosService diagnosService;
     private final IUserService userService;
@@ -50,7 +50,7 @@ public class DiagnosController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<DiagnosDTO> createDiagnos(@RequestBody DiagnosDTO diagnosDTO) {
+    public ResponseEntity<String> createDiagnos(@RequestBody DiagnosDTO diagnosDTO) {
         if (diagnosDTO.getName() == null || diagnosDTO.getPatientId() < 0 || diagnosDTO.getPractitionerId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -64,11 +64,11 @@ public class DiagnosController {
 
         Diagnos diagnos = new Diagnos(diagnosDTO.getName(), patient , practitioner);
         Diagnos createdDiagnos = diagnosService.createDiagnos(diagnos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdDiagnos));
+        return ResponseEntity.status(HttpStatus.CREATED).body("Diagnos created");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<DiagnosDTO> updateDiagnos(@PathVariable int id, @RequestBody DiagnosDTO diagnosDTO) {
+    public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody DiagnosDTO diagnosDTO) {
         if (diagnosDTO.getName() == null ||
                 diagnosDTO.getPatientId() < 0 ||
                 diagnosDTO.getPractitionerId() < 0) {
@@ -98,14 +98,14 @@ public class DiagnosController {
         ));
 
         if (updatedDiagnos != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedDiagnos));
+            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnos updated");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @PutMapping("/establish/{id}")
-    public ResponseEntity<DiagnosDTO> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus) {
+    public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus) {
         if (diagnosStatus == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String cleanedStatus = diagnosStatus.replace("\"", "").trim().toUpperCase();
 
@@ -127,7 +127,7 @@ public class DiagnosController {
         ));
 
         if (updatedDiagnos != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(updatedDiagnos));
+            return ResponseEntity.status(HttpStatus.CREATED).body("Diagnos established");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

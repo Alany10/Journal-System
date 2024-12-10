@@ -5,7 +5,7 @@ const db = mysql.createConnection({
     user: 'journal_user',     // Din MySQL-användare
     password: 'journal321',   // Ditt lösenord
     database: 'image',        // Namnet på databasen
-    port: 3310                // Ange porten som din MySQL-databas kör på
+    port: 3309              // Ange porten som din MySQL-databas kör på
 });
 
 db.connect((err) => {

@@ -15,7 +15,7 @@ public class AuthServiceClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String AUTH_SERVICE_BASE_URL = "http://localhost:8081/auth";
+    private static final String AUTH_SERVICE_BASE_URL = "https://localhost:8002/auth";
 
     public LoginResponse login(String email, String password) {
         // Bygg upp URL med query-parametrar
@@ -41,6 +41,10 @@ public class AuthServiceClient {
     }
 
     public ResponseEntity<String> createUser(UserDTO userDTO) {
+        System.out.println(userDTO.getEmail());
+        System.out.println(userDTO.getFirstName());
+        System.out.println(userDTO.getLastName());
+        System.out.println(userDTO.getPassword());
         // Build the URL with query parameters
         String url = UriComponentsBuilder.fromHttpUrl(AUTH_SERVICE_BASE_URL + "/create")
                 .queryParam("email", userDTO.getEmail())
@@ -58,12 +62,14 @@ public class AuthServiceClient {
 
         try {
             // Send the POST request using RestTemplate
-            ResponseEntity<LoginResponse> response = restTemplate.exchange(
+            ResponseEntity<String> response = restTemplate.exchange(
                     url,
                     HttpMethod.POST,
                     entity,
-                    LoginResponse.class
+                    String.class // Temporärt använda String för att logga svaret
             );
+            System.out.println("Response Body: " + response.getBody());  // Logga svaret
+
 
             // Return a response based on the result
             if (response.getStatusCode() == HttpStatus.CREATED) {

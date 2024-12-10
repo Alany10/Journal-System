@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {"http://frontend-service:5173", "http://localhost:5173", "http://localhost:30000"}, allowedHeaders = "*")
+@CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class UserController {
 
     @Autowired
@@ -110,29 +110,52 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
+        // Kontrollera om alla nödvändiga fält finns i userDTO
         if (userDTO.getEmail() == null ||
                 userDTO.getFirstName() == null ||
                 userDTO.getLastName() == null ||
                 userDTO.getPassword() == null ||
                 userDTO.getPhoneNr() == null ||
-                userDTO.getRole() == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                userDTO.getRole() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
+        // Skapa User-objekt
         User user = new User(userDTO.getEmail(),
-                    userDTO.getFirstName(),
-                    userDTO.getLastName(),
-                    userDTO.getPhoneNr(),
-                    Role.valueOf(userDTO.getRole().toUpperCase())
-                    );
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getPhoneNr(),
+                Role.valueOf(userDTO.getRole().toUpperCase()));
 
-        authServiceClient.createUser(userDTO);
+        // Försök att skapa användaren genom authServiceClient
+        System.out.println("Före");
+        try {
+            ResponseEntity<String> authResponse = authServiceClient.createUser(userDTO);
+
+            // Om authResponse inte är OK, returnera ett fel
+            if (!authResponse.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error creating user in auth service: " + authResponse.getBody());
+            }
+
+        } catch (Exception e) {
+            // Om det uppstår ett fel vid anropet till auth service
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error communicating with auth service: " + e.getMessage());
+        }
+        System.out.println("Efter");
+
+        // Om allt gick bra, skapa användaren i den lokala tjänsten
         User createdUser = userService.createUser(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.convertToDTO(createdUser));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User Created!");
     }
 
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         if (userDTO.getEmail() == null ||
                 userDTO.getFirstName() == null ||
                 userDTO.getLastName() == null ||
