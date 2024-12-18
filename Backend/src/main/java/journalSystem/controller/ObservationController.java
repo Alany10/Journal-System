@@ -22,32 +22,42 @@ public class ObservationController {
     private final IUserService userService;
     private final IEncounterService encounterService;
     private final IDiagnosService diagnosService;
+    private final UserController userController;
 
     @Autowired
     public ObservationController(IObservationService observationService, IUserService userService,
-                                 IEncounterService encounterService, IDiagnosService diagnosService) {
+                                 IEncounterService encounterService, IDiagnosService diagnosService, UserController userController) {
         this.observationService = observationService;
         this.userService = userService;
         this.encounterService = encounterService;
         this.diagnosService = diagnosService;
+        this.userController = userController;
     }
 
     @GetMapping("/getAll")
-    public List<ObservationDTO> getAllObservations() {
+    public ResponseEntity<List<ObservationDTO>> getAllObservations(@RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<Observation> observations = observationService.getAllObservations();
         if (observations != null) {
             List<ObservationDTO> observationDTOs = new ArrayList<>();
             for (Observation observation: observations){
                 observationDTOs.add(Mapper.convertToDTO(observation));
             }
-            return observationDTOs;
+            return ResponseEntity.ok(observationDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ObservationDTO> getObservationById(@PathVariable int id) {
+    public ResponseEntity<ObservationDTO> getObservationById(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         Observation observation = observationService.getObservationById(id);
         if (observation != null) {
             return ResponseEntity.ok(Mapper.convertToDTO(observation));
@@ -57,7 +67,11 @@ public class ObservationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createObservation(@RequestBody ObservationDTO observationDTO) {
+    public ResponseEntity<String> createObservation(@RequestBody ObservationDTO observationDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (observationDTO.getDescription() == null ||
                 observationDTO.getPatientId() < 0 ||
                 observationDTO.getPractitionerId() < 0) {
@@ -79,7 +93,11 @@ public class ObservationController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateObservation(@PathVariable int id, @RequestBody ObservationDTO observationDTO) {
+    public ResponseEntity<String> updateObservation(@PathVariable int id, @RequestBody ObservationDTO observationDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (observationDTO.getDescription() == null ||
                 observationDTO.getPatientId() < 0 ||
                 observationDTO.getPractitionerId() < 0 ||
@@ -113,7 +131,11 @@ public class ObservationController {
     }
 
     @GetMapping("/getAllByDiagnos/{diagnosId}")
-    public List<ObservationDTO> getAllObservationsByDiagnos(@PathVariable int diagnosId) {
+    public ResponseEntity<List<ObservationDTO>> getAllObservationsByDiagnos(@PathVariable int diagnosId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (!diagnosService.existsById(diagnosId)) throw new IllegalArgumentException("No Diagnos With Id: " + diagnosId);
 
         List<Observation> observations = observationService.getAllObservationsByDiagnos(diagnosId);
@@ -122,14 +144,18 @@ public class ObservationController {
             for (Observation observation : observations){
                 observationDTOs.add(Mapper.convertToDTO(observation));
             }
-            return observationDTOs;
+            return ResponseEntity.ok(observationDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteObservation(@PathVariable int id) {
+    public ResponseEntity<Void> deleteObservation(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (id >= 0 && observationService.existsById(id)) {
             observationService.deleteObservation(id);
             return ResponseEntity.ok().build();

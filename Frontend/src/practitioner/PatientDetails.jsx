@@ -9,11 +9,17 @@ const PatientDetails = () => {
     const [selectedDiagnosis, setSelectedDiagnosis] = useState(null); // För vald diagnos
     const navigate = useNavigate(); // För att navigera till en annan sida
 
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
     useEffect(() => {
         // Hämta patientens detaljer baserat på id
         const fetchPatientDetails = async () => {
             try {
-                const response = await backendInstance.get(`/user/get/${id}`);
+                const response = await backendInstance.get(`/user/get/${id}`,{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setPatient(response.data);
             } catch (err) {
                 setError("Failed to load patient details");
@@ -28,7 +34,11 @@ const PatientDetails = () => {
 
     const handleNavigate = () => {
         if (selectedDiagnosis) {
-            navigate(`/diagnos-details/${selectedDiagnosis}`); // Navigera till ny sida med diagnosens id
+            navigate(`/diagnos-details/${selectedDiagnosis}`,{
+                headers: {
+                    Authorization: token
+                }
+            }); // Navigera till ny sida med diagnosens id
         }
     };
 

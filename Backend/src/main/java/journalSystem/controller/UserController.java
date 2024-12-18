@@ -1,5 +1,6 @@
 package journalSystem.controller;
 
+import jakarta.transaction.Transactional;
 import journalSystem.service.AuthServiceClient;
 import journalSystem.model.User;
 import journalSystem.model.Role;
@@ -20,72 +21,97 @@ import java.util.List;
 @CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class UserController {
 
-    @Autowired
-    private AuthServiceClient authServiceClient;
-
+    private final AuthServiceClient authServiceClient;
     private final IUserService userService;
 
     @Autowired
-    public UserController(IUserService userService) {
+    public UserController(IUserService userService, AuthServiceClient authServiceClient) {
         this.userService = userService;
+        this.authServiceClient = authServiceClient;
     }
 
+    @Transactional
     @GetMapping("/getAll")
-    public List<UserDTO> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        if (users != null) {
-            List<UserDTO> userDTOS = new ArrayList<>();
-            for (User user : users){
-                userDTOS.add(Mapper.convertToDTO(user));
-            }
-            return userDTOS;
-        } else {
-            return new ArrayList<>();
+    public ResponseEntity<List<UserDTO>> getAllUsers(@RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
         }
+
+        List<User> users = userService.getAllUsers();
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user : users) {
+            userDTOS.add(Mapper.convertToDTO(user));
+        }
+        return ResponseEntity.ok(userDTOS);
     }
 
+    @Transactional
     @GetMapping("/getAllDoctors")
-    public List<UserDTO> getAllDoctors() {
+    public ResponseEntity<List<UserDTO>> getAllDoctors(@RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<User> users = userService.getAllDoctors();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(Mapper.convertToDTO(user));
         }
-        return userDTOS;
+        return ResponseEntity.ok(userDTOS);
     }
 
+    @Transactional
     @GetMapping("/getAllPatients")
-    public List<UserDTO> getAllPatients() {
+    public ResponseEntity<List<UserDTO>> getAllPatients(@RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<User> users = userService.getAllPatients();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(Mapper.convertToDTO(user));
         }
-        return userDTOS;
+        return ResponseEntity.ok(userDTOS);
     }
 
+    @Transactional
     @GetMapping("/getAllOthers")
-    public List<UserDTO> getAllOthers() {
+    public ResponseEntity<List<UserDTO>> getAllOthers(@RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<User> users = userService.getAllOthers();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(Mapper.convertToDTO(user));
         }
-        return userDTOS;
+        return ResponseEntity.ok(userDTOS);
     }
 
+    @Transactional
     @GetMapping("/getAllPractitioners")
-    public List<UserDTO> getAllPractitioners() {
+    public ResponseEntity<List<UserDTO>> getAllPractitioners(@RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<User> users = userService.getAllPractitioners();
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(Mapper.convertToDTO(user));
         }
-        return userDTOS;
+        return ResponseEntity.ok(userDTOS);
     }
 
+    @Transactional
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Returnera 401 om token är ogiltig
+        }
+
         User user = userService.getUserById(id);
         if (user != null) {
             return ResponseEntity.ok(Mapper.convertToDTO(user));
@@ -94,8 +120,13 @@ public class UserController {
         }
     }
 
+    @Transactional
     @GetMapping("/getByEmail/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email, @RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Returnera 401 om token är ogiltig
+        }
+
         User user = userService.getUserByEmail(email);
         if (user != null) {
             return ResponseEntity.ok(Mapper.convertToDTO(user));
@@ -104,11 +135,17 @@ public class UserController {
         }
     }
 
+    @Transactional
     @GetMapping("/getIdByEmail/{email}")
-    public int getUserIdByEmail(@PathVariable String email) {
-        return userService.getIdByEmail(email);
+    public ResponseEntity<Integer> getUserIdByEmail(@PathVariable String email, @RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Returnera 401 om token är ogiltig
+        }
+
+        return ResponseEntity.ok(userService.getIdByEmail(email));
     }
 
+    @Transactional
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
         // Kontrollera om alla nödvändiga fält finns i userDTO
@@ -128,8 +165,6 @@ public class UserController {
                 userDTO.getPhoneNr(),
                 Role.valueOf(userDTO.getRole().toUpperCase()));
 
-        // Försök att skapa användaren genom authServiceClient
-        System.out.println("Före");
         try {
             ResponseEntity<String> authResponse = authServiceClient.createUser(userDTO);
 
@@ -144,7 +179,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error communicating with auth service: " + e.getMessage());
         }
-        System.out.println("Efter");
 
         // Om allt gick bra, skapa användaren i den lokala tjänsten
         User createdUser = userService.createUser(user);
@@ -153,9 +187,13 @@ public class UserController {
                 .body("User Created!");
     }
 
-
+    @Transactional
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO, @RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Returnera 401 om token är ogiltig
+        }
+
         if (userDTO.getEmail() == null ||
                 userDTO.getFirstName() == null ||
                 userDTO.getLastName() == null ||
@@ -179,8 +217,13 @@ public class UserController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Returnera 401 om token är ogiltig
+        }
+
         if (id >= 0 && userService.existsById(id)) {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
@@ -189,6 +232,7 @@ public class UserController {
         }
     }
 
+    @Transactional
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         User user = userService.getUserByEmailAndRole(request.getEmail(), Role.valueOf(request.getRole().toUpperCase()));
@@ -196,5 +240,11 @@ public class UserController {
         if (user != null) return authServiceClient.login(request.getEmail(), request.getPassword());
 
         return new LoginResponse("User not found");
+    }
+
+    @Transactional
+    @GetMapping("/validate")
+    public boolean validate(@RequestHeader("Authorization") String token) {
+        return authServiceClient.validate(token);
     }
 }

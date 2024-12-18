@@ -8,11 +8,17 @@ const ViewPatients = () => {
     const [error, setError] = useState(null);          // För att hantera fel
     const navigate = useNavigate();                    // Hook för navigering
 
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
     useEffect(() => {
         // Hämta alla patienter när komponenten laddas
         const fetchPatients = async () => {
             try {
-                const response = await backendInstance.get('/user/getAllPatients');
+                const response = await backendInstance.get('/user/getAllPatients',{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");
@@ -24,7 +30,11 @@ const ViewPatients = () => {
     // Funktion som hanterar knappen "View"
     const handleViewPatient = () => {
         if (selectedPatientId) {
-            navigate(`/patient-details/${selectedPatientId}`); // Navigera till PatientDetails med id:t
+            navigate(`/patient-details/${selectedPatientId}`,{
+                headers: {
+                    Authorization: token
+                }
+            }); // Navigera till PatientDetails med id:t
         }
     };
 

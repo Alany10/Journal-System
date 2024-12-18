@@ -1,4 +1,4 @@
-package journalSystem;
+package journalSystem.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

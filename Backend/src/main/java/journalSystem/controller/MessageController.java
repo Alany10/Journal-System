@@ -16,28 +16,37 @@ import java.util.List;
 @CrossOrigin(origins = {"https://frontend-service:5173", "https://localhost:8000", "https://localhost:30000"}, allowedHeaders = "*")
 public class MessageController {
 
-    @Autowired
-    private MessageServiceClient messageServiceClient;
-
+    private final MessageServiceClient messageServiceClient;
     private final IUserService userService;
+    private final UserController userController;
 
     @Autowired
-    public MessageController(IUserService userService) {
+    public MessageController(IUserService userService, MessageServiceClient messageServiceClient, UserController userController) {
         this.userService = userService;
+        this.messageServiceClient = messageServiceClient;
+        this.userController = userController;
     }
 
     @GetMapping("/getAll")
-    public List<MessageDTO> getAllMessages() {
+    public ResponseEntity<List<MessageDTO>> getAllMessages(@RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<MessageDTO> messageDTOs = messageServiceClient.getAllMessages();
         if (messageDTOs != null) {
-            return messageDTOs;
+            return ResponseEntity.ok(messageDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<MessageDTO> getMessageById(@PathVariable int id) {
+    public ResponseEntity<MessageDTO> getMessageById(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         MessageDTO messageDTO = messageServiceClient.getMessageById(id);
         if (messageDTO != null) {
             return ResponseEntity.ok(messageDTO);
@@ -47,7 +56,11 @@ public class MessageController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createMessage(@RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<String> createMessage(@RequestBody MessageDTO messageDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         User sender = userService.getUserByEmail(messageDTO.getSender());
         User receiver = userService.getUserByEmail(messageDTO.getReceiver());
 
@@ -58,68 +71,76 @@ public class MessageController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Created message");
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateMessage(@PathVariable int id, @RequestBody MessageDTO messageDTO) {
-        User sender = userService.getUserByEmail(messageDTO.getSender());
-        User receiver = userService.getUserByEmail(messageDTO.getReceiver());
-
-        if (sender == null || receiver == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    @PutMapping("/read/{id}")
+    public ResponseEntity<String> readMessage(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body("Updated message");
-    }
-
-    @PutMapping("/read/{id}")
-    public ResponseEntity<String> readMessage(@PathVariable int id) {
         messageServiceClient.readMessage(id);
         return ResponseEntity.status(HttpStatus.OK).body("Message is now read");
     }
 
     @GetMapping("/getAllReceived/{userId}")
-    public List<MessageDTO> getAllReceived(@PathVariable int userId) {
+    public ResponseEntity<List<MessageDTO>> getAllReceived(@PathVariable int userId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         User user = userService.getUserById(userId);
         if (user == null) throw new IllegalArgumentException("No User With id: " + userId);
 
         List<MessageDTO> messageDTOs = messageServiceClient.getAllReceived(user.getEmail());
 
         if (messageDTOs != null) {
-            return messageDTOs;
+            return ResponseEntity.ok(messageDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/getAllUnread/{userId}")
-    public List<MessageDTO> getAllUnread(@PathVariable int userId) {
+    public ResponseEntity<List<MessageDTO>> getAllUnread(@PathVariable int userId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         User user = userService.getUserById(userId);
         if (user == null) throw new IllegalArgumentException("No User With id: " + userId);
 
         List<MessageDTO> messageDTOs = messageServiceClient.getAllUnread(user.getEmail());
 
         if (messageDTOs != null) {
-            return messageDTOs;
+            return ResponseEntity.ok(messageDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/getAllSent/{userId}")
-    public List<MessageDTO> getAllSent(@PathVariable int userId) {
+    public ResponseEntity<List<MessageDTO>> getAllSent(@PathVariable int userId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         User user = userService.getUserById(userId);
         if (user == null) throw new IllegalArgumentException("No User With email: " + userId);
 
         List<MessageDTO> messageDTOs = messageServiceClient.getAllSent(user.getEmail());
 
         if (messageDTOs != null) {
-            return messageDTOs;
+            return ResponseEntity.ok(messageDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable int id) {
+    public ResponseEntity<Void> deleteMessage(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (messageServiceClient.getMessageById(id) != null) {
             messageServiceClient.deleteMessage(id);
             return ResponseEntity.ok().build();

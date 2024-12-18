@@ -12,11 +12,17 @@ const CreateObservation = () => {
     const [selectedDiagnosis, setSelectedDiagnosis] = useState('');
     const [error, setError] = useState(null);
 
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
     // Hämta alla patienter vid komponentens laddning
     useEffect(() => {
         const fetchInformations = async () => {
             try {
-                const response = await backendInstance.get('/user/getAllPatients');
+                const response = await backendInstance.get('/user/getAllPatients',{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");
@@ -30,8 +36,16 @@ const CreateObservation = () => {
         if (patientId) {
             const fetchEncounterAndDiagnoses = async () => {
                 try {
-                    const encounterResponse = await backendInstance.get(`/encounter/getAllByPatient/${patientId}`);
-                    const diagnosesResponse = await backendInstance.get(`/diagnos/getAllByPatient/${patientId}`);
+                    const encounterResponse = await backendInstance.get(`/encounter/getAllByPatient/${patientId}`,{
+                        headers: {
+                            Authorization: token
+                        }
+                    });
+                    const diagnosesResponse = await backendInstance.get(`/diagnos/getAllByPatient/${patientId}`,{
+                        headers: {
+                            Authorization: token
+                        }
+                    });
                     setEncounters(encounterResponse.data);
                     setDiagnoses(diagnosesResponse.data);
                 } catch (err) {
@@ -57,7 +71,11 @@ const CreateObservation = () => {
         };
 
         try {
-            await backendInstance.post('/observation/create', observationData);
+            await backendInstance.post('/observation/create', observationData,{
+                headers: {
+                    Authorization: token
+                }
+            });
             alert("Observation created successfully!");
         } catch (err) {
             setError("Error creating observation");

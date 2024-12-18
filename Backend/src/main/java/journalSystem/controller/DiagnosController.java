@@ -1,5 +1,6 @@
 package journalSystem.controller;
 
+import jakarta.transaction.Transactional;
 import journalSystem.model.*;
 import journalSystem.service.interfaces.IDiagnosService;
 import journalSystem.service.interfaces.IUserService;
@@ -18,29 +19,40 @@ import java.util.List;
 public class DiagnosController {
     private final IDiagnosService diagnosService;
     private final IUserService userService;
+    private final UserController userController;
 
     @Autowired
-    public DiagnosController(IDiagnosService diagnosService, IUserService userService) {
+    public DiagnosController(IDiagnosService diagnosService, IUserService userService, UserController userController) {
         this.diagnosService = diagnosService;
         this.userService = userService;
+        this.userController = userController;
     }
 
+    @Transactional
     @GetMapping("/getAll")
-    public List<DiagnosDTO> getAllDiagnoses() {
+    public ResponseEntity<List<DiagnosDTO>> getAllDiagnoses(@RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<Diagnos> diagnoses = diagnosService.getAllDiagnoses();
         if (diagnoses != null) {
             List<DiagnosDTO> diagnosDTOS = new ArrayList<>();
             for (Diagnos diagnos : diagnoses){
                 diagnosDTOS.add(Mapper.convertToDTO(diagnos));
             }
-            return diagnosDTOS;
+            return ResponseEntity.ok(diagnosDTOS);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<DiagnosDTO> getDiagnosById(@PathVariable int id) {
+    public ResponseEntity<DiagnosDTO> getDiagnosById(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         Diagnos diagnos = diagnosService.getDiagnosById(id);
         if (diagnos != null) {
             return ResponseEntity.ok(Mapper.convertToDTO(diagnos));
@@ -50,7 +62,11 @@ public class DiagnosController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createDiagnos(@RequestBody DiagnosDTO diagnosDTO) {
+    public ResponseEntity<String> createDiagnos(@RequestBody DiagnosDTO diagnosDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (diagnosDTO.getName() == null || diagnosDTO.getPatientId() < 0 || diagnosDTO.getPractitionerId() < 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -63,12 +79,16 @@ public class DiagnosController {
         }
 
         Diagnos diagnos = new Diagnos(diagnosDTO.getName(), patient , practitioner);
-        Diagnos createdDiagnos = diagnosService.createDiagnos(diagnos);
+        diagnosService.createDiagnos(diagnos);
         return ResponseEntity.status(HttpStatus.CREATED).body("Diagnos created");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody DiagnosDTO diagnosDTO) {
+    public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody DiagnosDTO diagnosDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (diagnosDTO.getName() == null ||
                 diagnosDTO.getPatientId() < 0 ||
                 diagnosDTO.getPractitionerId() < 0) {
@@ -105,7 +125,11 @@ public class DiagnosController {
     }
 
     @PutMapping("/establish/{id}")
-    public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus) {
+    public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (diagnosStatus == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         String cleanedStatus = diagnosStatus.replace("\"", "").trim().toUpperCase();
 
@@ -135,7 +159,11 @@ public class DiagnosController {
 
 
     @GetMapping("/getAllByPatient/{patientId}")
-    public List<DiagnosDTO> getAllDiagnosesByPatient(@PathVariable int patientId) {
+    public ResponseEntity<List<DiagnosDTO>> getAllDiagnosesByPatient(@PathVariable int patientId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (userService.getPatientById(patientId) == null) throw new IllegalArgumentException("No Patient With Id: " + patientId);
 
         List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPatient(patientId);
@@ -144,14 +172,18 @@ public class DiagnosController {
             for (Diagnos diagnos : diagnoses){
                 diagnosDTOS.add(Mapper.convertToDTO(diagnos));
             }
-            return diagnosDTOS;
+            return ResponseEntity.ok(diagnosDTOS);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/getAllByPractitioner/{practitionerId}")
-    public List<DiagnosDTO> getAllDiagnosesByPractitioner(@PathVariable int practitionerId) {
+    public ResponseEntity<List<DiagnosDTO>> getAllDiagnosesByPractitioner(@PathVariable int practitionerId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (userService.getPractitionerById(practitionerId) == null) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
 
         List<Diagnos> diagnoses = diagnosService.getAllDiagnosesByPractitioner(practitionerId);
@@ -160,14 +192,18 @@ public class DiagnosController {
             for (Diagnos diagnos : diagnoses){
                 diagnosDTOS.add(Mapper.convertToDTO(diagnos));
             }
-            return diagnosDTOS;
+            return ResponseEntity.ok(diagnosDTOS);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteDiagnos(@PathVariable int id) {
+    public ResponseEntity<Void> deleteDiagnos(@PathVariable int id,  @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (id >= 0 && diagnosService.existsById(id)) {
             diagnosService.deleteDiagnos(id);
             return ResponseEntity.ok().build();

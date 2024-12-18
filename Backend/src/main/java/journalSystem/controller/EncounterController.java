@@ -17,29 +17,39 @@ import java.util.List;
 public class EncounterController {
     private final IEncounterService encounterService;
     private final IUserService userService;
+    private final UserController userController;
 
     @Autowired
-    public EncounterController(IEncounterService encounterService, IUserService userService) {
+    public EncounterController(IEncounterService encounterService, IUserService userService, UserController userController) {
         this.encounterService = encounterService;
         this.userService = userService;
+        this.userController = userController;
     }
 
     @GetMapping("/getAll")
-    public List<EncounterDTO> getAllEncounters() {
+    public ResponseEntity<List<EncounterDTO>> getAllEncounters(@RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         List<Encounter> encounters = encounterService.getAllEncounters();
         if (encounters != null) {
             List<EncounterDTO> encounterDTOs = new ArrayList<>();
             for (Encounter encounter: encounters){
                 encounterDTOs.add(Mapper.convertToDTO(encounter));
             }
-            return encounterDTOs;
+            return ResponseEntity.ok(encounterDTOs);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<EncounterDTO> getEncounterById(@PathVariable int id) {
+    public ResponseEntity<EncounterDTO> getEncounterById(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         Encounter encounter = encounterService.getEncounterById(id);
         if (encounter != null) {
             return ResponseEntity.ok(Mapper.convertToDTO(encounter));
@@ -49,8 +59,11 @@ public class EncounterController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createEncounter(@RequestBody EncounterDTO encounterDTO) {
-        System.out.println(encounterDTO.getDateTime() + " " + encounterDTO.getPatientId() + encounterDTO.getPractitionerId());
+    public ResponseEntity<String> createEncounter(@RequestBody EncounterDTO encounterDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (encounterDTO.getDateTime() == null ||
                 encounterDTO.getPatientId() < 0 ||
                 encounterDTO.getPractitionerId() < 0) {
@@ -70,7 +83,11 @@ public class EncounterController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateEncounter(@PathVariable int id, @RequestBody EncounterDTO encounterDTO) {
+    public ResponseEntity<String> updateEncounter(@PathVariable int id, @RequestBody EncounterDTO encounterDTO, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (encounterDTO.getDateTime() == null ||
                 encounterDTO.getPatientId() < 0 ||
                 encounterDTO.getPractitionerId() < 0) {
@@ -98,7 +115,11 @@ public class EncounterController {
     }
 
     @GetMapping("/getAllByPatient/{patientId}")
-    public List<EncounterDTO> getAllEncoutersByPatient(@PathVariable int patientId) {
+    public ResponseEntity<List<EncounterDTO>> getAllEncoutersByPatient(@PathVariable int patientId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (userService.getPatientById(patientId) == null) throw new IllegalArgumentException("No Patient With Id: " + patientId);
 
         List<Encounter> encouters = encounterService.getAllEncountersByPatientId(patientId);
@@ -108,14 +129,18 @@ public class EncounterController {
             for (Encounter encounter : encouters){
                 encouterDTOS.add(Mapper.convertToDTO(encounter));
             }
-            return encouterDTOS;
+            return ResponseEntity.ok(encouterDTOS);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/getAllByPractitioner/{practitionerId}")
-    public List<EncounterDTO> getAllEncoutersByPractitioner(@PathVariable int practitionerId) {
+    public ResponseEntity<List<EncounterDTO>> getAllEncoutersByPractitioner(@PathVariable int practitionerId, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (userService.getPractitionerById(practitionerId) == null) throw new IllegalArgumentException("No Practitioner With Id: " + practitionerId);
 
         List<Encounter> encouters = encounterService.getAllEncountersByPractitionerId(practitionerId);
@@ -125,14 +150,18 @@ public class EncounterController {
             for (Encounter encounter : encouters){
                 encouterDTOS.add(Mapper.convertToDTO(encounter));
             }
-            return encouterDTOS;
+            return ResponseEntity.ok(encouterDTOS);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteEncounter(@PathVariable int id) {
+    public ResponseEntity<Void> deleteEncounter(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        if (!userController.validate(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
+        }
+
         if (id >= 0 && encounterService.existsById(id)) {
             encounterService.deleteEncounter(id);
             return ResponseEntity.ok().build();

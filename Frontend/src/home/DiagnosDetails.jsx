@@ -8,17 +8,27 @@ const DiagnosDetails = () => {
     const [error, setError] = useState(null); // För felhantering
     const [encounterDates, setEncounterDates] = useState({}); // State för encounterDate för varje observation
 
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
     // Hämta observationer relaterade till diagnosen
     useEffect(() => {
         const fetchObservationDetails = async () => {
             try {
-                const response = await backendInstance.get(`/observation/getAllByDiagnos/${id}`);
+                const response = await backendInstance.get(`/observation/getAllByDiagnos/${id}`,{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setObservations(response.data);  // Uppdatera med listan av observationer
 
                 // För varje observation, hämta encounter date
                 const encounters = {};
                 for (const observation of response.data) {
-                    const encounterResponse = await backendInstance.get(`/encounter/get/${observation.encounterId}`);
+                        const encounterResponse = await backendInstance.get(`/encounter/get/${observation.encounterId}`, {
+                            headers: {
+                                Authorization: token
+                            }
+                        });
                     encounters[observation.id] = encounterResponse.data.dateTime;
                 }
                 setEncounterDates(encounters);

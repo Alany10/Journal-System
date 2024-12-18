@@ -13,6 +13,7 @@ const MessageDashboard = () => {
     const userId = JSON.parse(localStorage.getItem('user'))?.id;
     const userRole = JSON.parse(localStorage.getItem('user'))?.role;
     const userEmail = JSON.parse(localStorage.getItem('user'))?.email;
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
 
     // Hämta alla meddelanden vid sidladdning
     useEffect(() => {
@@ -29,7 +30,11 @@ const MessageDashboard = () => {
     // Hämta alla praktiker om användaren är en patient
     const fetchPractitioners = async () => {
         try {
-            const response = await backendInstance.get('/user/getAllPractitioners');
+            const response = await backendInstance.get('/user/getAllPractitioners', {
+                headers: {
+                    Authorization: token
+                }
+            });
             setRecipients(response.data);
         } catch (error) {
             setError("Failed to fetch practitioners.");
@@ -39,7 +44,11 @@ const MessageDashboard = () => {
     // Hämta alla patienter om användaren är en praktiker
     const fetchPatients = async () => {
         try {
-            const response = await backendInstance.get('/user/getAllPatients');
+            const response = await backendInstance.get('/user/getAllPatients', {
+                headers: {
+                    Authorization: token
+                }
+            });
             setRecipients(response.data);
             aler('Fetched practitioners:', response.data); // Kontrollera vad som hämtas
         } catch (error) {
@@ -50,7 +59,11 @@ const MessageDashboard = () => {
     // Hämta användarnamn baserat på roll och id
     const getUserEmail = async (userEmail) => {
         const endpoint =  `/user/getByEmail/${userEmail}`;
-        const response = await backendInstance.get(endpoint);
+        const response = await backendInstance.get(endpoint, {
+            headers: {
+                Authorization: token
+            }
+        });
         return response.data.email;
     };
 
@@ -59,7 +72,11 @@ const MessageDashboard = () => {
         try {
             setShowSendMessageForm(false); // Döljer formuläret
             const endpoint = `/message/getAllReceived/${userId}`
-            const response = await backendInstance.get(endpoint);
+            const response = await backendInstance.get(endpoint, {
+                headers: {
+                    Authorization: token
+                }
+            });
 
             const messagesWithEmails = await Promise.all(response.data.map(async (message) => {
                 let senderEmail = '';
@@ -83,7 +100,11 @@ const MessageDashboard = () => {
         try {
             setShowSendMessageForm(false);
             const endpoint = `/message/getAllUnread/${userId}`;
-            const response = await backendInstance.get(endpoint);
+            const response = await backendInstance.get(endpoint, {
+                headers: {
+                    Authorization: token
+                }
+            });
 
             const messagesWithEmails = await Promise.all(response.data.map(async (message) => {
                 let senderEmail = '';
@@ -107,7 +128,11 @@ const MessageDashboard = () => {
         try {
             setShowSendMessageForm(false);
             const endpoint = `/message/getAllSent/${userId}`;
-            const response = await backendInstance.get(endpoint);
+            const response = await backendInstance.get(endpoint, {
+                headers: {
+                    Authorization: token
+                }
+            });
 
             const messagesWithEmails = await Promise.all(response.data.map(async (message) => {
                 let senderEmail = '';
@@ -138,7 +163,11 @@ const MessageDashboard = () => {
 
         // Skicka API-anrop för att markera meddelandet som läst
         try {
-            await backendInstance.put(`/message/read/${message.id}`);
+            await backendInstance.put(`/message/read/${message.id}`, {
+                headers: {
+                    Authorization: token
+                }
+            });
         } catch (error) {
             setError("Failed to mark the message as read.");
         }
@@ -164,7 +193,11 @@ const MessageDashboard = () => {
         };
 
         try {
-            await backendInstance.post('/message/create', messageDTO);
+            await backendInstance.post('/message/create', messageDTO, {
+                headers: {
+                    Authorization: token
+                }
+            });
             setShowSendMessageForm(false);
             setNewMessage({ title: '', text: '', recipientEmail: '' });
             handleViewAll(); // Uppdatera meddelandelistan

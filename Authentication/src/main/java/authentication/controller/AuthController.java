@@ -29,23 +29,27 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
+    public boolean validateToken(@RequestHeader("Authorization") String token) {
         try {
-            // Validera token via Keycloak
-            String userInfo = authUserService.validateToken(token.substring(7)); // Ta bort "Bearer "
-            return ResponseEntity.ok(userInfo);
+            return authUserService.validateToken(token);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            return false;
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        try {
+            authUserService.logout(token);
+            return ResponseEntity.status(HttpStatus.OK).body("Logged out successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error logging out: " + e.getMessage());
         }
     }
 
     // Skapa användare via Keycloak Admin API
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestParam String email, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String password) {
-        System.out.println(email);
-        System.out.println(firstName);
-        System.out.println(lastName);
-        System.out.println(password);
         try {
             // Skapa användare genom AuthUserService
             authUserService.createUser(email, firstName, lastName, password);

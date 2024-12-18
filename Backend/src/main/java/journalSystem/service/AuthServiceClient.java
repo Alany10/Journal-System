@@ -1,6 +1,5 @@
 package journalSystem.service;
 
-import journalSystem.model.Role;
 import journalSystem.model.login.LoginResponse;
 import journalSystem.viewModel.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,36 @@ public class AuthServiceClient {
         return response.getBody();
     }
 
+    public boolean validate(String token) {
+        // Bygg upp URL för validerings-endpointen
+        String url = AUTH_SERVICE_BASE_URL + "/validate";
+
+        // Sätt upp headers med Authorization-token
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        try {
+            // Skicka GET-förfrågan till validate-endpointen
+            ResponseEntity<Boolean> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    Boolean.class
+            );
+
+            // Returnera svaret från servern
+            return response.getBody() != null && response.getBody();
+        } catch (Exception e) {
+            // Hantera eventuella fel
+            e.printStackTrace();
+            return false; // Anta att token inte är giltig om något går fel
+        }
+    }
+
+
     public ResponseEntity<String> createUser(UserDTO userDTO) {
-        System.out.println(userDTO.getEmail());
-        System.out.println(userDTO.getFirstName());
-        System.out.println(userDTO.getLastName());
-        System.out.println(userDTO.getPassword());
         // Build the URL with query parameters
         String url = UriComponentsBuilder.fromHttpUrl(AUTH_SERVICE_BASE_URL + "/create")
                 .queryParam("email", userDTO.getEmail())
@@ -68,7 +92,6 @@ public class AuthServiceClient {
                     entity,
                     String.class // Temporärt använda String för att logga svaret
             );
-            System.out.println("Response Body: " + response.getBody());  // Logga svaret
 
 
             // Return a response based on the result

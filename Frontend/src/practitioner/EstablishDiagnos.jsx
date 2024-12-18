@@ -7,11 +7,17 @@ const EstablishDiagnos = () => {
     const [diagnoses, setDiagnoses] = useState([]); // Listan på diagnoser
     const [error, setError] = useState(null); // För att hantera fel
 
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
     useEffect(() => {
         // Hämta alla diagnoser vid komponentens laddning
         const fetchDiagnoses = async () => {
             try {
-                const response = await backendInstance.get(`/diagnos/getAllByPractitioner/${practitionerId}`);
+                const response = await backendInstance.get(`/diagnos/getAllByPractitioner/${practitionerId}`,{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setDiagnoses(response.data);  // Sätter listan på diagnoser
             } catch (err) {
                 setError("Failed to load diagnoses");
@@ -26,7 +32,11 @@ const EstablishDiagnos = () => {
         e.preventDefault(); // Förhindrar standardbeteendet för formuläret
         setError(null); // Återställer eventuella tidigare fel
         try {
-            await backendInstance.put(`/diagnos/establish/${diagnosId}`, status);
+            await backendInstance.put(`/diagnos/establish/${diagnosId}`, status,{
+                headers: {
+                    Authorization: token
+                }
+            });
             alert("Diagnosis established successfully!");
         } catch (err) {
             setError("Error establishing diagnosis");

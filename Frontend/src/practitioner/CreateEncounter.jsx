@@ -8,11 +8,17 @@ const CreateEncounter = () => {
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState(null);
 
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
+
     useEffect(() => {
         // Hämta alla patienter vid komponentens laddning
         const fetchPatients = async () => {
             try {
-                const response = await backendInstance.get('/user/getAllPatients');
+                const response = await backendInstance.get('/user/getAllPatients',{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setPatients(response.data);
             } catch (err) {
                 setError("Failed to load patients");
@@ -33,7 +39,11 @@ const CreateEncounter = () => {
         };
 
         try {
-            await backendInstance.post('/encounter/create', encounterData);
+            await backendInstance.post('/encounter/create', encounterData,{
+                headers: {
+                    Authorization: token
+                }
+            });
             alert("Encounter created successfully!");
         } catch (err) {
             setError("Error creating encounter");

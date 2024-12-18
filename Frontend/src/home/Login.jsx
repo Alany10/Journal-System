@@ -18,14 +18,22 @@ const Login = ({ setUser }) => {
         try {
             const url = '/user/login';
             const response = await backendInstance.post(url, { email: email, password: password, role: userType });
+            const token = response.data.token;
 
-            // Hämta användarens ID asynkront
-            const userId = (await backendInstance.get(`/user/getIdByEmail/${email}`)).data;
+            // Hämta användarens ID med token i Authorization-headern
+            const userIdResponse = await backendInstance.get(`/user/getIdByEmail/${email}`, {
+                headers: {
+                    Authorization: token
+                }
+            });
+
+            const userId = userIdResponse.data;
 
             const user = {
                 email: email,
-                id: userId, // Här är det faktiska ID:t
+                id: userId,
                 role: userType,
+                token: token
             };
 
             // Uppdatera användardatan i App.js
@@ -42,6 +50,7 @@ const Login = ({ setUser }) => {
             setError('Invalid email, password or role');
         }
     };
+
 
 
     return (
