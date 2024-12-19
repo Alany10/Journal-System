@@ -19,15 +19,24 @@ const SearchDashboard = () => {
     // Hämta userId och roll från localStorage
     const userId = JSON.parse(localStorage.getItem('user'))?.id;
     const userRole = JSON.parse(localStorage.getItem('user'))?.role;
+    const token = JSON.parse(localStorage.getItem('user'))?.token;
 
     // Hämta diagnoser och encounters vid laddning
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const diagnosResponse = await backendInstance.get('/diagnos/getAll');
+                const diagnosResponse = await backendInstance.get('/diagnos/getAll',{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setDiagnosList(diagnosResponse.data);
 
-                const encounterResponse = await backendInstance.get('/encounter/getAll');
+                const encounterResponse = await backendInstance.get('/encounter/getAll',{
+                    headers: {
+                        Authorization: token
+                    }
+                });
                 setEncounterList(encounterResponse.data);
             } catch (error) {
                 console.error('Error fetching diagnoses and encounters:', error);

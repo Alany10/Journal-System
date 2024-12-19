@@ -157,21 +157,24 @@ const MessageDashboard = () => {
         setSelectedMessage(message);
 
         // Kontrollera om användaren är samma som avsändaren
-        if (
-            (userEmail === message.sender)
-        ) return;
+        if (userEmail === message.sender) return;
 
         // Skicka API-anrop för att markera meddelandet som läst
         try {
-            await backendInstance.put(`/message/read/${message.id}`, {
-                headers: {
-                    Authorization: token
+            await backendInstance.put(
+                `/message/read/${message.id}`,
+                null, // Ingen request body behövs, skicka `null`
+                {
+                    headers: {
+                        Authorization: token, // Se till att skicka token korrekt
+                    },
                 }
-            });
+            );
         } catch (error) {
             setError("Failed to mark the message as read.");
         }
     };
+
 
     // Hantera skicka meddelande
     const handleSendMessage = () => {

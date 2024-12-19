@@ -38,13 +38,6 @@ public class MessageServiceClient {
         return response.getBody();
     }
 
-    // Uppdatera ett meddelande
-    public MessageDTO updateMessage(int id, MessageDTO messageDTO) {
-        String url = MESSAGE_SERVICE_BASE_URL + "/update/" + id;
-        sendRequest(url, HttpMethod.PUT, messageDTO, Void.class);
-        return messageDTO; // Returnera det uppdaterade meddelandet
-    }
-
     // Markera ett meddelande som läst
     public MessageDTO readMessage(int id) {
         String url = MESSAGE_SERVICE_BASE_URL + "/read/" + id;

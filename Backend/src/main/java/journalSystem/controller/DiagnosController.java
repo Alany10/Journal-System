@@ -47,6 +47,7 @@ public class DiagnosController {
         }
     }
 
+    @Transactional
     @GetMapping("/get/{id}")
     public ResponseEntity<DiagnosDTO> getDiagnosById(@PathVariable int id, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -61,6 +62,7 @@ public class DiagnosController {
         }
     }
 
+    @Transactional
     @PostMapping("/create")
     public ResponseEntity<String> createDiagnos(@RequestBody DiagnosDTO diagnosDTO, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -83,6 +85,7 @@ public class DiagnosController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Diagnos created");
     }
 
+    @Transactional
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody DiagnosDTO diagnosDTO, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -124,6 +127,7 @@ public class DiagnosController {
         }
     }
 
+    @Transactional
     @PutMapping("/establish/{id}")
     public ResponseEntity<String> updateDiagnos(@PathVariable int id, @RequestBody String diagnosStatus, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -157,7 +161,7 @@ public class DiagnosController {
         }
     }
 
-
+    @Transactional
     @GetMapping("/getAllByPatient/{patientId}")
     public ResponseEntity<List<DiagnosDTO>> getAllDiagnosesByPatient(@PathVariable int patientId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -178,6 +182,7 @@ public class DiagnosController {
         }
     }
 
+    @Transactional
     @GetMapping("/getAllByPractitioner/{practitionerId}")
     public ResponseEntity<List<DiagnosDTO>> getAllDiagnosesByPractitioner(@PathVariable int practitionerId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -198,6 +203,7 @@ public class DiagnosController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteDiagnos(@PathVariable int id,  @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {

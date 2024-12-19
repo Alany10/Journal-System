@@ -1,5 +1,6 @@
 package journalSystem.controller;
 
+import jakarta.transaction.Transactional;
 import journalSystem.model.*;
 import journalSystem.service.interfaces.IEncounterService;
 import journalSystem.service.interfaces.IObservationService;
@@ -34,6 +35,7 @@ public class ObservationController {
         this.userController = userController;
     }
 
+    @Transactional
     @GetMapping("/getAll")
     public ResponseEntity<List<ObservationDTO>> getAllObservations(@RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -52,6 +54,7 @@ public class ObservationController {
         }
     }
 
+    @Transactional
     @GetMapping("/get/{id}")
     public ResponseEntity<ObservationDTO> getObservationById(@PathVariable int id, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -66,6 +69,7 @@ public class ObservationController {
         }
     }
 
+    @Transactional
     @PostMapping("/create")
     public ResponseEntity<String> createObservation(@RequestBody ObservationDTO observationDTO, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -92,6 +96,7 @@ public class ObservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Observation created");
     }
 
+    @Transactional
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateObservation(@PathVariable int id, @RequestBody ObservationDTO observationDTO, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -130,6 +135,7 @@ public class ObservationController {
         }
     }
 
+    @Transactional
     @GetMapping("/getAllByDiagnos/{diagnosId}")
     public ResponseEntity<List<ObservationDTO>> getAllObservationsByDiagnos(@PathVariable int diagnosId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {

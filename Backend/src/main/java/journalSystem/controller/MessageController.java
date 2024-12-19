@@ -1,5 +1,6 @@
 package journalSystem.controller;
 
+import jakarta.transaction.Transactional;
 import journalSystem.service.MessageServiceClient;
 import journalSystem.model.*;
 import journalSystem.service.interfaces.IUserService;
@@ -27,6 +28,7 @@ public class MessageController {
         this.userController = userController;
     }
 
+    @Transactional
     @GetMapping("/getAll")
     public ResponseEntity<List<MessageDTO>> getAllMessages(@RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -41,6 +43,7 @@ public class MessageController {
         }
     }
 
+    @Transactional
     @GetMapping("/get/{id}")
     public ResponseEntity<MessageDTO> getMessageById(@PathVariable int id, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -55,32 +58,43 @@ public class MessageController {
         }
     }
 
+    @Transactional
     @PostMapping("/create")
     public ResponseEntity<String> createMessage(@RequestBody MessageDTO messageDTO, @RequestHeader("Authorization") String token) {
+        System.out.println("1");
         if (!userController.validate(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
         }
+        System.out.println("2");
 
         User sender = userService.getUserByEmail(messageDTO.getSender());
         User receiver = userService.getUserByEmail(messageDTO.getReceiver());
+        System.out.println("3");
 
         if (sender == null || receiver == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+        System.out.println("4");
+        messageServiceClient.createMessage(messageDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Created message");
     }
 
+    @Transactional
     @PutMapping("/read/{id}")
     public ResponseEntity<String> readMessage(@PathVariable int id, @RequestHeader("Authorization") String token) {
+        System.out.println(token);
+        System.out.println("1");
         if (!userController.validate(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Returnera 401 om token är ogiltig
         }
+        System.out.println("2");
 
         messageServiceClient.readMessage(id);
         return ResponseEntity.status(HttpStatus.OK).body("Message is now read");
     }
 
+    @Transactional
     @GetMapping("/getAllReceived/{userId}")
     public ResponseEntity<List<MessageDTO>> getAllReceived(@PathVariable int userId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -99,6 +113,7 @@ public class MessageController {
         }
     }
 
+    @Transactional
     @GetMapping("/getAllUnread/{userId}")
     public ResponseEntity<List<MessageDTO>> getAllUnread(@PathVariable int userId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -117,6 +132,7 @@ public class MessageController {
         }
     }
 
+    @Transactional
     @GetMapping("/getAllSent/{userId}")
     public ResponseEntity<List<MessageDTO>> getAllSent(@PathVariable int userId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -135,6 +151,7 @@ public class MessageController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable int id, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {

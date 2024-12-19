@@ -1,5 +1,6 @@
 package journalSystem.controller;
 
+import jakarta.transaction.Transactional;
 import journalSystem.model.*;
 import journalSystem.service.interfaces.IEncounterService;
 import journalSystem.service.interfaces.IUserService;
@@ -26,6 +27,7 @@ public class EncounterController {
         this.userController = userController;
     }
 
+    @Transactional
     @GetMapping("/getAll")
     public ResponseEntity<List<EncounterDTO>> getAllEncounters(@RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -44,6 +46,7 @@ public class EncounterController {
         }
     }
 
+    @Transactional
     @GetMapping("/get/{id}")
     public ResponseEntity<EncounterDTO> getEncounterById(@PathVariable int id, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -58,6 +61,7 @@ public class EncounterController {
         }
     }
 
+    @Transactional
     @PostMapping("/create")
     public ResponseEntity<String> createEncounter(@RequestBody EncounterDTO encounterDTO, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -82,6 +86,7 @@ public class EncounterController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Encounter created");
     }
 
+    @Transactional
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateEncounter(@PathVariable int id, @RequestBody EncounterDTO encounterDTO, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -114,6 +119,7 @@ public class EncounterController {
         }
     }
 
+    @Transactional
     @GetMapping("/getAllByPatient/{patientId}")
     public ResponseEntity<List<EncounterDTO>> getAllEncoutersByPatient(@PathVariable int patientId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -135,6 +141,7 @@ public class EncounterController {
         }
     }
 
+    @Transactional
     @GetMapping("/getAllByPractitioner/{practitionerId}")
     public ResponseEntity<List<EncounterDTO>> getAllEncoutersByPractitioner(@PathVariable int practitionerId, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
@@ -156,6 +163,7 @@ public class EncounterController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteEncounter(@PathVariable int id, @RequestHeader("Authorization") String token) {
         if (!userController.validate(token)) {
